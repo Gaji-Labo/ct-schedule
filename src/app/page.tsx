@@ -19,6 +19,34 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
+import { generateRoundRobinPairs, Round } from "@/src/utils/member";
+
+type CT = {
+  date: string;
+  round: Round;
+};
+type SCHEDULE = CT[];
+
+// NOTE: type SCHEDULE
+// [
+//   {
+//     date: "2024/1/1(月)",
+//     round: [
+//       [{ name: "A" }, { name: "B" }],
+//       [{ name: "C" }, null],
+//       ...
+//     ],
+//   },
+//   {
+//     date: "2024/1/8(月)",
+//     round: [
+//       [{ name: "A" }, { name: "C" }],
+//       [{ name: "B" }, null],
+//       ...
+//     ],
+//   },
+//   ...
+// ];
 
 const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
   return (
@@ -50,6 +78,20 @@ export default async function Home() {
 
   // 不参加のメンバーを除外
   const member = memberData.filter((member) => member.participate);
+
+  const rounds = generateRoundRobinPairs(memberData);
+
+  // 日付とその日のペアを1つの配列にする
+  function generateCTSchedules(): SCHEDULE {
+    const schedule: SCHEDULE = [];
+    mondays.forEach((monday, mondayIndex) => {
+      if (mondayIndex < rounds.length) {
+        schedule.push({ date: monday, round: rounds[mondayIndex] });
+      }
+    });
+    return schedule;
+  }
+  const ctSchedules = generateCTSchedules();
 
   return (
     <main className="max-w-7xl mx-auto p-10">
@@ -105,6 +147,41 @@ export default async function Home() {
             自分がグレーアウトしたマスの場合、同じくグレーかつ数字が同じメンバーとペアになる
           </p>
         </section>
+      </div>
+      <div className="overflow-x-auto mt-10">
+        <div className="flex gap-4 pb-4 max-w-max">
+          {ctSchedules.map((schedule) => (
+            <div
+              key={schedule.date}
+              className="border rounded-lg p-4 bg-white shadow-sm flex-shrink-0 min-w-[250px]"
+            >
+              <h2 className="text-lg font-semibold mb-4 text-center">
+                <time dateTime={schedule.date}>{schedule.date}</time>
+              </h2>
+              <div className="flex flex-col gap-2">
+                {schedule.round.map((pair, pairIndex) => (
+                  <div
+                    key={pairIndex}
+                    className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
+                  >
+                    <span className="text-gray-400 text-xs">
+                      {pairIndex + 1}
+                    </span>
+                    <span className="font-medium text-sm">{pair[0].name}</span>
+                    <span className="text-gray-400 text-xs">×</span>
+                    <span
+                      className={`font-medium text-sm ${
+                        !pair[1] && "text-red-400"
+                      }`}
+                    >
+                      {pair[1] ? pair[1].name : "お休み"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <article className="flex gap-5 mt-10">
         <aside>
