@@ -101,4 +101,12 @@ describe("generateRoundRobinPairs", () => {
       );
     });
   });
+
+  test("全員participateがfalse：空配列", () => {
+    const members = [
+      { id: 1, name: "Alice", participate: false },
+      { id: 2, name: "Bob", participate: false },
+    ];
+    expect(generateRoundRobinPairs(members)).toEqual([]);
+  });
 });
