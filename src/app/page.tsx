@@ -39,6 +39,7 @@ export default async function Home() {
   const memberData = await getMember();
 
   // 不参加のメンバーを除外
+  // TODO: generateRoundRobinPairsのレビューが通ったら削除する
   const member = memberData.filter((member) => member.participate);
 
   const rounds = generateRoundRobinPairs(memberData);
@@ -134,6 +135,7 @@ export default async function Home() {
           ))}
         </div>
       </div>
+      {/* ↓↓↓ TODO: テーブルはgenerateRoundRobinPairsのレビューが通ったら削除する ↓↓↓ */}
       <article className="flex gap-5 mt-10">
         <aside>
           <ol>
@@ -187,6 +189,7 @@ export default async function Home() {
           </table>
         </div>
       </article>
+      {/* ↑↑↑ テーブルここまで ↑↑↑ */}
     </main>
   );
 }
