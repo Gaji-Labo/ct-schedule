@@ -86,4 +86,19 @@ describe("generateRoundRobinPairs", () => {
     expect(memberNames).not.toContain("Bob");
     expect(memberNames).not.toContain("David");
   });
+
+  // ラウンド数の数学的検証
+  test("奇数は(n-1),偶数はnラウンド生成の検証", () => {
+    [3, 4, 5, 6].forEach((participantCount) => {
+      const participants = Array.from({ length: participantCount }, (_, i) => ({
+        id: i + 1,
+        name: `Member${i + 1}`,
+        participate: true,
+      }));
+      const result = generateRoundRobinPairs(participants);
+      expect(result).toHaveLength(
+        participantCount % 2 ? participantCount : participantCount - 1
+      );
+    });
+  });
 });
