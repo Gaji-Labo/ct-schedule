@@ -44,4 +44,22 @@ describe("generateRoundRobinPairs", () => {
       expect(restPairs).toHaveLength(1); // 各ラウンドで1人お休み
     });
   });
+
+  // 基本ケース：4人(偶数)
+  test("参加者4人：3ラウンド、各ラウンド2組のペア", () => {
+    const members = [
+      { id: 1, name: "Alice", participate: true },
+      { id: 2, name: "Bob", participate: true },
+      { id: 3, name: "Charlie", participate: true },
+      { id: 4, name: "David", participate: true },
+    ];
+    const result = generateRoundRobinPairs(members);
+
+    expect(result).toHaveLength(3); // 3ラウンド
+    result.forEach((round) => {
+      expect(round).toHaveLength(2); // 各ラウンドに2組のペア
+      const hasRest = round.some((pair) => pair[1] === null);
+      expect(hasRest).toBe(false); // お休みなし
+    });
+  });
 });
