@@ -109,4 +109,24 @@ describe("generateRoundRobinPairs", () => {
     ];
     expect(generateRoundRobinPairs(members)).toEqual([]);
   });
+
+  test("動的に生成されたペアが重複しない", () => {
+    const members = [
+      { id: 1, name: "Alice", participate: true },
+      { id: 2, name: "Bob", participate: true },
+      { id: 3, name: "Charlie", participate: true },
+      { id: 4, name: "David", participate: true },
+      { id: 5, name: "Eve", participate: true },
+    ];
+    const result = generateRoundRobinPairs(members);
+    const seenPairs = new Set<string>();
+
+    result.forEach((round) => {
+      round.forEach((pair) => {
+        const pairKey = [pair[0].id, pair[1]?.id ?? "null"].sort().join("-"); // [1-3, 2-null]形式でキーを作成
+        expect(seenPairs.has(pairKey)).toBe(false); // pairKeyが既に存在しないことを確認
+        seenPairs.add(pairKey); // pairKeyをセットに追加
+      });
+    });
+  });
 });
