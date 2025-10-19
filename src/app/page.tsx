@@ -1,14 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { getMember } from "@/app/actions";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
-import {
-  eachDayOfInterval,
-  format,
-  isBefore,
-  isMonday,
-  startOfDay,
-} from "date-fns";
-import { ja } from "date-fns/locale";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -66,14 +58,6 @@ const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
 
 export default async function Home() {
   const session = await auth();
-
-  const mondays = eachDayOfInterval({
-    start: new Date("2025-08-01"),
-    end: new Date("2026-12-31"),
-  })
-    .filter((day) => isMonday(day))
-    .map((date) => format(date, "yyyy/M/d(E)", { locale: ja }));
-
   const memberData = await getMember();
 
   // 不参加のメンバーを除外
