@@ -27,4 +27,21 @@ describe("generateRoundRobinPairs", () => {
       { id: 2, name: "Bob", participate: true },
     ]);
   });
+
+  // 基本ケース：3人(奇数)
+  test("参加者3人：3ラウンド、各ラウンドで1人お休み", () => {
+    const members = [
+      { id: 1, name: "Alice", participate: true },
+      { id: 2, name: "Bob", participate: true },
+      { id: 3, name: "Charlie", participate: true },
+    ];
+    const result = generateRoundRobinPairs(members);
+
+    expect(result).toHaveLength(3); // 3ラウンド
+    result.forEach((round) => {
+      expect(round).toHaveLength(2); // 各ラウンドに2組のペア
+      const restPairs = round.filter((pair) => pair[1] === null);
+      expect(restPairs).toHaveLength(1); // 各ラウンドで1人お休み
+    });
+  });
 });
