@@ -11,34 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
-import { generateRoundRobinPairs, Round } from "@/src/utils/member";
-
-type CT = {
-  date: string;
-  round: Round;
-};
-type SCHEDULE = CT[];
-
-// NOTE: type SCHEDULE
-// [
-//   {
-//     date: "2024/1/1(月)",
-//     round: [
-//       [{ name: "A" }, { name: "B" }],
-//       [{ name: "C" }, null],
-//       ...
-//     ],
-//   },
-//   {
-//     date: "2024/1/8(月)",
-//     round: [
-//       [{ name: "A" }, { name: "C" }],
-//       [{ name: "B" }, null],
-//       ...
-//     ],
-//   },
-//   ...
-// ];
+import {
+  generateCTSchedules,
+  generateRoundRobinPairs,
+} from "@/src/utils/member";
 
 const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
   return (
@@ -64,18 +40,7 @@ export default async function Home() {
   const member = memberData.filter((member) => member.participate);
 
   const rounds = generateRoundRobinPairs(memberData);
-
-  // 日付とその日のペアを1つの配列にする
-  function generateCTSchedules(): SCHEDULE {
-    const schedule: SCHEDULE = [];
-    mondays.forEach((monday, mondayIndex) => {
-      if (mondayIndex < rounds.length) {
-        schedule.push({ date: monday, round: rounds[mondayIndex] });
-      }
-    });
-    return schedule;
-  }
-  const ctSchedules = generateCTSchedules();
+  const ctSchedules = generateCTSchedules(rounds);
 
   return (
     <main className="max-w-7xl mx-auto p-10">

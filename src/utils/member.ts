@@ -1,4 +1,5 @@
 import { Member } from "@/app/actions";
+import { mondays } from "@/src/utils/date";
 
 export type Pair = [Member, Member | null];
 export type Round = Pair[];
@@ -43,4 +44,43 @@ export function generateRoundRobinPairs(memberData: Member[]) {
     }
   }
   return rounds;
+}
+
+type CT = {
+  date: string;
+  round: Round;
+};
+type SCHEDULE = CT[];
+
+/**
+ * CTスケジュール全体の配列型
+ * @example
+ * ```typescript
+ * const schedule: SCHEDULE = [
+ *   {
+ *     date: "2024/1/1(月)",
+ *     round: [
+ *       [{ id: 1, name: "Alice", participate: true }, { id: 2, name: "Bob", participate: true }],
+ *       [{ id: 3, name: "Charlie", participate: true }, null], // nullはお休み
+ *     ]
+ *   },
+ *   {
+ *     date: "2024/1/8(月)",
+ *     round: [
+ *       [{ id: 1, name: "Alice", participate: true }, { id: 3, name: "Charlie", participate: true }],
+ *       [{ id: 2, name: "Bob", participate: true }, null],
+ *     ]
+ *   }
+ * ];
+ * ```
+ */
+
+export function generateCTSchedules(rounds: Round[]): SCHEDULE {
+  const schedule: SCHEDULE = [];
+  mondays.forEach((monday, mondayIndex) => {
+    if (mondayIndex < rounds.length) {
+      schedule.push({ date: monday, round: rounds[mondayIndex] });
+    }
+  });
+  return schedule;
 }
