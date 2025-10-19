@@ -62,4 +62,28 @@ describe("generateRoundRobinPairs", () => {
       expect(hasRest).toBe(false); // お休みなし
     });
   });
+
+  // 参加フラグ考慮テスト
+  test("participateフラグでフィルタリング", () => {
+    const members = [
+      { id: 1, name: "Alice", participate: true },
+      { id: 2, name: "Bob", participate: false },
+      { id: 3, name: "Charlie", participate: true },
+      { id: 4, name: "David", participate: false },
+      { id: 5, name: "Eve", participate: true },
+    ];
+    const result = generateRoundRobinPairs(members);
+
+    // 参加者3人（Alice, Charlie, Eve）
+    expect(result).toHaveLength(3);
+
+    // 不参加者（Bob, David）は結果に含まれない
+    const allMembers = result
+      .flat()
+      .flat()
+      .filter((member) => member !== null);
+    const memberNames = allMembers.map((member) => member.name);
+    expect(memberNames).not.toContain("Bob");
+    expect(memberNames).not.toContain("David");
+  });
 });
