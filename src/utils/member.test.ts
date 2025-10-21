@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { generateRoundRobinPairs } from "./member";
+import { generateCTSchedules, generateRoundRobinPairs, Round } from "./member";
 
 describe("generateRoundRobinPairs", () => {
   // 境界値テスト
@@ -128,5 +128,53 @@ describe("generateRoundRobinPairs", () => {
         seenPairs.add(pairKey); // pairKeyをセットに追加
       });
     });
+  });
+});
+
+describe("generateCTSchedules", () => {
+  test("3ラウンドから3つのスケジュールを生成する", () => {
+    const threePersonRounds: Round[] = [
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 2, name: "Bob", participate: true },
+        ],
+        [{ id: 3, name: "Charlie", participate: true }, null],
+      ],
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 3, name: "Charlie", participate: true },
+        ],
+        [{ id: 2, name: "Bob", participate: true }, null],
+      ],
+      [
+        [
+          { id: 2, name: "Bob", participate: true },
+          { id: 3, name: "Charlie", participate: true },
+        ],
+        [{ id: 1, name: "Alice", participate: true }, null],
+      ],
+    ];
+    const expectedThreeSchedules = [
+      { date: "2025/8/4(月)", round: threePersonRounds[0] },
+      { date: "2025/8/11(月)", round: threePersonRounds[1] },
+      { date: "2025/8/18(月)", round: threePersonRounds[2] },
+    ];
+    const result = generateCTSchedules(threePersonRounds);
+
+    // 生成されたスケジュールの数が正しいか
+    expect(result).toHaveLength(3);
+
+    // 持っているプロパティが正しいか
+    result.forEach((schedule) => {
+      expect(schedule).toHaveProperty("date");
+      expect(schedule).toHaveProperty("round");
+      expect(typeof schedule.date).toBe("string");
+      expect(Array.isArray(schedule.round)).toBe(true);
+    });
+
+    // スケジュール内容が正しい形式か
+    expect(result).toEqual(expectedThreeSchedules);
   });
 });
