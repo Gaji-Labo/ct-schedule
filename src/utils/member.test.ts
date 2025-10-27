@@ -177,4 +177,23 @@ describe("generateCTSchedules", () => {
     // スケジュール内容が正しい形式か
     expect(result).toEqual(expectedThreeSchedules);
   });
+
+  test("空のrounds配列：空のスケジュール配列を返す", () => {
+    const result = generateCTSchedules([]);
+    expect(result).toEqual([]);
+  });
+
+  test("1ラウンドのみ：1つのスケジュールを生成", () => {
+    const rounds: Round[] = [
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 2, name: "Bob", participate: true },
+        ],
+      ],
+    ];
+    const result = generateCTSchedules(rounds);
+
+    expect(result).toHaveLength(1);
+  });
 });
