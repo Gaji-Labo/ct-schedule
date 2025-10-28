@@ -209,4 +209,34 @@ describe("generateCTSchedules", () => {
     const result = generateCTSchedules(manyRounds);
     expect(result).toHaveLength(mondays.length);
   });
+
+  test("連続する月曜日が正しい順序で割り当てられる", () => {
+    const rounds: Round[] = [
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 2, name: "Bob", participate: true },
+        ],
+        [{ id: 3, name: "Charlie", participate: true }, null],
+      ],
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 3, name: "Charlie", participate: true },
+        ],
+        [{ id: 2, name: "Bob", participate: true }, null],
+      ],
+      [
+        [
+          { id: 2, name: "Bob", participate: true },
+          { id: 3, name: "Charlie", participate: true },
+        ],
+        [{ id: 1, name: "Alice", participate: true }, null],
+      ],
+    ];
+    const result = generateCTSchedules(rounds);
+    expect(result[0].date).toBe(mondays[0]);
+    expect(result[1].date).toBe(mondays[1]);
+    expect(result[2].date).toBe(mondays[2]);
+  });
 });
