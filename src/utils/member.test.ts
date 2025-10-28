@@ -3,7 +3,6 @@ import { generateCTSchedules, generateRoundRobinPairs, Round } from "./member";
 import { mondays } from "@/src/utils/date";
 
 describe("generateRoundRobinPairs", () => {
-  // 境界値テスト
   test("参加者0人：空配列を返す", () => {
     expect(generateRoundRobinPairs([])).toEqual([]);
   });
@@ -12,7 +11,6 @@ describe("generateRoundRobinPairs", () => {
     expect(generateRoundRobinPairs(members)).toEqual([]);
   });
 
-  // 基本ケース：2人
   test("参加者2人：1ラウンドの1組ペア", () => {
     const members = [
       { id: 1, name: "Alice", participate: true },
@@ -29,7 +27,6 @@ describe("generateRoundRobinPairs", () => {
     ]);
   });
 
-  // 基本ケース：3人(奇数)
   test("参加者3人：3ラウンド、各ラウンドで1人お休み", () => {
     const members = [
       { id: 1, name: "Alice", participate: true },
@@ -46,7 +43,6 @@ describe("generateRoundRobinPairs", () => {
     });
   });
 
-  // 基本ケース：4人(偶数)
   test("参加者4人：3ラウンド、各ラウンド2組のペア", () => {
     const members = [
       { id: 1, name: "Alice", participate: true },
@@ -64,7 +60,6 @@ describe("generateRoundRobinPairs", () => {
     });
   });
 
-  // 参加フラグ考慮テスト
   test("participateフラグでフィルタリング", () => {
     const members = [
       { id: 1, name: "Alice", participate: true },
@@ -88,7 +83,6 @@ describe("generateRoundRobinPairs", () => {
     expect(memberNames).not.toContain("David");
   });
 
-  // ラウンド数の数学的検証
   test("奇数は(n-1),偶数はnラウンド生成の検証", () => {
     [3, 4, 5, 6].forEach((participantCount) => {
       const participants = Array.from({ length: participantCount }, (_, i) => ({
