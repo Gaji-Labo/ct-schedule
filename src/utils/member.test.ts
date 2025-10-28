@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { generateCTSchedules, generateRoundRobinPairs, Round } from "./member";
+import { mondays } from "@/src/utils/date";
 
 describe("generateRoundRobinPairs", () => {
   // 境界値テスト
@@ -195,5 +196,17 @@ describe("generateCTSchedules", () => {
     const result = generateCTSchedules(rounds);
 
     expect(result).toHaveLength(1);
+  });
+
+  test("roundsがmondaysより多い場合：mondaysの範囲内でスケジュール生成", () => {
+    const round = [
+      [
+        { id: 1, name: "Alice", participate: true },
+        { id: 2, name: "Bob", participate: true },
+      ],
+    ];
+    const manyRounds: Round[] = Array(100).fill(round);
+    const result = generateCTSchedules(manyRounds);
+    expect(result).toHaveLength(mondays.length);
   });
 });
