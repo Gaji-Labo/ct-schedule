@@ -50,13 +50,13 @@ type CT = {
   date: string;
   round: Round;
 };
-type SCHEDULE = CT[];
+type Schedule = CT[];
 
 /**
  * CTスケジュール全体の配列型
  * @example
  * ```typescript
- * const schedule: SCHEDULE = [
+ * const schedule: Schedule = [
  *   {
  *     date: "2024/1/1(月)",
  *     round: [
@@ -75,8 +75,8 @@ type SCHEDULE = CT[];
  * ```
  */
 
-export function generateCTSchedules(rounds: Round[]): SCHEDULE {
-  const schedule: SCHEDULE = [];
+export function generateCTSchedules(rounds: Round[]): Schedule {
+  const schedule: Schedule = [];
   mondays.forEach((monday, mondayIndex) => {
     if (mondayIndex < rounds.length) {
       schedule.push({ date: monday, round: rounds[mondayIndex] });
