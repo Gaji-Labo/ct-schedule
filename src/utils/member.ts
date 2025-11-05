@@ -1,7 +1,7 @@
 import { Member } from "@/app/actions";
 import { mondays } from "@/src/utils/date";
 
-export type Pair = [Member, Member | null];
+type Pair = [Member, Member | null];
 export type Round = Pair[];
 
 // ペアの生成
