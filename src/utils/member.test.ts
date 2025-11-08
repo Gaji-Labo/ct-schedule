@@ -61,6 +61,7 @@ describe("generateRoundRobinPairs", () => {
   });
 
   test("participateフラグでフィルタリング", () => {
+    // 参加者3人（Alice, Charlie, Eve）不参加者2人（Bob, David）
     const members = [
       { id: 1, name: "Alice", participate: true },
       { id: 2, name: "Bob", participate: false },
@@ -68,19 +69,33 @@ describe("generateRoundRobinPairs", () => {
       { id: 4, name: "David", participate: false },
       { id: 5, name: "Eve", participate: true },
     ];
+    const rounds: Round[] = [
+      [
+        [{ id: 1, name: "Alice", participate: true }, null],
+        [
+          { id: 3, name: "Charlie", participate: true },
+          { id: 5, name: "Eve", participate: true },
+        ],
+      ],
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 3, name: "Charlie", participate: true },
+        ],
+        [{ id: 5, name: "Eve", participate: true }, null],
+      ],
+      [
+        [
+          { id: 1, name: "Alice", participate: true },
+          { id: 5, name: "Eve", participate: true },
+        ],
+        [{ id: 3, name: "Charlie", participate: true }, null],
+      ],
+    ];
     const result = generateRoundRobinPairs(members);
 
-    // 参加者3人（Alice, Charlie, Eve）
     expect(result).toHaveLength(3);
-
-    // 不参加者（Bob, David）は結果に含まれない
-    const allMembers = result
-      .flat()
-      .flat()
-      .filter((member) => member !== null);
-    const memberNames = allMembers.map((member) => member.name);
-    expect(memberNames).not.toContain("Bob");
-    expect(memberNames).not.toContain("David");
+    expect(result).toEqual(rounds);
   });
 
   test("奇数は(n-1),偶数はnラウンド生成の検証", () => {
