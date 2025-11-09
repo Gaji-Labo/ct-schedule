@@ -47,7 +47,7 @@ export function generateRoundRobinPairs(memberData: Member[]) {
   for (let round = 0; round < totalMembers - 1; round++) {
     const roundPairs = createRoundPairs(members);
     rounds.push(roundPairs);
-    
+
     if (totalMembers > 2) {
       rotateMembers(members);
     }
@@ -85,11 +85,8 @@ type Schedule = CT[];
  */
 
 export function generateCTSchedules(rounds: Round[]): Schedule {
-  const schedule: Schedule = [];
-  mondays.forEach((monday, mondayIndex) => {
-    if (mondayIndex < rounds.length) {
-      schedule.push({ date: monday, round: rounds[mondayIndex] });
-    }
-  });
-  return schedule;
+  return mondays.slice(0, rounds.length).map((monday, mondayIndex) => ({
+    date: monday,
+    round: rounds[mondayIndex],
+  }));
 }
