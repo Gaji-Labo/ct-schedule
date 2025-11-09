@@ -4,6 +4,15 @@ import { mondays } from "@/src/utils/date";
 type Pair = [Member, Member | null];
 export type Round = Pair[];
 
+// 1人目は固定、2人目以降のメンバーを循環させて重複しない組み合わせを作る
+function rotateMembers(members: (Member | null)[]): void {
+  const temp = members[1]; // 2人目を保存
+  for (let i = 1; i < members.length - 1; i++) {
+    members[i] = members[i + 1]; // メンバーを一つ前にシフト
+  }
+  members[members.length - 1] = temp; // 保存した2人目を配列の最後に移動
+}
+
 // ペアの生成
 export function generateRoundRobinPairs(memberData: Member[]) {
   // 不参加のメンバーを除外
@@ -35,12 +44,7 @@ export function generateRoundRobinPairs(memberData: Member[]) {
     rounds.push(roundPairs);
 
     if (totalMembers > 2) {
-      // 1人目は固定、2人目以降のメンバーを循環させて重複しない組み合わせを作る
-      const temp = members[1]; // 2人目を保存
-      for (let i = 1; i < totalMembers - 1; i++) {
-        members[i] = members[i + 1]; // メンバーを一つ前にシフト
-      }
-      members[totalMembers - 1] = temp; // 保存した2人目を配列の最後に移動
+      rotateMembers(members);
     }
   }
   return rounds;
