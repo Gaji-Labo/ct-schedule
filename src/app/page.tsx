@@ -1,14 +1,6 @@
 import { auth, signOut } from "@/auth";
 import { getMember } from "@/app/actions";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
-import {
-  eachDayOfInterval,
-  format,
-  isBefore,
-  isMonday,
-  startOfDay,
-} from "date-fns";
-import { ja } from "date-fns/locale";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -19,35 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
-import { generateRoundRobinPairs, Round } from "@/src/utils/member";
 import { Badge } from "@/components/ui/badge";
-
-type CT = {
-  date: string;
-  round: Round;
-};
-type SCHEDULE = CT[];
-
-// NOTE: type SCHEDULE
-// [
-//   {
-//     date: "2024/1/1(月)",
-//     round: [
-//       [{ name: "A" }, { name: "B" }],
-//       [{ name: "C" }, null],
-//       ...
-//     ],
-//   },
-//   {
-//     date: "2024/1/8(月)",
-//     round: [
-//       [{ name: "A" }, { name: "C" }],
-//       [{ name: "B" }, null],
-//       ...
-//     ],
-//   },
-//   ...
-// ];
+import {
+  generateCTSchedules,
+  generateRoundRobinPairs,
+} from "@/src/utils/member";
+import { mondays } from "@/src/utils/date";
+import { isBefore, startOfDay } from "date-fns";
 
 const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
   return (
@@ -67,32 +37,14 @@ const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
 
 export default async function Home() {
   const session = await auth();
-
-  const mondays = eachDayOfInterval({
-    start: new Date("2025-08-01"),
-    end: new Date("2026-12-31"),
-  })
-    .filter((day) => isMonday(day))
-    .map((date) => format(date, "yyyy/M/d(E)", { locale: ja }));
-
   const memberData = await getMember();
 
   // 不参加のメンバーを除外
+  // TODO: generateRoundRobinPairsのレビューが通ったら削除する
   const member = memberData.filter((member) => member.participate);
 
   const rounds = generateRoundRobinPairs(memberData);
-
-  // 日付とその日のペアを1つの配列にする
-  function generateCTSchedules(): SCHEDULE {
-    const schedule: SCHEDULE = [];
-    mondays.forEach((monday, mondayIndex) => {
-      if (mondayIndex < rounds.length) {
-        schedule.push({ date: monday, round: rounds[mondayIndex] });
-      }
-    });
-    return schedule;
-  }
-  const ctSchedules = generateCTSchedules();
+  const ctSchedules = generateCTSchedules(rounds);
 
   return (
     <main className="max-w-7xl mx-auto p-10">
@@ -190,6 +142,7 @@ export default async function Home() {
           ))}
         </div>
       </div>
+      {/* ↓↓↓ TODO: テーブルはgenerateRoundRobinPairsのレビューが通ったら削除する ↓↓↓ */}
       <article className="flex gap-5 mt-10">
         <aside>
           <ol>
@@ -243,6 +196,7 @@ export default async function Home() {
           </table>
         </div>
       </article>
+      {/* ↑↑↑ テーブルここまで ↑↑↑ */}
     </main>
   );
 }
