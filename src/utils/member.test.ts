@@ -214,7 +214,7 @@ describe("generateCTSchedules", () => {
         { id: 2, name: "Bob", participate: true },
       ],
     ];
-    const manyRounds: Round[] = Array(100).fill(round);
+    const manyRounds: Round[] = Array(300).fill(round);
     const result = generateCTSchedules(manyRounds);
     expect(result).toHaveLength(mondays.length);
   });
