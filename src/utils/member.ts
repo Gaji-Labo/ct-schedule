@@ -1,5 +1,5 @@
 import { Member } from "@/app/actions";
-import { mondays } from "@/src/utils/date";
+import { futureMondaysFromToday } from "@/src/utils/date";
 
 type Pair = [Member, Member | null];
 export type Round = Pair[];
@@ -84,9 +84,13 @@ type Schedule = CT[];
  * ```
  */
 
-export function generateCTSchedules(rounds: Round[]): Schedule {
-  return mondays.slice(0, rounds.length).map((monday, mondayIndex) => ({
-    date: monday,
-    round: rounds[mondayIndex],
+export function generateCTSchedules(
+  rounds: Round[],
+  dateList: string[] = futureMondaysFromToday
+): Schedule {
+  // 組み合わせをdateList.lengthの数に制限する
+  return rounds.slice(0, dateList.length).map((round, index) => ({
+    date: dateList[index],
+    round,
   }));
 }
