@@ -1,4 +1,13 @@
-import { addYears, eachDayOfInterval, format, isMonday } from "date-fns";
+import {
+  addYears,
+  eachDayOfInterval,
+  format,
+  isBefore,
+  isMonday,
+  nextMonday,
+  parse,
+  startOfDay,
+} from "date-fns";
 import { ja } from "date-fns/locale";
 
 // プロジェクト開始日（固定基準日）
@@ -14,4 +23,17 @@ function generateAllWorkingMondays(startDate: Date): string[] {
     .map((date) => format(date, "yyyy/M/d(E)", { locale: ja }));
 }
 
+function filterFromToday(mondays: string[]): string[] {
+  const today = startOfDay(new Date());
+  const startMonday = isMonday(today) ? today : nextMonday(today);
+
+  return mondays.filter((monday) => {
+    // 文字列("2025/10/10(月)")とDateを比較するとフィルタリングが動作しない可能性があるため(月)をパースする
+    const dateString = monday.replace(/\([^)]*\)/, "");
+    const date = parse(dateString, "yyyy/M/d", new Date());
+    return !isBefore(date, startMonday);
+  });
+}
+
 export const mondays = generateAllWorkingMondays(PROJECT_START_DATE);
+export const futureMondaysFromToday = filterFromToday(mondays);
