@@ -1,5 +1,12 @@
-import { filterFromToday } from "@/src/utils/date";
+import { filterFromToday, mondays } from "@/src/utils/date";
+import { isMonday } from "date-fns";
 import { describe, expect, test } from "vitest";
+
+describe("generateAllWorkingMondays", () => {
+  test("配列の中身が全て月曜日である", () => {
+    mondays.map((date) => expect(isMonday(date)).toBe(true));
+  });
+});
 
 describe("filterFromToday", () => {
   test("実施日の出力：今日が月曜なら当日、月曜以外なら次の月曜", () => {
