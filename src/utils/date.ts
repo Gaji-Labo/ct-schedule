@@ -23,8 +23,11 @@ function generateAllWorkingMondays(startDate: Date): string[] {
     .map((date) => format(date, "yyyy/M/d(E)", { locale: ja }));
 }
 
-export function filterFromToday(mondays: string[]): string[] {
- const today = startOfDay(new Date());
+export function filterFromToday(
+  mondays: string[],
+  baseDate: Date = new Date()
+): string[] {
+  const today = startOfDay(baseDate);
   const startMonday = isMonday(today) ? today : nextMonday(today);
 
   return mondays.filter((monday) => {
