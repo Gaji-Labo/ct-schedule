@@ -1,5 +1,5 @@
 import { Member } from "@/app/actions";
-import { futureMondaysFromToday } from "@/src/utils/date";
+import { filterFromToday, mondays } from "@/src/utils/date";
 
 type Pair = [Member, Member | null];
 export type Round = Pair[];
@@ -83,6 +83,8 @@ type Schedule = CT[];
  * ];
  * ```
  */
+
+const futureMondaysFromToday = filterFromToday(mondays);
 
 export function generateCTSchedules(
   rounds: Round[],
