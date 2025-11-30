@@ -142,6 +142,7 @@ describe("generateRoundRobinPairs", () => {
 });
 
 describe("generateCTSchedules", () => {
+  const testData = ["2025/8/4(月)", "2025/8/11(月)", "2025/8/18(月)"];
   test("3ラウンドから3つのスケジュールを生成する", () => {
     const threePersonRounds: Round[] = [
       [
@@ -171,7 +172,7 @@ describe("generateCTSchedules", () => {
       { date: "2025/8/11(月)", round: threePersonRounds[1] },
       { date: "2025/8/18(月)", round: threePersonRounds[2] },
     ];
-    const result = generateCTSchedules(threePersonRounds);
+    const result = generateCTSchedules(threePersonRounds, testData);
 
     // 生成されたスケジュールの数が正しいか
     expect(result).toHaveLength(3);
@@ -202,7 +203,7 @@ describe("generateCTSchedules", () => {
         ],
       ],
     ];
-    const result = generateCTSchedules(rounds);
+    const result = generateCTSchedules(rounds, testData);
 
     expect(result).toHaveLength(1);
   });
@@ -214,9 +215,9 @@ describe("generateCTSchedules", () => {
         { id: 2, name: "Bob", participate: true },
       ],
     ];
-    const manyRounds: Round[] = Array(100).fill(round);
-    const result = generateCTSchedules(manyRounds);
-    expect(result).toHaveLength(mondays.length);
+    const manyRounds: Round[] = Array(300).fill(round);
+    const result = generateCTSchedules(manyRounds, testData);
+    expect(result).toHaveLength(testData.length);
   });
 
   test("連続する月曜日が正しい順序で割り当てられる", () => {
@@ -243,7 +244,7 @@ describe("generateCTSchedules", () => {
         [{ id: 1, name: "Alice", participate: true }, null],
       ],
     ];
-    const result = generateCTSchedules(rounds);
+    const result = generateCTSchedules(rounds, testData);
     expect(result[0].date).toBe(mondays[0]);
     expect(result[1].date).toBe(mondays[1]);
     expect(result[2].date).toBe(mondays[2]);
