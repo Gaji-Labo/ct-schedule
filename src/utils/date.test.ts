@@ -1,6 +1,20 @@
 import { filterFromToday, mondays } from "@/src/utils/date";
-import { isMonday } from "date-fns";
+import { isMonday, parse } from "date-fns";
 import { describe, expect, test } from "vitest";
+
+test("日付リストが十分な期間をカバーしている（残り3年以上）", () => {
+  const lastDateString = mondays[mondays.length - 1];
+  const parseDateString = lastDateString.replace(/\([^)]*\)/, "");
+  const lastDate = parse(parseDateString, "yyyy/M/d", new Date());
+
+  // 日付をミリ秒に変換して最終日と今日の差を計算
+  // (1000 * 60 * 60 * 24 * 365.25): 1年をミリ秒で計算する（1秒 * 1分 * 1時間 * 1日 * 1年）
+  const yearsLeft =
+    (lastDate.getTime() - new Date().getTime()) /
+    (1000 * 60 * 60 * 24 * 365.25);
+
+  expect(yearsLeft).toBeGreaterThan(3);
+});
 
 describe("generateAllWorkingMondays", () => {
   test("配列の中身が全て月曜日である", () => {
