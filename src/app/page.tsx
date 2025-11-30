@@ -16,24 +16,6 @@ import {
   generateCTSchedules,
   generateRoundRobinPairs,
 } from "@/src/utils/member";
-import { mondays } from "@/src/utils/date";
-import { isBefore, startOfDay } from "date-fns";
-
-const MemberCell = ({ name, row }: { name: string; row?: boolean }) => {
-  return (
-    <th
-      className={`border-r text-sm p-1 font-normal bg-gray-100 ${
-        row && "sticky top-0 left-0"
-      }`}
-    >
-      <div className="w-[100px]">
-        <span className="block text-xs text-gray-700 leading-none font-bold break-words">
-          {name}
-        </span>
-      </div>
-    </th>
-  );
-};
 
 export default async function Home() {
   const session = await auth();
@@ -91,14 +73,6 @@ export default async function Home() {
               {member.length}人
             </Link>
           </p>
-          <p className="mt-4 text-sm">グレーアウトしたマスの扱いについて</p>
-          <p className="text-gray-500 text-sm">
-            ・参加人数が奇数： グレーアウトしたマスはお休み
-          </p>
-          <p className="text-gray-500 text-sm">
-            ・参加人数が偶数：
-            自分がグレーアウトしたマスの場合、同じくグレーかつ数字が同じメンバーとペアになる
-          </p>
         </section>
       </div>
       <div className="overflow-x-auto mt-10">
@@ -106,9 +80,7 @@ export default async function Home() {
           {ctSchedules.map((schedule) => (
             <div
               key={schedule.date}
-              className={`border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px] ${
-                isBefore(schedule.date, startOfDay(new Date())) && "opacity-40"
-              }`}
+              className="border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px]"
             >
               <h2 className="text-lg font-semibold mb-4 text-center">
                 <time dateTime={schedule.date}>{schedule.date}</time>
@@ -142,61 +114,6 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      {/* ↓↓↓ TODO: テーブルはgenerateRoundRobinPairsのレビューが通ったら削除する ↓↓↓ */}
-      <article className="flex gap-5 mt-10">
-        <aside>
-          <ol>
-            {mondays.map(
-              (monday, index) =>
-                index < member.length && (
-                  <li
-                    key={monday}
-                    className={
-                      // mondayが今日以前であればグレーアウト
-                      isBefore(monday, startOfDay(new Date()))
-                        ? "bg-gray-300"
-                        : ""
-                    }
-                  >
-                    <span>{index % member.length}:</span>
-                    <time dateTime={monday}>{monday}</time>
-                  </li>
-                )
-            )}
-          </ol>
-        </aside>
-        <div className="border-t border-l overflow-scroll">
-          <table className="h-full">
-            <tbody>
-              {/* "": 左上の空マス */}
-              {[{ name: "" }, ...member].map((colMember, rowIndex) => (
-                <tr key={`tr-${rowIndex}`} className="border-b">
-                  <MemberCell name={colMember.name} row />
-                  {member.map((rowMember, colIndex) =>
-                    rowIndex === 0 ? (
-                      <MemberCell
-                        name={rowMember.name}
-                        key={`cell-th-${colIndex}`}
-                      />
-                    ) : (
-                      <td
-                        key={`cell-${colIndex}`}
-                        className={`border-r text-center text-gray-500 ${
-                          rowIndex - 1 === colIndex && "bg-gray-100"
-                        }`}
-                      >
-                        {/* rowIndexは空マス分要素数が1つ多いため-1をしている */}
-                        {(colIndex + rowIndex - 1) % member.length}
-                      </td>
-                    )
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </article>
-      {/* ↑↑↑ テーブルここまで ↑↑↑ */}
     </main>
   );
 }
