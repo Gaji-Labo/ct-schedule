@@ -21,10 +21,6 @@ export default async function Home() {
   const session = await auth();
   const memberData = await getMember();
 
-  // 不参加のメンバーを除外
-  // TODO: generateRoundRobinPairsのレビューが通ったら削除する
-  const member = memberData.filter((member) => member.participate);
-
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds);
 
@@ -70,7 +66,7 @@ export default async function Home() {
           <p>
             現在の参加者：
             <Link href="/member" className="underline">
-              {member.length}人
+              {ctSchedules.length}人
             </Link>
           </p>
         </section>
