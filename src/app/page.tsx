@@ -66,7 +66,7 @@ export default async function Home() {
           <p>
             現在の参加者：
             <Link href="/member" className="underline">
-              {ctSchedules.length}人
+              {memberData.length}人
             </Link>
           </p>
         </section>
