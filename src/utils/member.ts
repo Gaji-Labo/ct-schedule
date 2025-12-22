@@ -1,5 +1,6 @@
 import { Member } from "@/app/actions";
-import { filterFromToday, mondays } from "@/src/utils/date";
+import { filterFromToday, mondays, PROJECT_START_DATE } from "@/src/utils/date";
+import { parse } from "date-fns";
 
 type Pair = [Member, Member | null];
 export type Round = Pair[];
@@ -90,9 +91,22 @@ export function generateCTSchedules(
   rounds: Round[],
   dateList: string[] = futureMondaysFromToday
 ): Schedule {
-  // 組み合わせをdateList.lengthの数に制限する
-  return rounds.slice(0, dateList.length).map((round, index) => ({
-    date: dateList[index],
-    round,
-  }));
+  if (rounds.length === 0) return [];
+
+  // 基準日からの週数を計算
+  const startDate = PROJECT_START_DATE;
+  const firstMondayString = dateList[0].replace(/\([^)]*\)/, "");
+  const firstMonday = parse(firstMondayString, "yyyy/M/d", new Date());
+  const weekOffset = Math.floor(
+    (firstMonday.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+  );
+
+  // オフセット分ラウンドをずらす
+  return dateList.map((date, index) => {
+    const roundIndex = (weekOffset + index) % rounds.length;
+    return {
+      date,
+      round: rounds[roundIndex],
+    };
+  });
 }
