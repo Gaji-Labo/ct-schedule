@@ -12,7 +12,7 @@ import { ja } from "date-fns/locale";
 
 // プロジェクト開始日（固定基準日）
 // NOTE: ペア整合性維持のため、この日付は変更しないこと
-const PROJECT_START_DATE = new Date("2025-08-04");
+export const PROJECT_START_DATE = new Date("2025-08-04");
 
 function generateAllWorkingMondays(startDate: Date): string[] {
   const endDate = addYears(startDate, 5);
