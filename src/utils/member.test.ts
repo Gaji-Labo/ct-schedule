@@ -194,7 +194,7 @@ describe("generateCTSchedules", () => {
     expect(result).toEqual([]);
   });
 
-  test("1ラウンドのみ：1つのスケジュールを生成", () => {
+  test("1ラウンドのみ：dateListの数だけスケジュールを生成（同じラウンドが繰り返される）", () => {
     const rounds: Round[] = [
       [
         [
@@ -205,7 +205,11 @@ describe("generateCTSchedules", () => {
     ];
     const result = generateCTSchedules(rounds, testData);
 
-    expect(result).toHaveLength(1);
+    expect(result).toHaveLength(testData.length); // dateListの長さ分生成される
+    // 全て同じラウンドが繰り返される
+    result.forEach((schedule) => {
+      expect(schedule.round).toEqual(rounds[0]);
+    });
   });
 
   test("roundsがmondaysより多い場合：mondaysの範囲内でスケジュール生成", () => {

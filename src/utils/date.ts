@@ -8,6 +8,7 @@ import {
   parse,
   startOfDay,
 } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { ja } from "date-fns/locale";
 
 // プロジェクト開始日（固定基準日）
@@ -24,9 +25,16 @@ function generateAllWorkingMondays(startDate: Date): string[] {
     .map((date) => format(date, "yyyy/M/d(E)", { locale: ja }));
 }
 
+// タイムゾーンをどの環境でもTokyoにする
+const TIMEZONE = "Asia/Tokyo";
+
+export function getJSTNow(): Date {
+  return toZonedTime(new Date(), TIMEZONE);
+}
+
 export function filterFromToday(
   mondays: string[],
-  baseDate: Date = new Date()
+  baseDate: Date = getJSTNow()
 ): string[] {
   const today = startOfDay(baseDate);
   const startMonday = isMonday(today) ? today : nextMonday(today);
