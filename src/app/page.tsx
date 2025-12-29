@@ -1,5 +1,5 @@
 import { auth, signOut } from "@/auth";
-import { getMember } from "@/app/actions";
+import { getMember, getUserBySlackId } from "@/app/actions";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import Link from "next/link";
 import {
@@ -20,6 +20,9 @@ import {
 export default async function Home() {
   const session = await auth();
   const memberData = await getMember();
+  const user = session?.user?.slack_user_id
+    ? await getUserBySlackId(session.user.slack_user_id)
+    : null;
 
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds);
