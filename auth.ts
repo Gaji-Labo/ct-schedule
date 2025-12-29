@@ -31,5 +31,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       });
       return true;
     },
+    async jwt({ token, account, profile }) {
+      if (token && account) {
+        token.slack_user_id = profile?.sub;
+      }
+      return token;
+    },
+    async session({ token, session }) {
+      session.user.slack_user_id = token.slack_user_id as string;
+      return session;
+    },
   },
 });
