@@ -73,18 +73,18 @@ export async function getUserBySlackId(
 }
 
 export async function setEmployeeNumber(
-  userId: number,
+  slackUserId: string,
   employeeNumber: number
 ): Promise<User> {
   const result = await sql`
     UPDATE users
     SET employee_number = ${employeeNumber}, updated_at = NOW()
-    WHERE id = ${userId}
+    WHERE slack_user_id = ${slackUserId}
     RETURNING *;
   `;
 
   if (!result[0]) {
-    throw new Error(`User not found: ${userId}`);
+    throw new Error(`User not found: ${slackUserId}`);
   }
 
   return result[0] as User;
