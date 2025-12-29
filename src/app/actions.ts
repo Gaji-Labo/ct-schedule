@@ -57,6 +57,21 @@ export async function upsertUserFromSlack(slackUser: {
   return result[0] as User;
 }
 
+export async function getUserBySlackId(
+  slackUserId: string
+): Promise<User | null> {
+  const result = await sql`
+    SELECT * FROM public.users
+    WHERE slack_user_id = ${slackUserId}
+  `;
+
+  if (!result[0]) {
+    return null;
+  }
+
+  return result[0] as User;
+}
+
 export async function setEmployeeNumber(
   userId: number,
   employeeNumber: number
