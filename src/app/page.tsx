@@ -1,7 +1,9 @@
+import { getMember, getUserBySlackId } from "@/app/actions";
 import { auth, signOut } from "@/auth";
-import { getMember } from "@/app/actions";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
-import Link from "next/link";
+import { CTScheduleCard } from "@/components/CTScheduleCard";
+import { EmployeeNumberDialog } from "@/components/EmployeeNumberDialog";
+import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,16 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
-import { Badge } from "@/components/ui/badge";
 import {
   generateCTSchedules,
   generateRoundRobinPairs,
 } from "@/src/utils/member";
+import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
   const memberData = await getMember();
+  const user = session?.user?.slack_user_id
+    ? await getUserBySlackId(session.user.slack_user_id)
+    : null;
 
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds);
@@ -62,6 +66,9 @@ export default async function Home() {
             <SigninWithSlackButton />
           )}
         </div>
+        {user && !user.employee_number && (
+          <EmployeeNumberDialog userId={user.slack_user_id} />
+        )}
         <section>
           <p>
             現在の参加者：
@@ -74,41 +81,11 @@ export default async function Home() {
       <div className="overflow-x-auto mt-10">
         <div className="flex gap-4 pb-4 max-w-max">
           {ctSchedules.map((schedule, index) => (
-            <div
+            <CTScheduleCard
+              schedule={schedule}
+              index={index}
               key={schedule.date}
-              className={`border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px] ${
-                index === 0 && "border-2 border-gray-400"
-              }`}
-            >
-              <h2 className="text-lg font-semibold mb-4 text-center">
-                <time dateTime={schedule.date}>{schedule.date}</time>
-              </h2>
-              <div className="flex flex-col gap-2">
-                {schedule.round.map((pair, pairIndex) => (
-                  <div
-                    key={pairIndex}
-                    className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
-                  >
-                    <span className="text-gray-400 text-xs">
-                      {pairIndex + 1}
-                    </span>
-                    <span className="font-medium text-sm">{pair[0].name}</span>
-                    {pair[1] ? (
-                      <>
-                        <span className="text-gray-400 text-xs">×</span>
-                        <span className="font-medium text-sm">
-                          {pair[1].name}
-                        </span>
-                      </>
-                    ) : (
-                      <Badge className="bg-gray-400 rounded-full shadow-none hover:bg-gray-400">
-                        お休み
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+            />
           ))}
         </div>
       </div>
