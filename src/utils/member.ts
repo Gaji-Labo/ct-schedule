@@ -56,7 +56,7 @@ export function generateRoundRobinPairs(memberData: Member[]) {
   return rounds;
 }
 
-type CT = {
+export type CT = {
   date: string;
   round: Round;
 };
