@@ -16,6 +16,7 @@ import {
   generateCTSchedules,
   generateRoundRobinPairs,
 } from "@/src/utils/member";
+import { EmployeeNumberDialog } from "@/components/EmployeeNumberDialog";
 
 export default async function Home() {
   const session = await auth();
@@ -65,6 +66,7 @@ export default async function Home() {
             <SigninWithSlackButton />
           )}
         </div>
+        {user && !user.employee_number && <EmployeeNumberDialog />}
         <section>
           <p>
             現在の参加者：
