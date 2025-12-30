@@ -1,3 +1,4 @@
+import { upsertUserFromSlack } from "@/app/actions";
 import NextAuth from "next-auth";
 import Slack from "next-auth/providers/slack";
 
@@ -12,7 +13,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ profile }) {
       try {
-        console.log("1. signIn callback started");
         const res = await fetch(
           // ログインしたユーザーのプロフィール情報を取得
           `https://slack.com/api/users.profile.get?user=${profile?.sub}`,
@@ -24,17 +24,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         );
         const data = await res.json();
 
-        console.log("2. Slack API response:", data);
-
-        // await upsertUserFromSlack({
-        //   slack_user_id: profile?.sub as string,
-        //   slack_email: profile?.email as string,
-        //   slack_display_name:
-        //     data.profile.display_name || (profile?.name as string),
-        //   slack_image: profile?.picture,
-        // });
-
-        console.log("3. upsertUserFromSlack completed");
+        await upsertUserFromSlack({
+          slack_user_id: profile?.sub as string,
+          slack_email: profile?.email as string,
+          slack_display_name:
+            data.profile.display_name || (profile?.name as string),
+          slack_image: profile?.picture,
+        });
         return true;
       } catch (error) {
         console.error("signIn callback error:", error);
