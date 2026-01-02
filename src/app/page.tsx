@@ -2,7 +2,7 @@ import { getMember, getUserBySlackId } from "@/app/actions";
 import { auth, signOut } from "@/auth";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
-import { EmployeeNumberDialog } from "@/components/EmployeeNumberDialog";
+import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
 import {
   DropdownMenu,
@@ -66,7 +66,7 @@ export default async function Home() {
             <SigninWithSlackButton />
           )}
         </div>
-        {user && !user.employee_number && <EmployeeNumberDialog user={user} />}
+        {user && !user.employee_number && <SetupDataDialog user={user} />}
         <section>
           <p>
             現在の参加者：

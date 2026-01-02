@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const EmployeeNumberDialog = ({ user }: { user: User }) => {
+export const SetupDataDialog = ({ user }: { user: User }) => {
   const [number, setNumber] = useState("");
   const [name, setName] = useState(user.slack_display_name);
   const [open, setOpen] = useState(true);
