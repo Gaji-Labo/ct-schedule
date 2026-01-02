@@ -76,12 +76,13 @@ export async function setUser(
   slackUserId: string,
   formData: FormData
 ): Promise<User> {
+  const displayName = formData.get("displayName");
   const employeeNumber = formData.get("employeeNumber");
   const participate = formData.get("participate") === "on";
 
   const result = await sql`
     UPDATE users
-    SET employee_number = ${employeeNumber}, participate = ${participate}, updated_at = NOW()
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}, updated_at = NOW()
     WHERE slack_user_id = ${slackUserId}
     RETURNING *;
   `;

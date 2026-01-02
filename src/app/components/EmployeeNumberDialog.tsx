@@ -1,6 +1,6 @@
 "use client";
 
-import { setUser } from "@/app/actions";
+import { setUser, User } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -16,13 +16,14 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
+export const EmployeeNumberDialog = ({ user }: { user: User }) => {
   const [number, setNumber] = useState("");
+  const [name, setName] = useState(user.slack_display_name);
   const [open, setOpen] = useState(true);
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      await setUser(userId, formData);
+      await setUser(user.slack_user_id, formData);
       setOpen(false);
       toast.success("設定が完了しました");
     } catch (error) {
@@ -49,6 +50,18 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-2">
+              <Label htmlFor="displayName">名前</Label>
+              <Input
+                name="displayName"
+                type="text"
+                id="displayName"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                required
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="employeeNumber">社員番号</Label>
               <Input
                 name="employeeNumber"
                 type="number"
