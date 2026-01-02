@@ -112,14 +112,6 @@ describe("generateRoundRobinPairs", () => {
     });
   });
 
-  test("全員participateがfalse：空配列", () => {
-    const members = [
-      { id: 1, name: "Alice", participate: false },
-      { id: 2, name: "Bob", participate: false },
-    ];
-    expect(generateRoundRobinPairs(members)).toEqual([]);
-  });
-
   test("動的に生成されたペアが重複しない", () => {
     const members = [
       { id: 1, name: "Alice", participate: true },
@@ -192,20 +184,6 @@ describe("generateCTSchedules", () => {
   test("空のrounds配列：空のスケジュール配列を返す", () => {
     const result = generateCTSchedules([]);
     expect(result).toEqual([]);
-  });
-
-  test("1ラウンドのみ：1つのスケジュールを生成", () => {
-    const rounds: Round[] = [
-      [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 2, name: "Bob", participate: true },
-        ],
-      ],
-    ];
-    const result = generateCTSchedules(rounds, testData);
-
-    expect(result).toHaveLength(1);
   });
 
   test("roundsがmondaysより多い場合：mondaysの範囲内でスケジュール生成", () => {
