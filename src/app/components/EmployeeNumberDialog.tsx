@@ -1,7 +1,8 @@
 "use client";
 
-import { setEmployeeNumber } from "@/app/actions";
+import { setUser } from "@/app/actions";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -20,8 +22,7 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      const empemployeeNumber = Number(formData.get("employeeNumber"));
-      await setEmployeeNumber(userId, empemployeeNumber);
+      await setUser(userId, formData);
       setOpen(false);
       toast.success("設定が完了しました");
     } catch (error) {
@@ -56,6 +57,10 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
                 onChange={(e) => setNumber(e.target.value)}
                 required
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox name="participate" id="participate" defaultChecked />
+              <Label htmlFor="participate">CTに参加する</Label>
             </div>
           </div>
           <DialogFooter>
