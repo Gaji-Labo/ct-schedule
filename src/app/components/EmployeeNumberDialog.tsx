@@ -23,9 +23,9 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
       const empemployeeNumber = Number(formData.get("employeeNumber"));
       await setEmployeeNumber(userId, empemployeeNumber);
       setOpen(false);
-      toast.success("社員番号を設定しました");
+      toast.success("設定が完了しました");
     } catch (error) {
-      toast.error("社員番号の設定に失敗しました");
+      toast.error("設定に失敗しました");
       console.error("Error updating member:", error);
     }
   };
@@ -41,8 +41,10 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
       <DialogContent className="sm:max-w-[425px]">
         <form action={handleSubmit} className="grid gap-5">
           <DialogHeader>
-            <DialogTitle>社員番号を入力</DialogTitle>
-            <DialogDescription>社員番号を入力してください</DialogDescription>
+            <DialogTitle>設定</DialogTitle>
+            <DialogDescription>
+              CT表の表示に必要な情報を設定してください
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-2">
@@ -58,7 +60,7 @@ export const EmployeeNumberDialog = ({ userId }: { userId: string }) => {
           </div>
           <DialogFooter>
             <Button type="submit" disabled={!number}>
-              決定
+              保存
             </Button>
           </DialogFooter>
         </form>
