@@ -66,9 +66,7 @@ export default async function Home() {
             <SigninWithSlackButton />
           )}
         </div>
-        {user && !user.employee_number && (
-          <EmployeeNumberDialog userId={user.slack_user_id} />
-        )}
+        {user && !user.employee_number && <EmployeeNumberDialog user={user} />}
         <section>
           <p>
             現在の参加者：
