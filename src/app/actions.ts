@@ -94,6 +94,14 @@ export async function setUser(
   return result[0] as User;
 }
 
+export async function getUsers(): Promise<User[]> {
+  const data = await sql`
+    SELECT * FROM public.users
+    ORDER BY employee_number ASC
+  `;
+  return data as User[];
+}
+
 export type Member = {
   id: number;
   name: string;
