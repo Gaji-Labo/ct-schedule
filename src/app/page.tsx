@@ -1,4 +1,4 @@
-import { getMember, getUserBySlackId } from "@/app/actions";
+import { getUsers, getUserBySlackId } from "@/app/actions";
 import { auth, signOut } from "@/auth";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
@@ -20,7 +20,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
-  const memberData = await getMember();
+  const memberData = await getUsers();
   const user = session?.user?.slack_user_id
     ? await getUserBySlackId(session.user.slack_user_id)
     : null;
