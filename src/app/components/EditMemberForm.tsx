@@ -1,6 +1,6 @@
 "use client";
 
-import { Member, updateMember } from "@/app/actions";
+import { updateMember, User } from "@/app/actions";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,7 +16,7 @@ export const EditMemberForm = ({
   member,
   session,
 }: {
-  member: Member;
+  member: User;
   session: Session | null;
 }) => {
   const router = useRouter();
@@ -48,7 +48,7 @@ export const EditMemberForm = ({
         <Input
           name="name"
           id="name"
-          defaultValue={member.name}
+          defaultValue={member.slack_display_name}
           className="w-[300px]"
         />
         <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export const EditMemberForm = ({
   ) : (
     <div className="flex gap-3 items-center justify-between">
       <div key={member.id} className="flex gap-2 items-center">
-        <span className="font-semibold">{member.name}</span>
+        <span className="font-semibold">{member.slack_display_name}</span>
         <div className="flex gap-1 items-center text-sm">
           <div
             className={`${

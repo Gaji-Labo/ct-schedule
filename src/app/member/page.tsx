@@ -1,4 +1,4 @@
-import { getMember } from "@/app/actions";
+import { getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { EditMemberForm } from "@/components/EditMemberForm";
@@ -7,7 +7,7 @@ import { Fragment } from "react";
 
 export default async function Home() {
   const session = await auth();
-  const memberData = await getMember();
+  const memberData = await getUsers();
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
       <div className="flex justify-between items-center gap-10">

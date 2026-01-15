@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteMember, Member } from "@/app/actions";
+import { deleteMember, User } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
-export const DeleteMemberDialog = ({ member }: { member: Member }) => {
+export const DeleteMemberDialog = ({ member }: { member: User }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -45,7 +45,9 @@ export const DeleteMemberDialog = ({ member }: { member: Member }) => {
             <DialogTitle>メンバーを削除</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
-            <div className="grid gap-2">{member.name} を削除しますか？</div>
+            <div className="grid gap-2">
+              {member.slack_display_name} を削除しますか？
+            </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
