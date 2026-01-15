@@ -1,6 +1,6 @@
 "use client";
 
-import { updateMember, User } from "@/app/actions";
+import { updateUser, User } from "@/app/actions";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -25,9 +25,10 @@ export const EditMemberForm = ({
   const handleSubmit = async (formData: FormData) => {
     try {
       const id = Number(formData.get("id"));
-      const name = String(formData.get("name"));
+      const displayName = String(formData.get("displayName"));
       const participate = formData.get("participate") === "on";
-      await updateMember(id, name, participate);
+      const employeeNumber = Number(formData.get("employeeNumber"));
+      await updateUser(id, displayName, employeeNumber, participate);
       setEdit(false);
       toast.success("更新しました");
       router.refresh();
@@ -46,10 +47,16 @@ export const EditMemberForm = ({
       <Input type="hidden" name="id" value={member.id} />
       <div className="flex gap-3 items-center">
         <Input
-          name="name"
-          id="name"
+          name="displayName"
+          id="displayName"
           defaultValue={member.slack_display_name}
           className="w-[300px]"
+        />
+        <Input
+          name="employeeNumber"
+          type="number"
+          id="employeeNumber"
+          defaultValue={member.employee_number}
         />
         <div className="flex items-center gap-2">
           <Checkbox

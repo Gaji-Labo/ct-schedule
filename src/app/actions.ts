@@ -130,15 +130,15 @@ export async function addMember(formData: FormData) {
   return result[0];
 }
 
-// メンバーの編集
-export async function updateMember(
+export async function updateUser(
   id: number,
-  name: string,
+  displayName: string,
+  employeeNumber: number,
   participate: boolean
 ) {
   const result = await sql`
-    UPDATE member
-    SET name = ${name}, participate = ${participate}
+    UPDATE users
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}
     WHERE id = ${id}
     RETURNING *;
   `;
