@@ -1,6 +1,5 @@
 import { getUsers } from "@/app/actions";
 import { auth } from "@/auth";
-import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { EditMemberDialog } from "@/components/EditMemberDialog";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
@@ -12,7 +11,6 @@ export default async function Home() {
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
       <div className="flex justify-between items-center gap-10">
         <h1 className="text-2xl font-bold">メンバー一覧</h1>
-        {session && <AddMemberFormDialog />}
       </div>
       <section className="grid gap-3">
         {memberData.map((member) => (

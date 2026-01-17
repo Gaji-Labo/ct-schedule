@@ -1,6 +1,5 @@
 import { getUsers, getUserBySlackId } from "@/app/actions";
 import { auth, signOut } from "@/auth";
-import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
@@ -35,7 +34,6 @@ export default async function Home() {
           <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
           {session && session.user ? (
             <div className="flex items-center gap-4">
-              <AddMemberFormDialog />
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <img

@@ -102,33 +102,6 @@ export async function getUsers(): Promise<User[]> {
   return data as User[];
 }
 
-export type Member = {
-  id: number;
-  name: string;
-  participate: boolean;
-};
-
-export async function getMember(): Promise<Member[]> {
-  const data = await sql`
-    SELECT * FROM public.member
-    ORDER BY id ASC
-  `;
-  return data as Member[];
-}
-
-// メンバーの追加
-export async function addMember(formData: FormData) {
-  const name = formData.get("name") as string;
-  const participate = formData.get("participate") === "on";
-
-  const result = await sql`
-    INSERT INTO member (name, participate)
-    VALUES (${name}, ${participate})
-    RETURNING *;
-  `;
-
-  return result[0];
-}
 
 export async function updateUser(
   id: number,
