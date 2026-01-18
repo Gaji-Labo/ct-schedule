@@ -1,12 +1,16 @@
-import { getUsers } from "@/app/actions";
+import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { EditMemberDialog } from "@/components/EditMemberDialog";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
 
 export default async function Home() {
-  const session = await auth();
   const memberData = await getUsers();
+  const session = await auth();
+  const user = session?.user?.slack_user_id
+    ? await getUserBySlackId(session.user.slack_user_id)
+    : null;
+
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
       <div className="flex justify-between items-center gap-10">
@@ -38,7 +42,7 @@ export default async function Home() {
                   {member.participate ? "参加" : "不参加"}
                 </div>
               </div>
-              {session && <EditMemberDialog member={member} />}
+              {user && <EditMemberDialog member={member} />}
             </div>
             <Separator />
           </Fragment>
