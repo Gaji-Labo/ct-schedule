@@ -15,8 +15,17 @@ export default async function Home() {
       <section className="grid gap-3">
         {memberData.map((member) => (
           <Fragment key={member.id}>
-            <div className="flex gap-3 items-center justify-between">
+            <div className="flex gap-3 items-center justify-between px-3">
               <div key={member.id} className="flex gap-2 items-center">
+                {member.slack_image && (
+                  <img
+                    src={member.slack_image}
+                    alt={`${member.slack_display_name}のアイコン`}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                )}
                 <span className="font-semibold">
                   {member.slack_display_name}
                 </span>
