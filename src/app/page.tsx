@@ -37,15 +37,17 @@ export default async function Home() {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <img
-                    src={session.user.image || ""}
-                    alt={`${session.user.name}のアイコン画像`}
+                    src={user?.slack_image || session.user.image || ""}
+                    alt={`${user?.slack_display_name}のアイコン画像`}
                     width={40}
                     height={40}
                     className="rounded-full"
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    {user?.slack_display_name}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <form
