@@ -102,7 +102,6 @@ export async function getUsers(): Promise<User[]> {
   return data as User[];
 }
 
-
 export async function updateUser(
   id: number,
   displayName: string,
@@ -119,12 +118,3 @@ export async function updateUser(
   return result[0];
 }
 
-// メンバーの削除
-export async function deleteMember(id: number) {
-  const result = await sql`
-    DELETE FROM member
-    WHERE id = ${id}
-    RETURNING name;
-  `;
-  return result[0]?.name;
-}
