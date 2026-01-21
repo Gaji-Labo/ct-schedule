@@ -1,12 +1,12 @@
-import { Member } from "@/app/actions";
+import { User } from "@/app/actions";
 import { filterFromToday, mondays, PROJECT_START_DATE } from "@/src/utils/date";
 import { parse } from "date-fns";
 
-type Pair = [Member, Member | null];
+type Pair = [User, User | null];
 export type Round = Pair[];
 
 // 二人一組のペアを作成
-function createRoundPairs(members: (Member | null)[]): Pair[] {
+function createRoundPairs(members: (User | null)[]): Pair[] {
   const pairs: Pair[] = [];
 
   for (let i = 0; i < members.length / 2; i++) {
@@ -23,7 +23,7 @@ function createRoundPairs(members: (Member | null)[]): Pair[] {
 }
 
 // 1人目は固定、2人目以降のメンバーを循環させて重複しない組み合わせを作る
-function rotateMembers(members: (Member | null)[]): void {
+function rotateMembers(members: (User | null)[]): void {
   const temp = members[1]; // 2人目を保存
   for (let i = 1; i < members.length - 1; i++) {
     members[i] = members[i + 1]; // メンバーを一つ前にシフト
@@ -32,7 +32,7 @@ function rotateMembers(members: (Member | null)[]): void {
 }
 
 // ペアの生成
-export function generateRoundRobinPairs(memberData: Member[]) {
+export function generateRoundRobinPairs(memberData: User[]) {
   // 不参加のメンバーを除外
   const participants = memberData.filter((member) => member.participate);
   if (participants.length < 2) {

@@ -1,6 +1,5 @@
-import { getMember, getUserBySlackId } from "@/app/actions";
+import { getUsers, getUserBySlackId } from "@/app/actions";
 import { auth, signOut } from "@/auth";
-import { AddMemberFormDialog } from "@/components/AddMemberFormDialog";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
@@ -20,13 +19,15 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
-  const memberData = await getMember();
+  const memberData = await getUsers();
   const user = session?.user?.slack_user_id
     ? await getUserBySlackId(session.user.slack_user_id)
     : null;
 
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds);
+
+  const participantsMember = memberData.filter((member) => member.participate);
 
   return (
     <main className="max-w-7xl mx-auto p-10">
@@ -35,19 +36,20 @@ export default async function Home() {
           <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
           {session && session.user ? (
             <div className="flex items-center gap-4">
-              <AddMemberFormDialog />
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <img
-                    src={session.user.image || ""}
-                    alt={`${session.user.name}のアイコン画像`}
+                    src={user?.slack_image || session.user.image || ""}
+                    alt={`${user?.slack_display_name}のアイコン画像`}
                     width={40}
                     height={40}
                     className="rounded-full"
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{session.user.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel>
+                    {user?.slack_display_name}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
                     <form
@@ -71,7 +73,7 @@ export default async function Home() {
           <p>
             現在の参加者：
             <Link href="/member" className="underline">
-              {memberData.length}人
+              {participantsMember.length}人
             </Link>
           </p>
         </section>

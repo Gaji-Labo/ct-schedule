@@ -23,11 +23,11 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
             className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
           >
             <span className="text-gray-400 text-xs">{pairIndex + 1}</span>
-            <span className="font-medium text-sm">{pair[0].name}</span>
+            <span className="font-medium text-sm">{pair[0].slack_display_name}</span>
             {pair[1] ? (
               <>
                 <span className="text-gray-400 text-xs">×</span>
-                <span className="font-medium text-sm">{pair[1].name}</span>
+                <span className="font-medium text-sm">{pair[1].slack_display_name}</span>
               </>
             ) : (
               <Badge className="bg-gray-400 rounded-full shadow-none hover:bg-gray-400">

@@ -29,7 +29,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           slack_email: profile?.email as string,
           slack_display_name:
             data.profile.display_name || (profile?.name as string),
-          slack_image: profile?.picture,
+          slack_image:
+            data.profile?.image_192 ||
+            data.profile?.image_72 ||
+            data.profile?.image_48 ||
+            profile?.picture,
         });
         return true;
       } catch (error) {

@@ -94,43 +94,23 @@ export async function setUser(
   return result[0] as User;
 }
 
-export type Member = {
-  id: number;
-  name: string;
-  participate: boolean;
-};
-
-export async function getMember(): Promise<Member[]> {
+export async function getUsers(): Promise<User[]> {
   const data = await sql`
-    SELECT * FROM public.member
-    ORDER BY id ASC
+    SELECT * FROM public.users
+    ORDER BY employee_number ASC
   `;
-  return data as Member[];
+  return data as User[];
 }
 
-// メンバーの追加
-export async function addMember(formData: FormData) {
-  const name = formData.get("name") as string;
-  const participate = formData.get("participate") === "on";
-
-  const result = await sql`
-    INSERT INTO member (name, participate)
-    VALUES (${name}, ${participate})
-    RETURNING *;
-  `;
-
-  return result[0];
-}
-
-// メンバーの編集
-export async function updateMember(
+export async function updateUser(
   id: number,
-  name: string,
+  displayName: string,
+  employeeNumber: number,
   participate: boolean
 ) {
   const result = await sql`
-    UPDATE member
-    SET name = ${name}, participate = ${participate}
+    UPDATE users
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}
     WHERE id = ${id}
     RETURNING *;
   `;
@@ -138,12 +118,3 @@ export async function updateMember(
   return result[0];
 }
 
-// メンバーの削除
-export async function deleteMember(id: number) {
-  const result = await sql`
-    DELETE FROM member
-    WHERE id = ${id}
-    RETURNING name;
-  `;
-  return result[0]?.name;
-}
