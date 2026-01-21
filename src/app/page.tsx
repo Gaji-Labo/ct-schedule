@@ -27,6 +27,8 @@ export default async function Home() {
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds);
 
+  const participantsMember = memberData.filter((member) => member.participate);
+
   return (
     <main className="max-w-7xl mx-auto p-10">
       <div className="grid gap-5">
@@ -71,7 +73,7 @@ export default async function Home() {
           <p>
             現在の参加者：
             <Link href="/member" className="underline">
-              {memberData.length}人
+              {participantsMember.length}人
             </Link>
           </p>
         </section>
