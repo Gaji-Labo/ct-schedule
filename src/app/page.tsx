@@ -3,6 +3,7 @@ import { auth, signOut } from "@/auth";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,13 +39,12 @@ export default async function Home() {
             <div className="flex items-center gap-4">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <img
-                    src={user?.slack_image || session.user.image || ""}
-                    alt={`${user?.slack_display_name}のアイコン画像`}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                  <Avatar>
+                    <AvatarImage
+                      src={user?.slack_image || session.user.image || ""}
+                      alt={`${user?.slack_display_name}のアイコン画像`}
+                    />
+                  </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>
