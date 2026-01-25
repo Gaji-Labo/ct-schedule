@@ -60,7 +60,7 @@ export type CT = {
   date: string;
   round: Round;
 };
-type Schedule = CT[];
+export type Schedule = CT[];
 
 /**
  * CTスケジュール全体の配列型
@@ -89,7 +89,7 @@ const futureMondaysFromToday = filterFromToday(mondays);
 
 export function generateCTSchedules(
   rounds: Round[],
-  dateList: string[] = futureMondaysFromToday
+  dateList: string[] = futureMondaysFromToday,
 ): Schedule {
   if (rounds.length === 0) return [];
 
@@ -98,7 +98,7 @@ export function generateCTSchedules(
   const firstMondayString = dateList[0].replace(/\([^)]*\)/, "");
   const firstMonday = parse(firstMondayString, "yyyy/M/d", new Date());
   const weekOffset = Math.floor(
-    (firstMonday.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000)
+    (firstMonday.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000),
   );
 
   // オフセット分ラウンドをずらす
