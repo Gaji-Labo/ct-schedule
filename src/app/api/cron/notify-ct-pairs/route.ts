@@ -8,7 +8,12 @@ import { getCurrentWeekCT } from "@/src/utils/date";
 import { postMessage } from "@/src/lib/slack";
 import type { CT } from "@/src/utils/member";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized", status: 401 });
+  }
+
   try {
     const users = await getUsers();
     const round = generateRoundRobinPairs(users);
