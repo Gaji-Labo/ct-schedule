@@ -8,7 +8,7 @@ import { getCurrentWeekCT } from "@/src/utils/date";
 import { postMessage } from "@/src/lib/slack";
 import type { CT } from "@/src/utils/member";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const users = await getUsers();
     const round = generateRoundRobinPairs(users);
