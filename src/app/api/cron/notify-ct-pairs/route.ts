@@ -49,8 +49,8 @@ export async function GET(request: Request) {
 function buildMessage(ct: CT): string {
   const lines = ["🗣️ 本日のCTペア", "https://ct-schedule.vercel.app/", ""];
   const pairLines = ct.round.map(([user1, user2]) => {
-    const pair1 = `@${user1.slack_display_name}`;
-    const pair2 = user2 ? `@${user2.slack_display_name}` : "お休み";
+    const pair1 = `<@${user1.slack_user_id}>`;
+    const pair2 = user2 ? `<@${user2.slack_user_id}>` : "お休み";
     return `• ${pair1} ${pair2}`;
   });
   return [...lines, ...pairLines].join("\n");
