@@ -1,0 +1,22 @@
+version: "1.0"
+
+defaults:
+  base_dir: "../next-gallery-worktrees"
+
+hooks:
+  post_create:
+    - type: copy
+      from: ".env.development.local"
+      to: ".env.development.local"
+
+    # - type: command
+    #   command: "volya set -u nodejs 22.22.0"
+
+    - type: command
+      command: "bun install"
+
+    # - type: command
+    #   command: "git submodule update --init --recursive"
+
+    # - type: command
+    #   command: "nr openapi:generate"
