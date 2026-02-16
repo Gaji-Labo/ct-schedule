@@ -119,12 +119,12 @@ export async function updateUser(
   return result[0];
 }
 
-// メンバーの削除
-export async function deleteMember(id: number) {
+export async function deleteUser(id: number) {
   const result = await sql`
-    DELETE FROM member
+    UPDATE users
+    SET deleted_at = NOW(), updated_at = NOW()
     WHERE id = ${id}
-    RETURNING name;
+    RETURNING slack_display_name;
   `;
-  return result[0]?.name;
+  return result[0]?.slack_display_name;
 }
