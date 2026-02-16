@@ -97,6 +97,7 @@ export async function setUser(
 export async function getUsers(): Promise<User[]> {
   const data = await sql`
     SELECT * FROM public.users
+    WHERE deleted_at IS NULL
     ORDER BY employee_number ASC
   `;
   return data as User[];
