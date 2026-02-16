@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteMember, User } from "@/app/actions";
+import { deleteUser, User } from "@/app/actions";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,7 @@ export const DeleteMemberDialog = ({ member }: { member: User }) => {
 
   const handleSubmit = async () => {
     try {
-      const deleteName = await deleteMember(Number(member.id));
+      const deleteName = await deleteUser(Number(member.id));
       setOpen(false);
       toast.success(`${deleteName} を削除しました`);
       router.refresh();
