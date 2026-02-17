@@ -97,10 +97,12 @@ export async function setUser(
 export async function getUsers(): Promise<User[]> {
   const data = await sql`
     SELECT * FROM public.users
+    WHERE deleted_at IS NULL
     ORDER BY employee_number ASC
   `;
   return data as User[];
 }
+
 
 export async function updateUser(
   id: number,
@@ -118,3 +120,12 @@ export async function updateUser(
   return result[0];
 }
 
+export async function deleteUser(id: number) {
+  const result = await sql`
+    UPDATE users
+    SET deleted_at = NOW(), updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING slack_display_name;
+  `;
+  return result[0]?.slack_display_name;
+}

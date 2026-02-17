@@ -1,5 +1,6 @@
 import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
+import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
 import { EditMemberDialog } from "@/components/EditMemberDialog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -42,7 +43,12 @@ export default async function Home() {
                   {member.participate ? "参加" : "不参加"}
                 </div>
               </div>
-              {user && <EditMemberDialog member={member} />}
+              {user && (
+                <div className="flex gap-1">
+                  <EditMemberDialog member={member} />
+                  <DeleteMemberDialog member={member} />
+                </div>
+              )}
             </div>
             <Separator />
           </Fragment>
