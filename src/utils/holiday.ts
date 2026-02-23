@@ -1,6 +1,6 @@
 import { format, isMonday, parse } from "date-fns";
 
-type Holiday = {
+export type Holiday = {
   date: string;
   name: string;
 };
