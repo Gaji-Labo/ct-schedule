@@ -132,7 +132,7 @@ export async function deleteUser(id: number) {
 
 export async function getHolidays(): Promise<Holiday[]> {
   const result = await sql`
-    SELECT * FROM public.holidays
+    SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, name FROM public.holidays
   `;
   return result as Holiday[];
 }
