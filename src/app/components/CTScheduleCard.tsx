@@ -1,5 +1,6 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/src/lib/utils";
 import { CT } from "@/src/utils/member";
 
 type Props = {
@@ -10,15 +11,22 @@ type Props = {
 export const CTScheduleCard = ({ schedule, index }: Props) => {
   return (
     <div
-      className={`border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px] ${
-        index === 0 && "border-2 border-gray-400"
-      }`}
+      className={cn(
+        "border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px]",
+        index === 0 && "border-2 border-gray-400",
+        schedule.isHoliday && "bg-gray-100"
+      )}
     >
       <h2 className="text-lg font-semibold mb-4 text-center">
         <time dateTime={schedule.date}>{schedule.date}</time>
       </h2>
+      {schedule.isHoliday && (
+        <Badge className="grid text-center bg-gray-400 rounded-full shadow-none hover:bg-gray-400">
+          {schedule.holidayName}
+        </Badge>
+      )}
       <div className="flex flex-col gap-2">
-        {schedule.round.map((pair, pairIndex) => (
+        {schedule.round?.map((pair, pairIndex) => (
           <div
             key={pairIndex}
             className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
