@@ -158,9 +158,9 @@ describe("generateCTSchedules", () => {
       ],
     ];
     const expectedThreeSchedules = [
-      { date: "2025/8/4(月)", round: threePersonRounds[0] },
-      { date: "2025/8/11(月)", round: threePersonRounds[1] },
-      { date: "2025/8/18(月)", round: threePersonRounds[2] },
+      { date: "2025/8/4(月)", isHoliday: false, round: threePersonRounds[0] },
+      { date: "2025/8/11(月)", isHoliday: false, round: threePersonRounds[1] },
+      { date: "2025/8/18(月)", isHoliday: false, round: threePersonRounds[2] },
     ];
     const result = generateCTSchedules(threePersonRounds, testData);
 
