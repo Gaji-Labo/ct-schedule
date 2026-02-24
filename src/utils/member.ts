@@ -1,5 +1,6 @@
 import { User } from "@/app/actions";
 import { filterFromToday, mondays, PROJECT_START_DATE } from "@/src/utils/date";
+import { getHolidayName, Holiday, isHolidayMonday } from "@/src/utils/holiday";
 import { parse } from "date-fns";
 
 type Pair = [User, User | null];
@@ -58,7 +59,9 @@ export function generateRoundRobinPairs(memberData: User[]) {
 
 export type CT = {
   date: string;
-  round: Round;
+  round: Round | null;
+  isHoliday: boolean;
+  holidayName?: string;
 };
 export type Schedule = CT[];
 
@@ -90,6 +93,7 @@ const futureMondaysFromToday = filterFromToday(mondays);
 export function generateCTSchedules(
   rounds: Round[],
   dateList: string[] = futureMondaysFromToday,
+  holidays: Holiday[] = [],
 ): Schedule {
   if (rounds.length === 0) return [];
 
@@ -101,12 +105,24 @@ export function generateCTSchedules(
     (firstMonday.getTime() - startDate.getTime()) / (7 * 24 * 60 * 60 * 1000),
   );
 
+  let roundPointer = 0;
+
   // オフセット分ラウンドをずらす
-  return dateList.map((date, index) => {
-    const roundIndex = (weekOffset + index) % rounds.length;
+  return dateList.map((date) => {
+    // 祝日の処理
+    if (isHolidayMonday(date, holidays)) {
+      console.log("isHolidayMonday");
+      const holidayName = getHolidayName(date, holidays);
+      return { date, round: null, isHoliday: true, holidayName };
+    }
+
+    const roundIndex = (weekOffset + roundPointer) % rounds.length;
+    roundPointer++;
+
     return {
       date,
       round: rounds[roundIndex],
+      isHoliday: false,
     };
   });
 }
