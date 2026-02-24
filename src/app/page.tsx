@@ -1,4 +1,4 @@
-import { getUsers, getUserBySlackId } from "@/app/actions";
+import { getUsers, getUserBySlackId, getHolidays } from "@/app/actions";
 import { auth, signOut } from "@/auth";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
@@ -24,9 +24,10 @@ export default async function Home() {
   const user = session?.user?.slack_user_id
     ? await getUserBySlackId(session.user.slack_user_id)
     : null;
+  const holidays = await getHolidays();
 
   const rounds = generateRoundRobinPairs(memberData);
-  const ctSchedules = generateCTSchedules(rounds);
+  const ctSchedules = generateCTSchedules(rounds, undefined, holidays);
 
   const participantsMember = memberData.filter((member) => member.participate);
 
