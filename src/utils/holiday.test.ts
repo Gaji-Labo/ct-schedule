@@ -28,8 +28,13 @@ describe("getHolidayName", () => {
     { date: "2025-11-03", name: "文化の日" },
   ];
 
-  test("祝日の場合は名前を返し、そうでない場合はnullを返す", () => {
+  test("祝日の場合は名前を返す", () => {
     expect(getHolidayName("2025/9/15(月)", holidays)).toBe("敬老の日");
-    expect(getHolidayName("2025/9/22(月)", holidays)).toBe(null);
+  });
+
+  test("祝日ではない場合はエラーを投げる", () => {
+    expect(() => getHolidayName("2025/9/22(月)", holidays)).toThrow(
+      "Holiday not found for date: 2025/9/22(月)",
+    );
   });
 });

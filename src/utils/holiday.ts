@@ -23,12 +23,17 @@ export function isHolidayMonday(
 export function getHolidayName(
   targetDate: string,
   holidays: Holiday[],
-): string | null {
+): string {
   const dateString = targetDate.replace(/\([^)]*\)/, "");
   const date = parse(dateString, "yyyy/M/d", new Date());
 
   const result = holidays.find(
     (holiday) => holiday.date === format(date, "yyyy-MM-dd"),
   );
-  return result ? result.name : null;
+
+  if (!result) {
+    throw new Error(`Holiday not found for date: ${targetDate}`);
+  }
+
+  return result.name;
 }
