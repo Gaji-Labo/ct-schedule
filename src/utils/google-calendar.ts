@@ -14,6 +14,26 @@ type GoogleCalendarResponse = {
 
 const CALENDAR_ID = "japanese__ja@holiday.calendar.google.com";
 
+const NATIONAL_HOLIDAYS = [
+  "元日",
+  "成人の日",
+  "建国記念の日",
+  "天皇誕生日",
+  "春分の日",
+  "昭和の日",
+  "憲法記念日",
+  "みどりの日",
+  "こどもの日",
+  "海の日",
+  "山の日",
+  "敬老の日",
+  "秋分の日",
+  "スポーツの日",
+  "文化の日",
+  "勤労感謝の日",
+  "振替休日",
+];
+
 export async function fetchHolidaysFromGoogle(
   startDate: Date,
   endDate: Date,
@@ -30,8 +50,12 @@ export async function fetchHolidaysFromGoogle(
   const response = await fetch(`${url}?${params}`);
   const data: GoogleCalendarResponse = await response.json();
 
-  return data.items.map((item) => ({
-    date: item.start.date,
-    name: item.summary,
-  }));
+  return data.items
+    .filter((item) =>
+      NATIONAL_HOLIDAYS.some((holiday) => item.summary.includes(holiday)),
+    )
+    .map((item) => ({
+      date: item.start.date,
+      name: item.summary,
+    }));
 }

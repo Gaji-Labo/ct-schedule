@@ -111,7 +111,6 @@ export function generateCTSchedules(
   return dateList.map((date) => {
     // 祝日の処理
     if (isHolidayMonday(date, holidays)) {
-      console.log("isHolidayMonday");
       const holidayName = getHolidayName(date, holidays);
       return { date, round: null, isHoliday: true, holidayName };
     }
