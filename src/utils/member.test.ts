@@ -1,37 +1,48 @@
 import { describe, expect, test } from "vitest";
-import { generateCTSchedules, generateRoundRobinPairs, Round } from "./member";
+import { generateCTSchedules, generateRoundRobinPairs, Round } from "@/src/utils/member";
 import { mondays } from "@/src/utils/date";
+import { User } from "@/app/actions";
+
+// テスト用ヘルパー: 最小限のUser型データを生成
+const createUser = (
+  id: number,
+  name: string,
+  participate: boolean = true
+): User => ({
+  id,
+  slack_user_id: `U${id.toString().padStart(10, "0")}`,
+  slack_display_name: name,
+  participate,
+  created_at: new Date("2025-01-01"),
+  updated_at: new Date("2025-01-01"),
+});
 
 describe("generateRoundRobinPairs", () => {
   test("参加者0人：空配列を返す", () => {
     expect(generateRoundRobinPairs([])).toEqual([]);
   });
   test("参加者1人：空配列を返す（ペアが作れない）", () => {
-    const members = [{ id: 1, name: "Alice", participate: true }];
+    const members = [createUser(1, "Alice")];
     expect(generateRoundRobinPairs(members)).toEqual([]);
   });
 
   test("参加者2人：1ラウンドの1組ペア", () => {
-    const members = [
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: true },
-    ];
+    const alice = createUser(1, "Alice");
+    const bob = createUser(2, "Bob");
+    const members = [alice, bob];
     const result = generateRoundRobinPairs(members);
 
     expect(result).toHaveLength(1); // 1ラウンド
     expect(result[0]).toHaveLength(1); // 1組のペア
     // ペアの組み合わせ
-    expect(result[0][0]).toEqual([
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: true },
-    ]);
+    expect(result[0][0]).toEqual([alice, bob]);
   });
 
   test("参加者3人：3ラウンド、各ラウンドで1人お休み", () => {
     const members = [
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: true },
-      { id: 3, name: "Charlie", participate: true },
+      createUser(1, "Alice"),
+      createUser(2, "Bob"),
+      createUser(3, "Charlie"),
     ];
     const result = generateRoundRobinPairs(members);
 
@@ -45,10 +56,10 @@ describe("generateRoundRobinPairs", () => {
 
   test("参加者4人：3ラウンド、各ラウンド2組のペア", () => {
     const members = [
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: true },
-      { id: 3, name: "Charlie", participate: true },
-      { id: 4, name: "David", participate: true },
+      createUser(1, "Alice"),
+      createUser(2, "Bob"),
+      createUser(3, "Charlie"),
+      createUser(4, "David"),
     ];
     const result = generateRoundRobinPairs(members);
 
@@ -62,34 +73,28 @@ describe("generateRoundRobinPairs", () => {
 
   test("participateフラグでフィルタリング", () => {
     // 参加者3人（Alice, Charlie, Eve）不参加者2人（Bob, David）
+    const alice = createUser(1, "Alice", true);
+    const charlie = createUser(3, "Charlie", true);
+    const eve = createUser(5, "Eve", true);
     const members = [
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: false },
-      { id: 3, name: "Charlie", participate: true },
-      { id: 4, name: "David", participate: false },
-      { id: 5, name: "Eve", participate: true },
+      alice,
+      createUser(2, "Bob", false),
+      charlie,
+      createUser(4, "David", false),
+      eve,
     ];
     const rounds: Round[] = [
       [
-        [{ id: 1, name: "Alice", participate: true }, null],
-        [
-          { id: 3, name: "Charlie", participate: true },
-          { id: 5, name: "Eve", participate: true },
-        ],
+        [alice, null],
+        [charlie, eve],
       ],
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 3, name: "Charlie", participate: true },
-        ],
-        [{ id: 5, name: "Eve", participate: true }, null],
+        [alice, charlie],
+        [eve, null],
       ],
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 5, name: "Eve", participate: true },
-        ],
-        [{ id: 3, name: "Charlie", participate: true }, null],
+        [alice, eve],
+        [charlie, null],
       ],
     ];
     const result = generateRoundRobinPairs(members);
@@ -100,11 +105,9 @@ describe("generateRoundRobinPairs", () => {
 
   test("奇数は(n-1),偶数はnラウンド生成の検証", () => {
     [3, 4, 5, 6].forEach((participantCount) => {
-      const participants = Array.from({ length: participantCount }, (_, i) => ({
-        id: i + 1,
-        name: `Member${i + 1}`,
-        participate: true,
-      }));
+      const participants = Array.from({ length: participantCount }, (_, i) =>
+        createUser(i + 1, `Member${i + 1}`)
+      );
       const result = generateRoundRobinPairs(participants);
       expect(result).toHaveLength(
         participantCount % 2 ? participantCount : participantCount - 1
@@ -114,11 +117,11 @@ describe("generateRoundRobinPairs", () => {
 
   test("動的に生成されたペアが重複しない", () => {
     const members = [
-      { id: 1, name: "Alice", participate: true },
-      { id: 2, name: "Bob", participate: true },
-      { id: 3, name: "Charlie", participate: true },
-      { id: 4, name: "David", participate: true },
-      { id: 5, name: "Eve", participate: true },
+      createUser(1, "Alice"),
+      createUser(2, "Bob"),
+      createUser(3, "Charlie"),
+      createUser(4, "David"),
+      createUser(5, "Eve"),
     ];
     const result = generateRoundRobinPairs(members);
     const seenPairs = new Set<string>();
@@ -135,28 +138,23 @@ describe("generateRoundRobinPairs", () => {
 
 describe("generateCTSchedules", () => {
   const testData = ["2025/8/4(月)", "2025/8/11(月)", "2025/8/18(月)"];
+  const alice = createUser(1, "Alice");
+  const bob = createUser(2, "Bob");
+  const charlie = createUser(3, "Charlie");
+
   test("3ラウンドから3つのスケジュールを生成する", () => {
     const threePersonRounds: Round[] = [
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 2, name: "Bob", participate: true },
-        ],
-        [{ id: 3, name: "Charlie", participate: true }, null],
+        [alice, bob],
+        [charlie, null],
       ],
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 3, name: "Charlie", participate: true },
-        ],
-        [{ id: 2, name: "Bob", participate: true }, null],
+        [alice, charlie],
+        [bob, null],
       ],
       [
-        [
-          { id: 2, name: "Bob", participate: true },
-          { id: 3, name: "Charlie", participate: true },
-        ],
-        [{ id: 1, name: "Alice", participate: true }, null],
+        [bob, charlie],
+        [alice, null],
       ],
     ];
     const expectedThreeSchedules = [
@@ -187,12 +185,7 @@ describe("generateCTSchedules", () => {
   });
 
   test("roundsがmondaysより多い場合：mondaysの範囲内でスケジュール生成", () => {
-    const round = [
-      [
-        { id: 1, name: "Alice", participate: true },
-        { id: 2, name: "Bob", participate: true },
-      ],
-    ];
+    const round = [[alice, bob]];
     const manyRounds: Round[] = Array(300).fill(round);
     const result = generateCTSchedules(manyRounds, testData);
     expect(result).toHaveLength(testData.length);
@@ -201,25 +194,16 @@ describe("generateCTSchedules", () => {
   test("連続する月曜日が正しい順序で割り当てられる", () => {
     const rounds: Round[] = [
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 2, name: "Bob", participate: true },
-        ],
-        [{ id: 3, name: "Charlie", participate: true }, null],
+        [alice, bob],
+        [charlie, null],
       ],
       [
-        [
-          { id: 1, name: "Alice", participate: true },
-          { id: 3, name: "Charlie", participate: true },
-        ],
-        [{ id: 2, name: "Bob", participate: true }, null],
+        [alice, charlie],
+        [bob, null],
       ],
       [
-        [
-          { id: 2, name: "Bob", participate: true },
-          { id: 3, name: "Charlie", participate: true },
-        ],
-        [{ id: 1, name: "Alice", participate: true }, null],
+        [bob, charlie],
+        [alice, null],
       ],
     ];
     const result = generateCTSchedules(rounds, testData);
