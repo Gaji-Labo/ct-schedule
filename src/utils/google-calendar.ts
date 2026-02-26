@@ -1,7 +1,4 @@
-export type Holiday = {
-  date: string;
-  name: string;
-};
+import { Holiday } from "@/src/utils/holiday";
 
 type GoogleCalendarEvent = {
   start: { date: string };
