@@ -1,4 +1,5 @@
 "use server";
+import { Holiday } from "@/src/utils/holiday";
 import { neon } from "@neondatabase/serverless";
 
 function getDataBaseUrl() {
@@ -58,7 +59,7 @@ export async function upsertUserFromSlack(slackUser: {
 }
 
 export async function getUserBySlackId(
-  slackUserId: string
+  slackUserId: string,
 ): Promise<User | null> {
   const result = await sql`
     SELECT * FROM public.users
@@ -74,7 +75,7 @@ export async function getUserBySlackId(
 
 export async function setUser(
   slackUserId: string,
-  formData: FormData
+  formData: FormData,
 ): Promise<User> {
   const displayName = formData.get("displayName");
   const employeeNumber = formData.get("employeeNumber");
@@ -103,12 +104,11 @@ export async function getUsers(): Promise<User[]> {
   return data as User[];
 }
 
-
 export async function updateUser(
   id: number,
   displayName: string,
   employeeNumber: number,
-  participate: boolean
+  participate: boolean,
 ) {
   const result = await sql`
     UPDATE users
@@ -128,4 +128,24 @@ export async function deleteUser(id: number) {
     RETURNING slack_display_name;
   `;
   return result[0]?.slack_display_name;
+}
+
+export async function getHolidays(): Promise<Holiday[]> {
+  const result = await sql`
+    SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, name FROM public.holidays
+  `;
+  return result as Holiday[];
+}
+
+export async function saveHolidaysToDB(holidays: Holiday[]): Promise<void> {
+  for (const holiday of holidays) {
+    await sql`
+      INSERT INTO holidays(date, name)
+      VALUES(${holiday.date}, ${holiday.name})
+      ON CONFLICT(date)
+      DO UPDATE SET
+        name = EXCLUDED.name,
+        updated_at = NOW()
+    `;
+  }
 }

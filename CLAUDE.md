@@ -18,11 +18,12 @@ bun run build
 # Lint実行
 bun run lint
 
-# テスト実行
-bun run test
+# テスト実行（bun組み込みテストランナーを使用）
+# ※ bun run test (vitest) はpath aliasエラーが出るため bun test を使う
+bun test
 
 # 特定ファイルのテストのみ実行
-bun run test src/utils/member.test.ts
+bun test src/utils/member.test.ts
 ```
 
 ## Architecture
@@ -143,7 +144,8 @@ const handleSubmit = async (formData: FormData) => {
 
 ## Testing
 
-- **Test Framework**: Vitest
+- **Test Runner**: `bun test`（bun組み込みテストランナー）
+  - `bun run test`（vitest）はpath alias（`@/src/...`）でエラーになるため使わない
 - **Test Files**: `*.test.ts`形式
 - **Coverage**: `src/utils/`のビジネスロジックに対してユニットテスト実装済み
 - **Focus**: ラウンドロビンアルゴリズム、日付ユーティリティ

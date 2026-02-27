@@ -1,0 +1,39 @@
+import { format, isMonday, parse } from "date-fns";
+
+export type Holiday = {
+  date: string;
+  name: string;
+};
+
+export function isHolidayMonday(
+  targetDate: string,
+  holidays: Holiday[],
+): boolean {
+  const dateString = targetDate.replace(/\([^)]*\)/, "");
+  const date = parse(dateString, "yyyy/M/d", new Date());
+
+  const isMondayFlag = isMonday(date);
+  const isHolidayFlag = holidays.some(
+    (holiday) => holiday.date === format(date, "yyyy-MM-dd"),
+  );
+
+  return isMondayFlag && isHolidayFlag;
+}
+
+export function getHolidayName(
+  targetDate: string,
+  holidays: Holiday[],
+): string {
+  const dateString = targetDate.replace(/\([^)]*\)/, "");
+  const date = parse(dateString, "yyyy/M/d", new Date());
+
+  const result = holidays.find(
+    (holiday) => holiday.date === format(date, "yyyy-MM-dd"),
+  );
+
+  if (!result) {
+    throw new Error(`Holiday not found for date: ${targetDate}`);
+  }
+
+  return result.name;
+}
