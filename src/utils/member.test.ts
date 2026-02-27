@@ -1,5 +1,9 @@
 import { describe, expect, test } from "vitest";
-import { generateCTSchedules, generateRoundRobinPairs, Round } from "@/src/utils/member";
+import {
+  generateCTSchedules,
+  generateRoundRobinPairs,
+  Round,
+} from "@/src/utils/member";
 import { mondays } from "@/src/utils/date";
 import { User } from "@/app/actions";
 
@@ -7,7 +11,7 @@ import { User } from "@/app/actions";
 const createUser = (
   id: number,
   name: string,
-  participate: boolean = true
+  participate: boolean = true,
 ): User => ({
   id,
   slack_user_id: `U${id.toString().padStart(10, "0")}`,
@@ -106,11 +110,11 @@ describe("generateRoundRobinPairs", () => {
   test("奇数は(n-1),偶数はnラウンド生成の検証", () => {
     [3, 4, 5, 6].forEach((participantCount) => {
       const participants = Array.from({ length: participantCount }, (_, i) =>
-        createUser(i + 1, `Member${i + 1}`)
+        createUser(i + 1, `Member${i + 1}`),
       );
       const result = generateRoundRobinPairs(participants);
       expect(result).toHaveLength(
-        participantCount % 2 ? participantCount : participantCount - 1
+        participantCount % 2 ? participantCount : participantCount - 1,
       );
     });
   });
@@ -210,5 +214,30 @@ describe("generateCTSchedules", () => {
     expect(result[0].date).toBe(mondays[0]);
     expect(result[1].date).toBe(mondays[1]);
     expect(result[2].date).toBe(mondays[2]);
+  });
+
+  test("祝日スキップしてもラウンドがずれない", () => {
+    const dateList = ["2025/8/4(月)", "2025/8/11(月)", "2025/8/18(月)"];
+    const holidays = [{ date: "2025-08-11", name: "山の日" }];
+    const rounds: Round[] = [
+      [
+        [alice, bob],
+        [charlie, null],
+      ],
+      [
+        [alice, charlie],
+        [bob, null],
+      ],
+      [
+        [bob, charlie],
+        [alice, null],
+      ],
+    ];
+    const result = generateCTSchedules(rounds, dateList, holidays);
+
+    expect(result[1].round).toBe(null);
+    expect(result[1].isHoliday).toBe(true);
+    expect(result[0].round).toBe(rounds[0]);
+    expect(result[2].round).toBe(rounds[1]);
   });
 });
