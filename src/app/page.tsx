@@ -3,7 +3,7 @@ import { auth, signOut } from "@/auth";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +45,9 @@ export default async function Home() {
                       src={user?.slack_image || session.user.image || ""}
                       alt={`${user?.slack_display_name}のアイコン画像`}
                     />
+                    <AvatarFallback>
+                      {user?.slack_display_name?.charAt(0) || "?"}
+                    </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
