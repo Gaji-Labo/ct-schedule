@@ -1,4 +1,5 @@
 "use server";
+import { auth } from "@/auth";
 import { Holiday } from "@/src/utils/holiday";
 import { neon } from "@neondatabase/serverless";
 
@@ -110,6 +111,15 @@ export async function updateUser(
   employeeNumber: number,
   participate: boolean,
 ) {
+  const session = await auth();
+  if (!session?.user?.slack_user_id) {
+    throw new Error("ログインしてください");
+  }
+
+  const currentUser = await getUserBySlackId(session.user.slack_user_id);
+  if (!currentUser || currentUser.id !== id) {
+    throw new Error("他人のプロフィールは更新できません");
+  }
   const result = await sql`
     UPDATE users
     SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}
