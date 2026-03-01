@@ -1,9 +1,8 @@
 import { getUsers, getUserBySlackId, getHolidays } from "@/app/actions";
 import { auth } from "@/auth";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
+import { Header } from "@/components/Header";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
-import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
-import { UserDropdown } from "@/components/UserDropdown";
 import {
   generateCTSchedules,
   generateRoundRobinPairs,
@@ -26,14 +25,7 @@ export default async function Home() {
   return (
     <main className="max-w-7xl mx-auto p-10">
       <div className="grid gap-5">
-        <div className="flex justify-between items-center gap-10">
-          <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
-          {session && session.user && user ? (
-            <UserDropdown user={user} image={session.user.image || undefined} />
-          ) : (
-            <SigninWithSlackButton />
-          )}
-        </div>
+        <Header title="CT組み合わせ表" />
         {user && !user.employee_number && <SetupDataDialog user={user} />}
         <section>
           <p>

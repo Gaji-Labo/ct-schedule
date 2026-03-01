@@ -1,6 +1,7 @@
 import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
+import { Header } from "@/components/Header";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
@@ -14,9 +15,7 @@ export default async function Home() {
 
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
-      <div className="flex justify-between items-center gap-10">
-        <h1 className="text-2xl font-bold">メンバー一覧</h1>
-      </div>
+      <Header title="メンバー一覧" />
       <section className="grid gap-3">
         {memberData.map((member) => (
           <Fragment key={member.id}>
