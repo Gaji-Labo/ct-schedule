@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "@/auth";
+import { signOut } from "next-auth/react";
 import { updateUser, User } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -53,7 +53,7 @@ export const UserDropdown = ({ user, image }: Props) => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    await signOut({ callbackUrl: "/" });
   };
 
   return (
@@ -140,4 +140,4 @@ export const UserDropdown = ({ user, image }: Props) => {
       </Dialog>
     </>
   );
-};
+}
