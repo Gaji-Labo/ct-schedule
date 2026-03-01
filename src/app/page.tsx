@@ -11,15 +11,14 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
-  const memberData = await getUsers();
   const user = session?.user?.slack_user_id
     ? await getUserBySlackId(session.user.slack_user_id)
     : null;
+  const memberData = await getUsers();
   const holidays = await getHolidays();
 
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds, undefined, holidays);
-
   const participantsMember = memberData.filter((member) => member.participate);
 
   return (

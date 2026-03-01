@@ -7,11 +7,12 @@ import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
 
 export default async function Home() {
-  const memberData = await getUsers();
   const session = await auth();
   const user = session?.user?.slack_user_id
-    ? await getUserBySlackId(session.user.slack_user_id)
-    : null;
+  ? await getUserBySlackId(session.user.slack_user_id)
+  : null;
+  
+  const memberData = await getUsers();
 
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
