@@ -2,16 +2,16 @@ import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
 import { Header } from "@/components/Header";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
 
 export default async function Home() {
   const session = await auth();
   const user = session?.user?.slack_user_id
-  ? await getUserBySlackId(session.user.slack_user_id)
-  : null;
-  
+    ? await getUserBySlackId(session.user.slack_user_id)
+    : null;
+
   const memberData = await getUsers();
 
   return (
@@ -22,14 +22,15 @@ export default async function Home() {
           <Fragment key={member.id}>
             <div className="flex gap-3 items-center justify-between px-3">
               <div key={member.id} className="flex gap-2 items-center">
-                {member.slack_image && (
-                  <Avatar>
-                    <AvatarImage
-                      src={member.slack_image}
-                      alt={`${member.slack_display_name}のアイコン`}
-                    />
-                  </Avatar>
-                )}
+                <Avatar>
+                  <AvatarImage
+                    src={member.slack_image}
+                    alt={`${member.slack_display_name}のアイコン`}
+                  />
+                  <AvatarFallback>
+                    {member.slack_display_name?.charAt(0) || "?"}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="font-semibold">
                   {member.slack_display_name}
                 </span>

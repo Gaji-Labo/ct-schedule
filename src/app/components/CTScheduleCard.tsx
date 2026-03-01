@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/src/lib/utils";
 import { CT } from "@/src/utils/member";
@@ -14,7 +14,7 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
       className={cn(
         "border rounded-lg p-4 shadow-sm flex-shrink-0 min-w-[300px]",
         index === 0 && "border-2 border-gray-400",
-        schedule.isHoliday && "bg-gray-100"
+        schedule.isHoliday && "bg-gray-100",
       )}
     >
       <h2 className="text-lg font-semibold mb-4 text-center">
@@ -37,6 +37,9 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
                 src={pair[0].slack_image}
                 alt={`${pair[0].slack_display_name}のアイコン`}
               />
+              <AvatarFallback>
+                {pair[0].slack_display_name?.charAt(0) || "?"}
+              </AvatarFallback>
             </Avatar>
             <span className="font-medium text-sm">
               {pair[0].slack_display_name}
@@ -49,6 +52,9 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
                     src={pair[1].slack_image}
                     alt={`${pair[1].slack_display_name}のアイコン`}
                   />
+                  <AvatarFallback>
+                    {pair[1].slack_display_name?.charAt(0) || "?"}
+                  </AvatarFallback>
                 </Avatar>
                 <span className="font-medium text-sm">
                   {pair[1].slack_display_name}
