@@ -1,36 +1,36 @@
 import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
-import { EditMemberDialog } from "@/components/EditMemberDialog";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Header } from "@/components/Header";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
 
 export default async function Home() {
-  const memberData = await getUsers();
   const session = await auth();
   const user = session?.user?.slack_user_id
     ? await getUserBySlackId(session.user.slack_user_id)
     : null;
 
+  const memberData = await getUsers();
+
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
-      <div className="flex justify-between items-center gap-10">
-        <h1 className="text-2xl font-bold">メンバー一覧</h1>
-      </div>
+      <Header title="メンバー一覧" />
       <section className="grid gap-3">
         {memberData.map((member) => (
           <Fragment key={member.id}>
             <div className="flex gap-3 items-center justify-between px-3">
               <div key={member.id} className="flex gap-2 items-center">
-                {member.slack_image && (
-                  <Avatar>
-                    <AvatarImage
-                      src={member.slack_image}
-                      alt={`${member.slack_display_name}のアイコン`}
-                    />
-                  </Avatar>
-                )}
+                <Avatar>
+                  <AvatarImage
+                    src={member.slack_image}
+                    alt={`${member.slack_display_name}のアイコン`}
+                  />
+                  <AvatarFallback>
+                    {member.slack_display_name?.charAt(0) || "?"}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="font-semibold">
                   {member.slack_display_name}
                 </span>
@@ -43,12 +43,7 @@ export default async function Home() {
                   {member.participate ? "参加" : "不参加"}
                 </div>
               </div>
-              {user && (
-                <div className="flex gap-1">
-                  <EditMemberDialog member={member} />
-                  <DeleteMemberDialog member={member} />
-                </div>
-              )}
+              {user && <DeleteMemberDialog member={member} />}
             </div>
             <Separator />
           </Fragment>
