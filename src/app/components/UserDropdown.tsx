@@ -26,13 +26,15 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { SlackChannelResponse } from "@/src/lib/slack";
 
 type Props = {
   user: User;
   image?: string;
+  channels: Pick<SlackChannelResponse, "id" | "name_normalized">[];
 };
 
-export const UserDropdown = ({ user, image }: Props) => {
+export const UserDropdown = ({ user, image, channels }: Props) => {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
