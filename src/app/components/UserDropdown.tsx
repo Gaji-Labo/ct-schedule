@@ -26,6 +26,14 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SlackChannelResponse } from "@/src/lib/slack";
 
 type Props = {
@@ -122,6 +130,23 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
                   required
                 />
               </div>
+              <div className="grid gap-2">
+                <Label htmlFor="slackUChannelId">uチャンネル</Label>
+                <Select required name="slackUChannelId">
+                  <SelectTrigger>
+                    <SelectValue placeholder="uチャンネルを選択" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {channels.map((channel) => (
+                        <SelectItem value={channel.name_normalized} key={channel.id}>
+                          {channel.name_normalized}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2">
                 <Checkbox
                   name="participate"
@@ -142,4 +167,4 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
       </Dialog>
     </>
   );
-}
+};
