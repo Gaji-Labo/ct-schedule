@@ -21,6 +21,7 @@ export type User = {
   slack_email?: string;
   slack_display_name?: string;
   slack_image?: string;
+  slack_u_channel_id?: string;
   employee_number?: number;
   participate: boolean;
   deleted_at?: Date;
