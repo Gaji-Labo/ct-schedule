@@ -32,8 +32,10 @@ export const SetupDataDialog = ({
   user: User;
   channels: Pick<SlackChannelResponse, "id" | "name_normalized">[];
 }) => {
-  const [number, setNumber] = useState("");
   const [name, setName] = useState(user.slack_display_name);
+  const [employeeNumber, setEmployeeNumber] = useState(
+    user.employee_number?.toString(),
+  );
   const [open, setOpen] = useState(true);
 
   const handleSubmit = async (formData: FormData) => {
@@ -51,7 +53,7 @@ export const SetupDataDialog = ({
     <Dialog
       open={open}
       onOpenChange={(open) => {
-        if (!open) setNumber("");
+        if (!open) setEmployeeNumber("");
         setOpen(open);
       }}
     >
@@ -81,8 +83,8 @@ export const SetupDataDialog = ({
                 name="employeeNumber"
                 type="number"
                 id="employeeNumber"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
+                value={employeeNumber}
+                onChange={(e) => setEmployeeNumber(e.target.value)}
                 required
               />
             </div>
@@ -113,7 +115,7 @@ export const SetupDataDialog = ({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={!number}>
+            <Button type="submit" disabled={!employeeNumber}>
               保存
             </Button>
           </DialogFooter>
