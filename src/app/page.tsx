@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { CTScheduleCard } from "@/components/CTScheduleCard";
 import { Header } from "@/components/Header";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
+import { getChannels } from "@/src/lib/slack";
 import {
   generateCTSchedules,
   generateRoundRobinPairs,
@@ -16,6 +17,7 @@ export default async function Home() {
     : null;
   const memberData = await getUsers();
   const holidays = await getHolidays();
+  const uchannels = await getChannels();
 
   const rounds = generateRoundRobinPairs(memberData);
   const ctSchedules = generateCTSchedules(rounds, undefined, holidays);
@@ -25,7 +27,9 @@ export default async function Home() {
     <main className="max-w-7xl mx-auto p-10">
       <div className="grid gap-5">
         <Header title="CT組み合わせ表" />
-        {user && !user.employee_number && <SetupDataDialog user={user} />}
+        {user && !user.employee_number && (
+          <SetupDataDialog user={user} channels={uchannels} />
+        )}
         <section>
           <p>
             現在の参加者：

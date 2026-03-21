@@ -13,10 +13,25 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SlackChannelResponse } from "@/src/lib/slack";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const SetupDataDialog = ({ user }: { user: User }) => {
+export const SetupDataDialog = ({
+  user,
+  channels,
+}: {
+  user: User;
+  channels: Pick<SlackChannelResponse, "id" | "name_normalized">[];
+}) => {
   const [number, setNumber] = useState("");
   const [name, setName] = useState(user.slack_display_name);
   const [open, setOpen] = useState(true);
@@ -70,6 +85,27 @@ export const SetupDataDialog = ({ user }: { user: User }) => {
                 onChange={(e) => setNumber(e.target.value)}
                 required
               />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="slackUChannelId">uチャンネル</Label>
+              <Select
+                required
+                name="slackUChannelId"
+                defaultValue={user.slack_u_channel_id || undefined}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="uチャンネルを選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {channels.map((channel) => (
+                      <SelectItem value={channel.id} key={channel.id}>
+                        {channel.name_normalized}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox name="participate" id="participate" defaultChecked />
