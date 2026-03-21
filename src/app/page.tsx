@@ -27,7 +27,7 @@ export default async function Home() {
     <main className="max-w-7xl mx-auto p-10">
       <div className="grid gap-5">
         <Header title="CT組み合わせ表" />
-        {user && !user.employee_number && (
+        {user && (!user.employee_number || !user?.slack_u_channel_id) && (
           <SetupDataDialog user={user} channels={uchannels} />
         )}
         <section>

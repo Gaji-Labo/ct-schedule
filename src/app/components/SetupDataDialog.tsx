@@ -36,6 +36,9 @@ export const SetupDataDialog = ({
   const [employeeNumber, setEmployeeNumber] = useState(
     user.employee_number?.toString(),
   );
+  const [uChannelId, setUChannelId] = useState(
+    user.slack_u_channel_id ?? undefined,
+  );
   const [open, setOpen] = useState(true);
 
   const handleSubmit = async (formData: FormData) => {
@@ -53,7 +56,10 @@ export const SetupDataDialog = ({
     <Dialog
       open={open}
       onOpenChange={(open) => {
+        if (!open) {
         if (!open) setEmployeeNumber("");
+          setUChannelId(undefined);
+        }
         setOpen(open);
       }}
     >
@@ -93,7 +99,8 @@ export const SetupDataDialog = ({
               <Select
                 required
                 name="slackUChannelId"
-                defaultValue={user.slack_u_channel_id || undefined}
+                value={uChannelId}
+                onValueChange={(e) => setUChannelId(e)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="uチャンネルを選択" />
@@ -115,7 +122,7 @@ export const SetupDataDialog = ({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={!employeeNumber}>
+            <Button type="submit" disabled={!employeeNumber || !uChannelId}>
               保存
             </Button>
           </DialogFooter>
