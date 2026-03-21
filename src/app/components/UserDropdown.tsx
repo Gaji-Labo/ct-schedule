@@ -52,7 +52,14 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
       const displayName = String(formData.get("displayName"));
       const participate = formData.get("participate") === "on";
       const employeeNumber = Number(formData.get("employeeNumber"));
-      await updateUser(id, displayName, employeeNumber, participate);
+      const uChannelId = String(formData.get("slackUChannelId"));
+      await updateUser(
+        id,
+        displayName,
+        employeeNumber,
+        participate,
+        uChannelId,
+      );
       setDialogOpen(false);
       toast.success("更新しました");
       router.refresh();
@@ -132,14 +139,18 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="slackUChannelId">uチャンネル</Label>
-                <Select required name="slackUChannelId">
+                <Select
+                  required
+                  name="slackUChannelId"
+                  defaultValue={user.slack_u_channel_id}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="uチャンネルを選択" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       {channels.map((channel) => (
-                        <SelectItem value={channel.name_normalized} key={channel.id}>
+                        <SelectItem value={channel.id} key={channel.id}>
                           {channel.name_normalized}
                         </SelectItem>
                       ))}

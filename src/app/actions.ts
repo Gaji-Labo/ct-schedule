@@ -111,6 +111,7 @@ export async function updateUser(
   displayName: string,
   employeeNumber: number,
   participate: boolean,
+  uChannelId: string,
 ) {
   const session = await auth();
   if (!session?.user?.slack_user_id) {
@@ -123,7 +124,7 @@ export async function updateUser(
   }
   const result = await sql`
     UPDATE users
-    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}, slack_u_channel_id = ${uChannelId}
     WHERE id = ${id}
     RETURNING *;
   `;
