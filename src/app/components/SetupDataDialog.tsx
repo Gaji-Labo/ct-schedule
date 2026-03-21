@@ -34,7 +34,7 @@ export const SetupDataDialog = ({
 }) => {
   const [name, setName] = useState(user.slack_display_name);
   const [employeeNumber, setEmployeeNumber] = useState(
-    user.employee_number?.toString() ?? undefined,
+    user.employee_number?.toString() ?? "",
   );
   const [uChannelId, setUChannelId] = useState(
     user.slack_u_channel_id ?? undefined,
@@ -57,7 +57,7 @@ export const SetupDataDialog = ({
       open={open}
       onOpenChange={(open) => {
         if (!open) {
-          setEmployeeNumber(undefined);
+          setEmployeeNumber("");
           setUChannelId(undefined);
         }
         setOpen(open);
@@ -89,7 +89,7 @@ export const SetupDataDialog = ({
                 name="employeeNumber"
                 type="number"
                 id="employeeNumber"
-                value={employeeNumber}
+                defaultValue={user.employee_number ?? ""}
                 onChange={(e) => setEmployeeNumber(e.target.value)}
                 required
               />
