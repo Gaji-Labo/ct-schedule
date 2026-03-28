@@ -75,14 +75,17 @@ export async function getUserBySlackId(
   return result[0] as User;
 }
 
-export async function setUser(
-  slackUserId: string,
-  formData: FormData,
-): Promise<User> {
+export async function setUser(formData: FormData): Promise<User> {
   const displayName = formData.get("displayName");
   const employeeNumber = formData.get("employeeNumber");
   const participate = formData.get("participate") === "on";
   const uChannelId = formData.get("slackUChannelId");
+
+  const session = await auth();
+  if (!session?.user.slack_user_id) {
+    throw new Error("ログインしてください");
+  }
+  const slackUserId = session.user.slack_user_id;
 
   const result = await sql`
     UPDATE users
