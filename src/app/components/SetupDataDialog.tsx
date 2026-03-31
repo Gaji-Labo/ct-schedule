@@ -43,7 +43,7 @@ export const SetupDataDialog = ({
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      await setUser(user.slack_user_id, formData);
+      await setUser(formData);
       setOpen(false);
       toast.success("設定が完了しました");
     } catch (error) {
