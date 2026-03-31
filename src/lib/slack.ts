@@ -25,3 +25,39 @@ export async function postMessage(
     throw error;
   }
 }
+
+export type SlackChannelResponse = {
+  id: string;
+  name_normalized: string;
+  is_archived: boolean;
+};
+
+export async function getChannels(): Promise<
+  Pick<SlackChannelResponse, "id" | "name_normalized">[]
+> {
+  try {
+    const res = await fetch(
+      "https://slack.com/api/conversations.list?limit=1000",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const data = await res.json();
+
+    if (!data.ok) {
+      throw new Error(`Slack API error: ${data.error}`);
+    }
+
+    const channels = data.channels.filter((channel: SlackChannelResponse) => {
+      return channel.name_normalized.startsWith("u-") && !channel.is_archived;
+    });
+    return channels;
+  } catch (error) {
+    console.error("Slack API error:", error);
+    throw error;
+  }
+}
