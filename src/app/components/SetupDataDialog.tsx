@@ -13,17 +13,37 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SlackChannelResponse } from "@/src/lib/slack";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const SetupDataDialog = ({ user }: { user: User }) => {
-  const [number, setNumber] = useState("");
+export const SetupDataDialog = ({
+  user,
+  channels,
+}: {
+  user: User;
+  channels: Pick<SlackChannelResponse, "id" | "name_normalized">[];
+}) => {
   const [name, setName] = useState(user.slack_display_name);
+  const [employeeNumber, setEmployeeNumber] = useState(
+    user.employee_number?.toString() ?? "",
+  );
+  const [uChannelId, setUChannelId] = useState(
+    user.slack_u_channel_id ?? undefined,
+  );
   const [open, setOpen] = useState(true);
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      await setUser(user.slack_user_id, formData);
+      await setUser(formData);
       setOpen(false);
       toast.success("設定が完了しました");
     } catch (error) {
@@ -36,7 +56,10 @@ export const SetupDataDialog = ({ user }: { user: User }) => {
     <Dialog
       open={open}
       onOpenChange={(open) => {
-        if (!open) setNumber("");
+        if (!open) {
+          setEmployeeNumber("");
+          setUChannelId(undefined);
+        }
         setOpen(open);
       }}
     >
@@ -66,10 +89,32 @@ export const SetupDataDialog = ({ user }: { user: User }) => {
                 name="employeeNumber"
                 type="number"
                 id="employeeNumber"
-                value={number}
-                onChange={(e) => setNumber(e.target.value)}
+                defaultValue={user.employee_number ?? ""}
+                onChange={(e) => setEmployeeNumber(e.target.value)}
                 required
               />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="slackUChannelId">uチャンネル</Label>
+              <Select
+                required
+                name="slackUChannelId"
+                value={uChannelId}
+                onValueChange={(e) => setUChannelId(e)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="uチャンネルを選択" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {channels.map((channel) => (
+                      <SelectItem value={channel.id} key={channel.id}>
+                        {channel.name_normalized}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex items-center gap-2">
               <Checkbox name="participate" id="participate" defaultChecked />
@@ -77,7 +122,7 @@ export const SetupDataDialog = ({ user }: { user: User }) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={!number}>
+            <Button type="submit" disabled={!employeeNumber || !uChannelId}>
               保存
             </Button>
           </DialogFooter>

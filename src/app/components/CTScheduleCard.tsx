@@ -1,7 +1,29 @@
+import { User } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/src/lib/utils";
 import { CT } from "@/src/utils/member";
+import { Headphones } from "lucide-react";
+
+const CTScheduleItem = ({ user }: { user: User }) => (
+  <div className="flex items-center gap-2">
+    <Avatar size="sm">
+      <AvatarImage
+        src={user.slack_image}
+        alt={`${user.slack_display_name}のアイコン`}
+      />
+      <AvatarFallback>
+        {user.slack_display_name?.charAt(0) || "?"}
+      </AvatarFallback>
+    </Avatar>
+    <span className="font-medium text-sm">{user.slack_display_name}</span>
+  </div>
+);
 
 type Props = {
   schedule: CT;
@@ -32,33 +54,26 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
             className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
           >
             <span className="text-gray-400 text-xs">{pairIndex + 1}</span>
-            <Avatar size="sm">
-              <AvatarImage
-                src={pair[0].slack_image}
-                alt={`${pair[0].slack_display_name}のアイコン`}
-              />
-              <AvatarFallback>
-                {pair[0].slack_display_name?.charAt(0) || "?"}
-              </AvatarFallback>
-            </Avatar>
-            <span className="font-medium text-sm">
-              {pair[0].slack_display_name}
-            </span>
+            <CTScheduleItem user={pair[0]} />
             {pair[1] ? (
               <>
                 <span className="text-gray-400 text-xs">×</span>
-                <Avatar size="sm">
-                  <AvatarImage
-                    src={pair[1].slack_image}
-                    alt={`${pair[1].slack_display_name}のアイコン`}
-                  />
-                  <AvatarFallback>
-                    {pair[1].slack_display_name?.charAt(0) || "?"}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="font-medium text-sm">
-                  {pair[1].slack_display_name}
-                </span>
+                <CTScheduleItem user={pair[1]} />
+                {pair[1].slack_u_channel_id && (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a
+                        href={`https://app.slack.com/huddle/${process.env.SLACK_WORKSPACE_ID}/${pair[1].slack_u_channel_id}`}
+                        className="p-2 rounded-md border pointer ml-auto"
+                      >
+                        <Headphones className="w-4 h-4 text-gray-500" />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>ハドルを開始</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
               </>
             ) : (
               <Badge className="bg-gray-400 rounded-full shadow-none hover:bg-gray-400">

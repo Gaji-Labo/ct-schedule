@@ -1,19 +1,27 @@
-import { getUserBySlackId } from "@/app/actions";
-import { auth } from "@/auth";
+import { User } from "@/app/actions";
 import { SigninWithSlackButton } from "@/components/SigninWithSlackButton";
 import { UserDropdown } from "@/components/UserDropdown";
+import { getChannels } from "@/src/lib/slack";
+import { Session } from "next-auth";
 
-export async function Header({ title }: { title: string }) {
-  const session = await auth();
-  const user = session?.user?.slack_user_id
-    ? await getUserBySlackId(session.user.slack_user_id)
-    : null;
+type Props = {
+  title: string;
+  session: Session | null;
+  user: User | null;
+};
+
+export async function Header({ title, session, user }: Props) {
+  const uchannels = session ? await getChannels() : [];
 
   return (
     <div className="flex justify-between items-center gap-10">
       <h1 className="text-2xl font-bold">{title}</h1>
       {session && session.user && user ? (
-        <UserDropdown user={user} image={session.user.image || undefined} />
+        <UserDropdown
+          user={user}
+          image={session.user.image || undefined}
+          channels={uchannels}
+        />
       ) : (
         <SigninWithSlackButton />
       )}

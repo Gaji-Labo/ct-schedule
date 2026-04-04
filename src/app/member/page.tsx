@@ -16,7 +16,7 @@ export default async function Home() {
 
   return (
     <main className="grid gap-10 max-w-7xl mx-auto p-10">
-      <Header title="メンバー一覧" />
+      <Header title="メンバー一覧"  user={user} session={session} />
       <section className="grid gap-3">
         {memberData.map((member) => (
           <Fragment key={member.id}>

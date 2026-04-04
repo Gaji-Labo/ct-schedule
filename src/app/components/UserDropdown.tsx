@@ -26,13 +26,23 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SlackChannelResponse } from "@/src/lib/slack";
 
 type Props = {
   user: User;
   image?: string;
+  channels: Pick<SlackChannelResponse, "id" | "name_normalized">[];
 };
 
-export const UserDropdown = ({ user, image }: Props) => {
+export const UserDropdown = ({ user, image, channels }: Props) => {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -42,7 +52,14 @@ export const UserDropdown = ({ user, image }: Props) => {
       const displayName = String(formData.get("displayName"));
       const participate = formData.get("participate") === "on";
       const employeeNumber = Number(formData.get("employeeNumber"));
-      await updateUser(id, displayName, employeeNumber, participate);
+      const uChannelId = String(formData.get("slackUChannelId"));
+      await updateUser(
+        id,
+        displayName,
+        employeeNumber,
+        participate,
+        uChannelId,
+      );
       setDialogOpen(false);
       toast.success("更新しました");
       router.refresh();
@@ -120,6 +137,27 @@ export const UserDropdown = ({ user, image }: Props) => {
                   required
                 />
               </div>
+              <div className="grid gap-2">
+                <Label htmlFor="slackUChannelId">uチャンネル</Label>
+                <Select
+                  required
+                  name="slackUChannelId"
+                  defaultValue={user.slack_u_channel_id}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="uチャンネルを選択" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {channels.map((channel) => (
+                        <SelectItem value={channel.id} key={channel.id}>
+                          {channel.name_normalized}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2">
                 <Checkbox
                   name="participate"
@@ -140,4 +178,4 @@ export const UserDropdown = ({ user, image }: Props) => {
       </Dialog>
     </>
   );
-}
+};

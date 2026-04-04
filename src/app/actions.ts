@@ -21,6 +21,7 @@ export type User = {
   slack_email?: string;
   slack_display_name?: string;
   slack_image?: string;
+  slack_u_channel_id?: string;
   employee_number?: number;
   participate: boolean;
   deleted_at?: Date;
@@ -74,17 +75,21 @@ export async function getUserBySlackId(
   return result[0] as User;
 }
 
-export async function setUser(
-  slackUserId: string,
-  formData: FormData,
-): Promise<User> {
+export async function setUser(formData: FormData): Promise<User> {
   const displayName = formData.get("displayName");
   const employeeNumber = formData.get("employeeNumber");
   const participate = formData.get("participate") === "on";
+  const uChannelId = formData.get("slackUChannelId");
+
+  const session = await auth();
+  if (!session?.user.slack_user_id) {
+    throw new Error("ログインしてください");
+  }
+  const slackUserId = session.user.slack_user_id;
 
   const result = await sql`
     UPDATE users
-    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}, updated_at = NOW()
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}, slack_u_channel_id = ${uChannelId}, updated_at = NOW()
     WHERE slack_user_id = ${slackUserId}
     RETURNING *;
   `;
@@ -110,6 +115,7 @@ export async function updateUser(
   displayName: string,
   employeeNumber: number,
   participate: boolean,
+  uChannelId: string,
 ) {
   const session = await auth();
   if (!session?.user?.slack_user_id) {
@@ -122,7 +128,7 @@ export async function updateUser(
   }
   const result = await sql`
     UPDATE users
-    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}
+    SET slack_display_name = ${displayName}, employee_number = ${employeeNumber}, participate = ${participate}, slack_u_channel_id = ${uChannelId}
     WHERE id = ${id}
     RETURNING *;
   `;
