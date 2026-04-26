@@ -2,7 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import { updateUser, User } from "@/app/actions";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,15 +77,7 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Avatar>
-            <AvatarImage
-              src={user.slack_image || image || ""}
-              alt={`${user.slack_display_name}のアイコン画像`}
-            />
-            <AvatarFallback>
-              {user.slack_display_name?.charAt(0) || "?"}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar user={user} fallbackSrc={image} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>{user.slack_display_name}</DropdownMenuLabel>

@@ -1,5 +1,5 @@
 import { User } from "@/app/actions";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -12,15 +12,7 @@ import { Headphones } from "lucide-react";
 
 const CTScheduleItem = ({ user }: { user: User }) => (
   <div className="flex items-center gap-2">
-    <Avatar size="sm">
-      <AvatarImage
-        src={user.slack_image}
-        alt={`${user.slack_display_name}のアイコン`}
-      />
-      <AvatarFallback>
-        {user.slack_display_name?.charAt(0) || "?"}
-      </AvatarFallback>
-    </Avatar>
+    <UserAvatar user={user} size="sm" />
     <span className="font-medium text-sm">{user.slack_display_name}</span>
   </div>
 );
