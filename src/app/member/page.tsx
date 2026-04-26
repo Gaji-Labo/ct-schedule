@@ -2,7 +2,7 @@ import { getUserBySlackId, getUsers } from "@/app/actions";
 import { auth } from "@/auth";
 import { DeleteMemberDialog } from "@/components/DeleteMemberDialog";
 import { Header } from "@/components/Header";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { Separator } from "@/components/ui/separator";
 import { Fragment } from "react";
 
@@ -22,15 +22,7 @@ export default async function Home() {
           <Fragment key={member.id}>
             <div className="flex gap-3 items-center justify-between px-3">
               <div key={member.id} className="flex gap-2 items-center">
-                <Avatar>
-                  <AvatarImage
-                    src={member.slack_image}
-                    alt={`${member.slack_display_name}のアイコン`}
-                  />
-                  <AvatarFallback>
-                    {member.slack_display_name?.charAt(0) || "?"}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar user={member} />
                 <span className="font-semibold">
                   {member.slack_display_name}
                 </span>
