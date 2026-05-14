@@ -2,8 +2,8 @@
 # Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
 updates:
-  # npm パッケージ（package.json）の週次チェック
-  - package-ecosystem: "npm"
+  # Bun パッケージ（package.json + bun.lock）の週次チェック
+  - package-ecosystem: "bun"
     directory: "/"
     schedule:
       interval: "weekly"
