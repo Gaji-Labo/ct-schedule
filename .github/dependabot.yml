@@ -2,14 +2,19 @@
 # Docs: https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
 updates:
-  # Bun パッケージ（package.json + bun.lock）の週次チェック
+  # Bun パッケージ（package.json + bun.lock）の月次チェック
   - package-ecosystem: "bun"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
+      day: "friday"
       time: "09:00"
       timezone: "Asia/Tokyo"
+    cooldown:
+      default-days: 14
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 1
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -51,12 +56,12 @@ updates:
           - "minor"
           - "patch"
 
-  # GitHub Actions（.github/workflows/*）の週次チェック
+  # GitHub Actions（.github/workflows/*）の月次チェック
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
+      day: "friday"
       time: "09:00"
       timezone: "Asia/Tokyo"
     labels:
