@@ -1,6 +1,7 @@
 import nextPlugin from "@next/eslint-plugin-next";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
+import storybook from "eslint-plugin-storybook";
 
 export default [
   {
@@ -10,6 +11,7 @@ export default [
       "out/**",
       "dist/**",
       "build/**",
+      "storybook-static/**",
     ],
   },
   {
@@ -33,4 +35,5 @@ export default [
       ...nextPlugin.configs["core-web-vitals"].rules,
     },
   },
+  ...storybook.configs["flat/recommended"],
 ];
