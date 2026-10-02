@@ -37,9 +37,16 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /** true のとき子要素（`<a>` など）をボタンとして描画する（Radix Slot） */
   asChild?: boolean
 }
 
+/**
+ * クリックで操作を実行するボタン。画面遷移には `asChild` で `<a>` / `Link` を包んで使う。
+ * 破壊的な操作（削除など）には `variant="destructive"` を使う。
+ *
+ * @import import { Button } from "@/src/app/components/ui/button"
+ */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
