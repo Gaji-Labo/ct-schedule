@@ -1,8 +1,15 @@
 import type { Preview } from "@storybook/nextjs-vite";
+import { sb } from "storybook/test";
 import { withThemeByClassName } from "@storybook/addon-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "../src/app/globals.css";
 import "./preview.css";
+
+// DB・認証・Slack API に依存するモジュールを、隣の __mocks__/ にあるモックへ差し替える。
+// 戻り値は Story の beforeEach で mocked(fn).mockResolvedValue(...) により変えられる
+sb.mock(import("../src/app/actions.ts"));
+sb.mock(import("../auth.ts"));
+sb.mock(import("../src/lib/slack.ts"));
 
 const preview: Preview = {
   parameters: {
@@ -21,6 +28,7 @@ const preview: Preview = {
           "UI",
           "Domain",
           "Patterns",
+          "Pages",
         ],
       },
     },

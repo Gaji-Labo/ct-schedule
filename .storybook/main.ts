@@ -23,6 +23,10 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs-vite",
     options: {},
   },
+  features: {
+    // async な Server Component（app/**/page.tsx）を Story で描画する
+    experimentalRSC: true,
+  },
   staticDirs: ["../public"],
 };
 
