@@ -121,7 +121,24 @@ CTスケジュールの UI を実装するときのルールと判断材料。�
 4. **Story を書く** — 画面またはその主要部品の Story を書き、次の状態を用意する
    - 通常 / データ0件 / 長い名前・多い件数 / 読み込み中・エラー（あれば）
    - CT 固有: 祝日の週、参加人数が奇数（お休みあり）、今週のカード
+   - Story ファイルはコンポーネントの隣に `<Component>.stories.tsx` で置く。ページは `app/**/page.stories.tsx`
 5. **検証する** — 下の「検証」をすべて通す
+
+### Story でデータ・認証を扱う
+
+DB・認証・Slack API に触れるモジュールは、Storybook では `.storybook/preview.tsx` の `sb.mock` で隣の `__mocks__/` に差し替わる。
+
+| 本体 | モック |
+| --- | --- |
+| `src/app/actions.ts`（Server Actions） | `src/app/__mocks__/actions.ts` |
+| `auth.ts`（Auth.js） | `__mocks__/auth.ts`（既定は未ログイン） |
+| `src/lib/slack.ts` | `src/lib/__mocks__/slack.ts` |
+
+- ダミーデータは `src/stories/fixtures.ts` に集める（名前は架空のもの、画像は外部 URL に依存させない）
+- Story ごとに戻り値を変えるときは `beforeEach` で上書きする: `mocked(getUsers).mockResolvedValue([])`
+- ログイン状態にするときは `mockedAuth.mockResolvedValue(createSession())`（`src/stories/mocks.ts`）
+- async な Server Component（ページ・`Header`）も `features.experimentalRSC` でそのまま Story にできる
+- Server Action を本体に追加したら、モックにも同じ名前で追加する
 
 ## 5. 検証
 
