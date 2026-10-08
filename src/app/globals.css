@@ -6,7 +6,7 @@
  * デザイントークン
  *
  * 2層構造:
- *   1. Primitive (--neutral-*, --red-*, --green-*): 生の色値。コンポーネントから直接参照しない
+ *   1. Primitive (--neutral-*, --red-*, --green-*, --gaji-*): 生の色値。コンポーネントから直接参照しない
  *   2. Semantic  (--background, --primary, --status-* など): 用途に名前を付けたトークン
  *
  * コンポーネントは Semantic トークン (Tailwind の bg-primary / text-muted-foreground 等) のみを使う。
@@ -34,6 +34,16 @@
 
     --green-500: 142.1 70.6% 45.3%;
     --green-700: 142.4 71.8% 29.2%;
+
+    /* Gaji-Labo ブランドカラー (Figma: Gaji-Labo Styles / Gaji-Labo Colors) */
+    --gaji-main-700: 202.5 10% 52.9%; /* #7B8A93 */
+    --gaji-main-500: 202.2 28.7% 68.6%; /* #98B5C6 */
+    --gaji-main-300: 200.9 28.4% 84.1%; /* #CBDAE2 */
+    --gaji-main-100: 201.8 28.2% 92.4%; /* #E6EDF1 */
+    --gaji-main-50: 200 10.3% 94.3%; /* #EFF1F2 */
+    --gaji-accent-700: 202.4 85.2% 34.5%; /* #0D6BA3 */
+    --gaji-accent-200: 204 45.5% 87.1%; /* #CFE1ED */
+    --gaji-accent-100: 202.5 47.1% 93.3%; /* #E6F0F6 */
 
     /* ---------- Semantic: base (shadcn/ui) ---------- */
     --background: var(--neutral-0);
@@ -69,6 +79,28 @@
     --status-rest-foreground: var(--neutral-0);
     /* 今週 (直近) のスケジュールの強調枠 */
     --highlight-current: var(--neutral-400);
+
+    /* ページ最上部の帯 (SiteHeader)。ライト・ダークとも黒地に白 */
+    --site-header: var(--neutral-950);
+    --site-header-foreground: var(--neutral-0);
+
+    /* ---------- Semantic: avatar ---------- */
+    /* 画像が無いときのアバター背景。ユーザーごとにブランドカラーから1色を割り当てる */
+    /* ダークテーマでも同じ値を使う (明るい背景＋濃い文字 / 濃い背景＋白文字の組で、どちらのテーマでも読める) */
+    --avatar-1: var(--gaji-main-700);
+    --avatar-1-foreground: var(--neutral-900);
+    --avatar-2: var(--gaji-main-500);
+    --avatar-2-foreground: var(--neutral-900);
+    --avatar-3: var(--gaji-main-300);
+    --avatar-3-foreground: var(--neutral-900);
+    --avatar-4: var(--gaji-main-100);
+    --avatar-4-foreground: var(--neutral-900);
+    --avatar-5: var(--gaji-accent-700);
+    --avatar-5-foreground: var(--neutral-50);
+    --avatar-6: var(--gaji-accent-200);
+    --avatar-6-foreground: var(--neutral-900);
+    --avatar-7: var(--gaji-accent-100);
+    --avatar-7-foreground: var(--neutral-900);
 
     /* ---------- Chart ---------- */
     --chart-1: 12 76% 61%;
@@ -110,6 +142,8 @@
     --status-rest: var(--neutral-600);
     --status-rest-foreground: var(--neutral-50);
     --highlight-current: var(--neutral-500);
+    --site-header: var(--neutral-950);
+    --site-header-foreground: var(--neutral-0);
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;

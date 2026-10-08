@@ -50,6 +50,8 @@ export const semanticColors: ColorTokenGroup[] = [
       { name: "card-foreground", tailwind: "text-card-foreground", usage: "カード内テキスト" },
       { name: "popover", tailwind: "bg-popover", usage: "ドロップダウン・ツールチップの背景" },
       { name: "popover-foreground", tailwind: "text-popover-foreground", usage: "ポップオーバー内テキスト" },
+      { name: "site-header", tailwind: "bg-site-header", usage: "ページ最上部の帯 (SiteHeader) の背景。ライト・ダークとも黒" },
+      { name: "site-header-foreground", tailwind: "text-site-header-foreground", usage: "SiteHeader 上のロゴ・テキスト (白)" },
     ],
   },
   {
@@ -101,6 +103,19 @@ export const semanticColors: ColorTokenGroup[] = [
       },
     ],
   },
+  {
+    title: "Avatar",
+    description: "画像が無いときのアバター背景。ユーザーごとに自動で1色が決まる（AvatarFallback の colorSeed）。直接クラスを書かない",
+    tokens: [
+      { name: "avatar-1", tailwind: "bg-avatar-1 text-avatar-1-foreground", usage: "参照先: gaji-main-700" },
+      { name: "avatar-2", tailwind: "bg-avatar-2 text-avatar-2-foreground", usage: "参照先: gaji-main-500" },
+      { name: "avatar-3", tailwind: "bg-avatar-3 text-avatar-3-foreground", usage: "参照先: gaji-main-300" },
+      { name: "avatar-4", tailwind: "bg-avatar-4 text-avatar-4-foreground", usage: "参照先: gaji-main-100" },
+      { name: "avatar-5", tailwind: "bg-avatar-5 text-avatar-5-foreground", usage: "参照先: gaji-accent-700" },
+      { name: "avatar-6", tailwind: "bg-avatar-6 text-avatar-6-foreground", usage: "参照先: gaji-accent-200" },
+      { name: "avatar-7", tailwind: "bg-avatar-7 text-avatar-7-foreground", usage: "参照先: gaji-accent-100" },
+    ],
+  },
 ];
 
 /** Primitive カラー。Semantic トークンの定義にのみ使い、コンポーネントからは参照しない */
@@ -113,6 +128,44 @@ export const primitiveColors: { title: string; names: string[] }[] = [
   },
   { title: "Red", names: ["red-500", "red-800"] },
   { title: "Green", names: ["green-500", "green-700"] },
+];
+
+export type BrandColor = {
+  /** CSS 変数名 (先頭の -- を除く) */
+  name: string;
+  hex: string;
+  /** Figma の Gaji-Labo Colors に書かれている用途 (Web サイト / ブログでの使われ方) */
+  usage: string;
+};
+
+/**
+ * Gaji-Labo のブランドカラー (Primitive)
+ * 出典: Figma「Gaji-Labo Styles」> Gaji-Labo Colors
+ *   - Main: Web Site の Main
+ *   - Accent: Blog の Accent
+ * まだ Semantic トークンには割り当てていない。使うときは Semantic トークンを追加して、その参照先にする
+ */
+export const brandColors: { title: string; description: string; colors: BrandColor[] }[] = [
+  {
+    title: "Main",
+    description: "落ち着いた青みのグレー。面・背景・区切りに使われている",
+    colors: [
+      { name: "gaji-main-700", hex: "#7B8A93", usage: "サービス案内タイトル、採用パネルメニュー罫" },
+      { name: "gaji-main-500", hex: "#98B5C6", usage: "アイコン" },
+      { name: "gaji-main-300", hex: "#CBDAE2", usage: "ボタン hover" },
+      { name: "gaji-main-100", hex: "#E6EDF1", usage: "スケジュール table 背景、採用パネルメニュー背景" },
+      { name: "gaji-main-50", hex: "#EFF1F2", usage: "ページタイトル背景、table B 背景" },
+    ],
+  },
+  {
+    title: "Accent",
+    description: "はっきりした青。リンクや操作できる要素を示す",
+    colors: [
+      { name: "gaji-accent-700", hex: "#0D6BA3", usage: "アイコン、リンク" },
+      { name: "gaji-accent-200", hex: "#CFE1ED", usage: "タグ背景色" },
+      { name: "gaji-accent-100", hex: "#E6F0F6", usage: "hover" },
+    ],
+  },
 ];
 
 /** 角丸。--radius (0.5rem) を基準に派生 */

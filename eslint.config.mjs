@@ -55,7 +55,6 @@ export default [
   {
     // 既知の違反 (デザインシステム導入前のコード)。置き換えたらこのリストから外す
     files: [
-      "src/app/member/page.tsx",
       "src/app/components/CTScheduleCard.tsx",
       "src/app/components/SigninWithSlackButton.tsx",
       "src/app/components/ui/dialog.tsx",
