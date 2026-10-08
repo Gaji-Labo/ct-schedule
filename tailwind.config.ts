@@ -7,7 +7,11 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/design-system/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // .dark はソース中に現れず実行時に付与される (Storybook のテーマ切替) ため、
+  // globals.css のダーク用トークン定義が purge されないよう明示的に残す
+  safelist: ["dark"],
   theme: {
   	extend: {
   		colors: {
@@ -40,6 +44,23 @@ export default {
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))'
+  			},
+  			status: {
+  				holiday: {
+  					DEFAULT: 'hsl(var(--status-holiday))',
+  					foreground: 'hsl(var(--status-holiday-foreground))'
+  				},
+  				rest: {
+  					DEFAULT: 'hsl(var(--status-rest))',
+  					foreground: 'hsl(var(--status-rest-foreground))'
+  				}
+  			},
+  			highlight: {
+  				current: 'hsl(var(--highlight-current))'
   			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',

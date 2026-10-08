@@ -1,0 +1,19 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { PrimitivePalette, SemanticColorTable } from "./TokenDocs";
+
+<Meta title="Foundations/Colors" />
+
+# Colors
+
+## Semantic
+
+コンポーネントから使う色です。Tailwind のクラス (`bg-primary`、`text-muted-foreground` など) で指定します。
+ツールバーでダークテーマに切り替えると、ダーク時の値を確認できます。
+
+<SemanticColorTable />
+
+## Primitive
+
+Semantic トークンの参照先になる生の色値です。**コンポーネントからは直接使いません。**
+
+<PrimitivePalette />
