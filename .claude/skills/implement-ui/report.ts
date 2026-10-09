@@ -24,10 +24,21 @@ const option = (name: string) => {
 const root = realpathSync(option("--root") ?? process.cwd());
 const outPath = resolve(option("--out") ?? join(root, ".implement-ui/report.html"));
 const reportJsonPath = join(root, ".implement-ui/report.json");
+// 評価シート (人や別の AI が、正解との比較・目視の結果を書いた Markdown)。実験の回収時に渡す
+const notesPath = option("--notes");
 const HOME = homedir();
 
 // ---------- 自己申告 (report.json) ----------
-type Guess = { topic: string; decision: string; reason?: string; basis?: string; missing_rule?: string };
+type Guess = {
+  topic: string;
+  decision: string;
+  reason?: string;
+  basis?: string;
+  /** どこに・何が書いてあれば迷わなかったか (= 戻し先) */
+  fix?: { where?: string; what?: string };
+  /** 旧形式。fix.what として表示する */
+  missing_rule?: string;
+};
 type SelfReport = {
   request?: string;
   context?: { who?: string; purpose?: string; first_seen?: string; irreversible?: string };
@@ -216,7 +227,15 @@ const clip = (s = "", n = 4000) => (s.length > n ? s.slice(0, n) + `\n… (${s.l
 const fmtTime = (t: string) => (t ? new Date(t).toLocaleTimeString("ja-JP", { hour12: false }) : "");
 const rel = (p: string) => (isInside(p) ? relative(root, p) || "." : p);
 
+/** インラインの Markdown (コード・太字・リンク) */
+const inline = (t: string) =>
+  esc(t)
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
 const guesses = self?.guesses ?? [];
+const fixOf = (g: Guess) => ({ where: g.fix?.where, what: g.fix?.what ?? g.missing_rule });
 const guessRows = guesses.length
   ? guesses
       .map(
@@ -225,8 +244,11 @@ const guessRows = guesses.length
   <dl>
     <dt>決めたこと</dt><dd>${esc(g.decision)}</dd>
     ${g.reason ? `<dt>理由</dt><dd>${esc(g.reason)}</dd>` : ""}
-    ${g.missing_rule ? `<dt>どこに書いてあれば迷わなかったか</dt><dd>${esc(g.missing_rule)}</dd>` : ""}
   </dl>
+  ${fixOf(g).where || fixOf(g).what ? `<div class="fix"><h4>戻し先 — これが書いてあれば迷わなかった</h4><dl>
+    <dt>どこに</dt><dd>${fixOf(g).where ? inline(fixOf(g).where!) : '<span class="empty">未記入</span>'}</dd>
+    <dt>何を</dt><dd>${fixOf(g).what ? inline(fixOf(g).what!) : '<span class="empty">未記入</span>'}</dd>
+  </dl></div>` : '<p class="meta">戻し先なし（ルールを足さなくてよい推測）</p>'}
 </article>`,
       )
       .join("\n")
@@ -235,6 +257,36 @@ const guessRows = guesses.length
 const verifyRows = (self?.verification ?? [])
   .map((v) => `<tr><td>${esc(v.item)}</td><td><span class="res res-${esc(v.result)}">${{ pass: "通過", fail: "失敗", unchecked: "未確認" }[v.result] ?? esc(v.result)}</span></td><td>${esc(v.note)}</td></tr>`)
   .join("");
+
+/** 評価シート用の小さな Markdown 変換 (見出し・表・箇条書き・段落) */
+function markdown(md: string): string {
+  const out: string[] = [];
+  const lines = md.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const h = line.match(/^(#{1,4})\s+(.*)/);
+    if (h) {
+      const level = Math.min(h[1].length + 1, 4);
+      out.push(`<h${level}>${inline(h[2])}</h${level}>`);
+    } else if (/^\|/.test(line)) {
+      const rows: string[][] = [];
+      for (; i < lines.length && /^\|/.test(lines[i]); i++)
+        if (!/^\|[\s:|-]+\|$/.test(lines[i])) rows.push(lines[i].replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
+      i--;
+      const [head, ...body] = rows;
+      out.push(`<table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${body.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>`);
+    } else if (/^\s*- /.test(line)) {
+      const items: string[] = [];
+      for (; i < lines.length && /^\s*- /.test(lines[i]); i++) items.push(`<li>${inline(lines[i].replace(/^\s*- /, ""))}</li>`);
+      i--;
+      out.push(`<ul>${items.join("")}</ul>`);
+    } else if (line.trim()) {
+      out.push(`<p>${inline(line)}</p>`);
+    }
+  }
+  return out.join("\n");
+}
+const notesHtml = notesPath && existsSync(notesPath) ? markdown(readFileSync(notesPath, "utf8")) : "";
 
 const summaryBlock = self
   ? `<div class="grid2">
@@ -308,6 +360,8 @@ details summary{cursor:pointer;overflow-wrap:anywhere;font-family:ui-monospace,m
 pre{background:var(--code);padding:8px;border-radius:6px;overflow:auto;max-height:320px;font-size:12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .flag{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:0 6px;margin:0 4px 4px 0}.flag-danger{background:var(--danger);color:var(--bg)}.flag-warn{background:var(--warn);color:var(--bg)}
 .empty{color:var(--muted)}
+.fix{margin-top:12px;padding:10px 12px;border-radius:6px;background:var(--code)}.fix h4{margin:0 0 6px;font-size:12px;color:var(--accent)}
+.notes h2{font-size:17px;margin:28px 0 10px}.notes h3{font-size:15px;margin:20px 0 8px}.notes table{background:var(--panel);border:1px solid var(--border);border-radius:8px;margin:8px 0 16px}.notes ul{padding-left:20px}.notes a{color:var(--accent)}
 @media (max-width:640px){.ev{grid-template-columns:1fr}dl{grid-template-columns:1fr}}
 </style></head><body><main>
 <h1>implement-ui レポート</h1>
@@ -322,12 +376,14 @@ ${verdict}
   <div class="stat"><b>${files.length}</b>触ったパス</div>
 </div>
 <nav class="tabs" role="tablist">
-  <button role="tab" aria-selected="true" data-tab="guess">推測リスト</button>
+  ${notesHtml ? '<button role="tab" aria-selected="true" data-tab="eval">評価</button>' : ""}
+  <button role="tab" aria-selected="${notesHtml ? "false" : "true"}" data-tab="guess">推測と戻し先 (${guesses.length})</button>
   <button role="tab" aria-selected="false" data-tab="log">行動ログ</button>
   <button role="tab" aria-selected="false" data-tab="files">触ったファイル</button>
   <button role="tab" aria-selected="false" data-tab="summary">作業のまとめ</button>
 </nav>
-<section class="tab on" id="guess"><h2>推測で決めたこと</h2><p class="meta">DESIGN.md・Story・ガイドラインに書かれておらず、AI が推測で決めたこと。「どこに書いてあれば迷わなかったか」が DESIGN.md「フィードバックの戻し先」の材料になる。</p>${guessRows}</section>
+${notesHtml ? `<section class="tab on" id="eval"><p class="meta">評価シート（<code>${esc(basename(notesPath!))}</code>）。正解との比較や目視など、生成した AI 以外が確かめた結果。</p><div class="notes">${notesHtml}</div></section>` : ""}
+<section class="tab${notesHtml ? "" : " on"}" id="guess"><h2>推測で決めたことと戻し先</h2><p class="meta">DESIGN.md・Story・ガイドラインに書かれておらず、AI が推測で決めたこと。それぞれに「どこに・何が書いてあれば迷わなかったか」（DESIGN.md「フィードバックの戻し先」に沿った直す候補）を付けている。</p>${guessRows}</section>
 <section class="tab" id="log"><h2>行動ログ</h2><p class="meta">Claude Code のセッション記録から作成（AI の自己申告ではない）。行を開くと入力と結果が見られる。</p>
 <div class="filters" role="group">
   <button aria-pressed="true" data-f="all">すべて</button><button aria-pressed="false" data-f="flagged">要確認だけ (${flagged.length})</button>

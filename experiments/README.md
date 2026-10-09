@@ -17,10 +17,10 @@ experiments/setup.sh reproduce 01
 2. サンドボックスで新しく `claude` を起動し、`prompts/<種類>.md` の中身をそのまま貼る。途中で口を出したら notes に書く
 3. Storybook で見る: サンドボックスで `bun run storybook`
 4. 結果を集める: `experiments/collect.sh reproduce 01`。`results/reproduce-01/` に次ができる
-   - `report.html` — 推測リスト（AI の自己申告）と行動ログ（セッション記録から機械的に作る）。外へのアクセス・git 履歴・ネットワークの利用は赤・黄で示す
+   - `report.html` — 結果を見る場所はここに一本化している。タブは「評価」（`notes.md` の内容）、「推測リスト」「戻し先の候補」（生成した AI の自己申告）、「行動ログ」「触ったファイル」（セッション記録から機械的に作る。外へのアクセス・git 履歴・ネットワークの利用は赤・黄で示す）
    - `files/`、`generated.patch` — 生成物
    - `answer.diff` — 正解との差分（reproduce のみ）
-   - `notes.md` — 評価シート
+   - `notes.md` — 評価シート。正解との比較・目視など、生成した AI 以外が確かめたことを書く。書き直したら `collect.sh` をもう一度実行すると `report.html` に反映される
 5. `notes.md` を埋め、見つかった問題を DESIGN.md「フィードバックの戻し先」に沿って直す。直したら連番を上げてもう一度回す
 
 同じ条件で2〜3回回すと、たまたまの出来と、毎回起きる問題を分けられる。

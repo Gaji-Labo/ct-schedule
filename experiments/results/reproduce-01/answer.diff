@@ -1,0 +1,2405 @@
+--- /Users/aito/ct-schedule/src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-09 21:02:26
+@@ -1,55 +1,63 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
++import { Users } from "lucide-react";
++import type { User } from "@/app/actions";
+ import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
+-import { SiteHeader } from "@/components/SiteHeader";
+-import { Button } from "@/components/ui/button";
+-import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
++import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import {
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-type PageProps = {
+-  /** 参加者の人数 */
+-  participants: number;
+-  /** 表示する週数（本番は5年分。Storybook では軽くするため絞る） */
+-  weeks: number;
++const MEMBER_PAGE_HREF = storyHref("メンバー一覧");
++
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
++  /** 表示する週の数 */
++  weeks?: number;
+ };
+ 
+-/**
+- * トップページ（src/app/page.tsx）の見た目を、モックデータで再現したもの。
+- * page.tsx はサーバー側で DB・Slack に接続するため、そのままは Storybook で動かせない。
+- * カード (CTScheduleCard) と組み合わせのロジックは本物を使い、ヘッダーのログインボタンだけ見た目の代用品にしている。
+- */
+-const CTSchedulePage = ({ participants, weeks }: PageProps) => {
+-  const members = createMembers(participants);
++/** 参加メンバーの人数。押すとメンバー一覧へ移動する（本物は next/link の Link で /member） */
++const ParticipantCountLink = ({ count }: { count: number }) => (
++  <a
++    href={MEMBER_PAGE_HREF}
++    target="_top"
++    className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
++  >
++    <Users aria-hidden className="size-4 text-muted-foreground" />
++    参加メンバー {count}人
++  </a>
++);
++
++const CTSchedulePage = ({ members, loginUser, weeks = 12 }: Props) => {
++  const participants = members.filter((m) => m.participate);
+   const schedules = createSchedules(members, weeks);
+ 
+   return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto max-w-7xl p-10">
+-        <div className="grid gap-5">
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
+-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
+-            <Button variant="outline">Sign in with Slack</Button>
+-          </div>
+-          <section>
+-            <p>
+-              現在のメンバー：
+-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+-              <a
+-                href="/?path=/story/pages-メンバー一覧--default"
+-                target="_top"
+-                className="underline"
+-              >
+-                {participants}人
+-              </a>
+-            </p>
+-          </section>
++    <PageFrame>
++      <div className="grid gap-2">
++        <HeaderStandIn title="CT組み合わせ表" loginUser={loginUser} />
++        <div>
++          <ParticipantCountLink count={participants.length} />
+         </div>
+-        <div className="mt-10">
+-          <CTScheduleCarousel schedules={schedules} />
+-        </div>
+-      </main>
+-    </>
++      </div>
++      {schedules.length > 0 ? (
++        <CTScheduleCarousel schedules={schedules} />
++      ) : (
++        <Alert variant="info">
++          <Users />
++          <AlertTitle>組み合わせを作れません</AlertTitle>
++          <AlertDescription>
++            CT に参加するメンバーが2人以上になると、組み合わせが表示されます。
++          </AlertDescription>
++        </Alert>
++      )}
++    </PageFrame>
+   );
+ };
+ 
+@@ -60,38 +68,71 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/）のトップページをモックデータで再現した画面。デザインシステムの変更が画面全体にどう効くかをここで確認する。",
++        component: [
++          "CT組み合わせ表。本番のパスは `/`（アプリのトップページ）。",
++          "チームメンバーが週の初めに「今週の相手は誰か」を確かめ、ハドルを始めるために開く。Slack のリンクやブックマークから直接来ることが多い。",
++          "",
++          "**構成**: `SiteHeader` → ページタイトルとログイン（`Header`）→ 参加メンバーの人数（メンバー一覧へのリンク）→ 週ごとのカード（`CTScheduleCarousel`）。",
++          "トップページなのでパンくずは付けない。",
++          "",
++          "※ ログインボタン・ユーザーメニューは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++          "組み合わせは本番と同じロジックで、Storybook を開いた日以降の月曜から作る（祝日はモックの `mockHolidays`）。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-    weeks: { control: { type: "range", min: 1, max: 52, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    weeks: 12,
++    members: createMembers(20),
+   },
+ } satisfies Meta<typeof CTSchedulePage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** 本番と同じ 20 人 */
++/** 未ログイン・参加 20 人（偶数）。右上に Slack ログインボタン */
+ export const Default: Story = {};
+ 
+-/** 参加人数が奇数（毎週1人がお休み） */
+-export const OddParticipants: Story = {
+-  args: { participants: 19 },
++/** ログイン中。右上はユーザーメニュー（アバター） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** 少人数 */
+-export const FewParticipants: Story = {
+-  args: { participants: 3 },
++/** 参加人数が奇数。毎週1人が「お休み」になる */
++export const OddMembers: Story = {
++  args: { members: createMembers(7) },
+ };
+ 
+-/** 参加者が1人以下（組み合わせが作れない） */
+-export const Empty: Story = {
+-  args: { participants: 1 },
++/** 参加人数が少ない（2人）。カードが短い */
++export const FewMembers: Story = {
++  args: { members: createMembers(2) },
+ };
++
++/** 長い表示名のメンバーが多いとき */
++export const LongNames: Story = {
++  args: {
++    members: createMembers(10).map((m) => ({
++      ...m,
++      slack_display_name: `${m.slack_display_name}-design-unit-kobe`,
++    })),
++  },
++};
++
++/** 参加メンバーが1人以下で、組み合わせを作れない */
++export const NoParticipants: Story = {
++  args: { members: [createMember(0), createMember(1, { participate: false })] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <HeaderStandIn title="CT組み合わせ表" />
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/MemberPage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/MemberPage.stories.tsx	2026-10-09 21:02:42
+@@ -1,8 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+-import { Trash2 } from "lucide-react";
+ import { Fragment } from "react";
++import type { User } from "@/app/actions";
+ import { MemberListItem } from "@/components/MemberListItem";
+-import { SiteHeader } from "@/components/SiteHeader";
+ import {
+   Breadcrumb,
+   BreadcrumbItem,
+@@ -11,122 +10,70 @@
+   BreadcrumbPage,
+   BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+-import { Button } from "@/components/ui/button";
+-import {
+-  Dialog,
+-  DialogClose,
+-  DialogContent,
+-  DialogFooter,
+-  DialogHeader,
+-  DialogTitle,
+-  DialogTrigger,
+-} from "@/components/ui/dialog";
+ import { Separator } from "@/components/ui/separator";
+-import { createMembers } from "@/src/design-system/mocks/ct";
+-import type { User } from "@/app/actions";
++import { createMember, createMembers } from "@/src/design-system/mocks/ct";
++import {
++  DeleteMemberDialogStandIn,
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-/**
+- * 削除ボタンの代用品。見た目と確認ダイアログは本物 (DeleteMemberDialog) と同じで、
+- * 「削除」を押してもデータは消えない (ダイアログが閉じるだけ)。
+- */
+-const DeleteMemberButton = ({ member }: { member: User }) => (
+-  <Dialog>
+-    <DialogTrigger asChild>
+-      <Button
+-        variant="ghost"
+-        size="icon"
+-        aria-label={`${member.slack_display_name} を削除`}
+-      >
+-        <Trash2 />
+-      </Button>
+-    </DialogTrigger>
+-    <DialogContent className="sm:max-w-md">
+-      <div className="grid gap-5">
+-        <DialogHeader>
+-          <DialogTitle>メンバーを削除</DialogTitle>
+-        </DialogHeader>
+-        <div className="grid gap-4">
+-          <div className="grid gap-2">
+-            {member.slack_display_name} を削除しますか？
+-          </div>
+-        </div>
+-        <DialogFooter>
+-          <DialogClose asChild>
+-            <Button variant="outline">キャンセル</Button>
+-          </DialogClose>
+-          <DialogClose asChild>
+-            <Button variant="destructive">削除</Button>
+-          </DialogClose>
+-        </DialogFooter>
+-      </div>
+-    </DialogContent>
+-  </Dialog>
++const TOP_PAGE_HREF = storyHref("ct組み合わせ表");
++
++/** パンくず。本物は BreadcrumbLink asChild で next/link の Link（/）を包む */
++const MemberBreadcrumb = () => (
++  <Breadcrumb>
++    <BreadcrumbList>
++      <BreadcrumbItem>
++        <BreadcrumbLink href={TOP_PAGE_HREF} target="_top">
++          CT組み合わせ表
++        </BreadcrumbLink>
++      </BreadcrumbItem>
++      <BreadcrumbSeparator />
++      <BreadcrumbItem>
++        <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
++      </BreadcrumbItem>
++    </BreadcrumbList>
++  </Breadcrumb>
+ );
+ 
+-type PageProps = {
+-  /** 参加者の人数 (このほかに不参加が1人いる) */
+-  participants: number;
+-  /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
+-  signedIn: boolean;
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
+ };
+ 
+-/**
+- * メンバー一覧ページ（src/app/member/page.tsx）の見た目を、モックデータで再現したもの。
+- * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
+- * (本物はサーバーアクションで DB に接続するため)。
+- */
+-const MemberPage = ({ participants, signedIn }: PageProps) => {
+-  const members = createMembers(participants);
++const MemberPage = ({ members, loginUser }: Props) => (
++  <PageFrame>
++    <div className="grid gap-2">
++      <MemberBreadcrumb />
++      <HeaderStandIn title="メンバー一覧" loginUser={loginUser} />
++    </div>
++    {members.length > 0 ? (
++      <div className="grid gap-3">
++        {members.map((member, index) => (
++          <Fragment key={member.slack_user_id}>
++            {index > 0 && <Separator />}
++            <MemberListItem
++              member={member}
++              action={
++                loginUser ? <DeleteMemberDialogStandIn member={member} /> : undefined
++              }
++            />
++          </Fragment>
++        ))}
++      </div>
++    ) : (
++      <p className="text-sm text-muted-foreground">
++        メンバーがいません。Slack でログインすると、メンバーとして追加されます。
++      </p>
++    )}
++  </PageFrame>
++);
+ 
+-  return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
+-        <div className="grid gap-2">
+-          <Breadcrumb>
+-            <BreadcrumbList>
+-              <BreadcrumbItem>
+-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+-                <BreadcrumbLink
+-                  href="/?path=/story/pages-ct組み合わせ表--default"
+-                  target="_top"
+-                >
+-                  CT組み合わせ表
+-                </BreadcrumbLink>
+-              </BreadcrumbItem>
+-              <BreadcrumbSeparator />
+-              <BreadcrumbItem>
+-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+-              </BreadcrumbItem>
+-            </BreadcrumbList>
+-          </Breadcrumb>
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
+-            {/* 本物は SigninWithSlackButton / UserDropdown */}
+-            {signedIn ? null : (
+-              <Button variant="outline">Sign in with Slack</Button>
+-            )}
+-          </div>
+-        </div>
+-        <section className="grid gap-3">
+-          {members.map((member) => (
+-            <Fragment key={member.id}>
+-              <MemberListItem
+-                member={member}
+-                action={
+-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+-                  signedIn && <DeleteMemberButton member={member} />
+-                }
+-              />
+-              <Separator />
+-            </Fragment>
+-          ))}
+-        </section>
+-      </main>
+-    </>
+-  );
+-};
+-
+ const meta = {
+   title: "Pages/メンバー一覧",
+   component: MemberPage,
+@@ -134,32 +81,75 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
++        component: [
++          "メンバー一覧。本番のパスは `/member`。",
++          "CT組み合わせ表の「参加メンバー ○人」から来る。参加メンバーと参加・不参加の状態を確かめ、ログイン中は不要になったメンバーを削除する。",
++          "",
++          "**構成**: `SiteHeader` → パンくず（CT組み合わせ表へ戻る）→ ページタイトルとログイン（`Header`）→ メンバーの行（`MemberListItem`、行の間に `Separator`）。",
++          "",
++          "**ログイン状態による違い**",
++          "- 未ログイン: 右上に Slack ログインボタン。行に操作は出さない",
++          "- ログイン中: 右上はユーザーメニュー（ログインボタンは出さない）。各行の右端に削除ボタンを出し、押すと確認ダイアログを挟む",
++          "",
++          "※ ログインボタン・ユーザーメニュー・削除ダイアログは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    signedIn: true,
++    members: createMembers(8),
+   },
+ } satisfies Meta<typeof MemberPage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** ログイン中。各行の右端に削除ボタンがあり、押すと確認ダイアログが開く */
++/** 未ログイン。参加 8 人と不参加 1 人。削除ボタンは出ない */
+ export const Default: Story = {};
+ 
+-/** ログインしていない状態（削除ボタンは出ない） */
+-export const SignedOut: Story = {
+-  args: { signedIn: false },
++/** ログイン中。各行に削除ボタンが出る（押すと確認ダイアログ） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** メンバーが少ない */
+-export const FewMembers: Story = {
+-  args: { participants: 2 },
++/** メンバーが多く、長い表示名が混ざるとき（ログイン中） */
++export const ManyMembersWithLongNames: Story = {
++  args: {
++    loginUser: createMember(0),
++    members: createMembers(22).map((m, i) =>
++      i % 5 === 1
++        ? { ...m, slack_display_name: `${m.slack_display_name}-design-unit-kobe-office` }
++        : m,
++    ),
++  },
+ };
++
++/** 全員が不参加 */
++export const AllNotParticipating: Story = {
++  args: {
++    members: createMembers(4).map((m) => ({ ...m, participate: false })),
++  },
++};
++
++/** メンバーが0人 */
++export const Empty: Story = {
++  args: { members: [] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <div className="grid gap-2">
++        <MemberBreadcrumb />
++        <HeaderStandIn title="メンバー一覧" />
++      </div>
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-09 21:02:26
+@@ -1,55 +1,63 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
++import { Users } from "lucide-react";
++import type { User } from "@/app/actions";
+ import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
+-import { SiteHeader } from "@/components/SiteHeader";
+-import { Button } from "@/components/ui/button";
+-import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
++import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import {
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-type PageProps = {
+-  /** 参加者の人数 */
+-  participants: number;
+-  /** 表示する週数（本番は5年分。Storybook では軽くするため絞る） */
+-  weeks: number;
++const MEMBER_PAGE_HREF = storyHref("メンバー一覧");
++
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
++  /** 表示する週の数 */
++  weeks?: number;
+ };
+ 
+-/**
+- * トップページ（src/app/page.tsx）の見た目を、モックデータで再現したもの。
+- * page.tsx はサーバー側で DB・Slack に接続するため、そのままは Storybook で動かせない。
+- * カード (CTScheduleCard) と組み合わせのロジックは本物を使い、ヘッダーのログインボタンだけ見た目の代用品にしている。
+- */
+-const CTSchedulePage = ({ participants, weeks }: PageProps) => {
+-  const members = createMembers(participants);
++/** 参加メンバーの人数。押すとメンバー一覧へ移動する（本物は next/link の Link で /member） */
++const ParticipantCountLink = ({ count }: { count: number }) => (
++  <a
++    href={MEMBER_PAGE_HREF}
++    target="_top"
++    className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
++  >
++    <Users aria-hidden className="size-4 text-muted-foreground" />
++    参加メンバー {count}人
++  </a>
++);
++
++const CTSchedulePage = ({ members, loginUser, weeks = 12 }: Props) => {
++  const participants = members.filter((m) => m.participate);
+   const schedules = createSchedules(members, weeks);
+ 
+   return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto max-w-7xl p-10">
+-        <div className="grid gap-5">
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
+-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
+-            <Button variant="outline">Sign in with Slack</Button>
+-          </div>
+-          <section>
+-            <p>
+-              現在のメンバー：
+-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+-              <a
+-                href="/?path=/story/pages-メンバー一覧--default"
+-                target="_top"
+-                className="underline"
+-              >
+-                {participants}人
+-              </a>
+-            </p>
+-          </section>
++    <PageFrame>
++      <div className="grid gap-2">
++        <HeaderStandIn title="CT組み合わせ表" loginUser={loginUser} />
++        <div>
++          <ParticipantCountLink count={participants.length} />
+         </div>
+-        <div className="mt-10">
+-          <CTScheduleCarousel schedules={schedules} />
+-        </div>
+-      </main>
+-    </>
++      </div>
++      {schedules.length > 0 ? (
++        <CTScheduleCarousel schedules={schedules} />
++      ) : (
++        <Alert variant="info">
++          <Users />
++          <AlertTitle>組み合わせを作れません</AlertTitle>
++          <AlertDescription>
++            CT に参加するメンバーが2人以上になると、組み合わせが表示されます。
++          </AlertDescription>
++        </Alert>
++      )}
++    </PageFrame>
+   );
+ };
+ 
+@@ -60,38 +68,71 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/）のトップページをモックデータで再現した画面。デザインシステムの変更が画面全体にどう効くかをここで確認する。",
++        component: [
++          "CT組み合わせ表。本番のパスは `/`（アプリのトップページ）。",
++          "チームメンバーが週の初めに「今週の相手は誰か」を確かめ、ハドルを始めるために開く。Slack のリンクやブックマークから直接来ることが多い。",
++          "",
++          "**構成**: `SiteHeader` → ページタイトルとログイン（`Header`）→ 参加メンバーの人数（メンバー一覧へのリンク）→ 週ごとのカード（`CTScheduleCarousel`）。",
++          "トップページなのでパンくずは付けない。",
++          "",
++          "※ ログインボタン・ユーザーメニューは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++          "組み合わせは本番と同じロジックで、Storybook を開いた日以降の月曜から作る（祝日はモックの `mockHolidays`）。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-    weeks: { control: { type: "range", min: 1, max: 52, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    weeks: 12,
++    members: createMembers(20),
+   },
+ } satisfies Meta<typeof CTSchedulePage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** 本番と同じ 20 人 */
++/** 未ログイン・参加 20 人（偶数）。右上に Slack ログインボタン */
+ export const Default: Story = {};
+ 
+-/** 参加人数が奇数（毎週1人がお休み） */
+-export const OddParticipants: Story = {
+-  args: { participants: 19 },
++/** ログイン中。右上はユーザーメニュー（アバター） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** 少人数 */
+-export const FewParticipants: Story = {
+-  args: { participants: 3 },
++/** 参加人数が奇数。毎週1人が「お休み」になる */
++export const OddMembers: Story = {
++  args: { members: createMembers(7) },
+ };
+ 
+-/** 参加者が1人以下（組み合わせが作れない） */
+-export const Empty: Story = {
+-  args: { participants: 1 },
++/** 参加人数が少ない（2人）。カードが短い */
++export const FewMembers: Story = {
++  args: { members: createMembers(2) },
+ };
++
++/** 長い表示名のメンバーが多いとき */
++export const LongNames: Story = {
++  args: {
++    members: createMembers(10).map((m) => ({
++      ...m,
++      slack_display_name: `${m.slack_display_name}-design-unit-kobe`,
++    })),
++  },
++};
++
++/** 参加メンバーが1人以下で、組み合わせを作れない */
++export const NoParticipants: Story = {
++  args: { members: [createMember(0), createMember(1, { participate: false })] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <HeaderStandIn title="CT組み合わせ表" />
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/MemberPage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/MemberPage.stories.tsx	2026-10-09 21:02:42
+@@ -1,8 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+-import { Trash2 } from "lucide-react";
+ import { Fragment } from "react";
++import type { User } from "@/app/actions";
+ import { MemberListItem } from "@/components/MemberListItem";
+-import { SiteHeader } from "@/components/SiteHeader";
+ import {
+   Breadcrumb,
+   BreadcrumbItem,
+@@ -11,122 +10,70 @@
+   BreadcrumbPage,
+   BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+-import { Button } from "@/components/ui/button";
+-import {
+-  Dialog,
+-  DialogClose,
+-  DialogContent,
+-  DialogFooter,
+-  DialogHeader,
+-  DialogTitle,
+-  DialogTrigger,
+-} from "@/components/ui/dialog";
+ import { Separator } from "@/components/ui/separator";
+-import { createMembers } from "@/src/design-system/mocks/ct";
+-import type { User } from "@/app/actions";
++import { createMember, createMembers } from "@/src/design-system/mocks/ct";
++import {
++  DeleteMemberDialogStandIn,
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-/**
+- * 削除ボタンの代用品。見た目と確認ダイアログは本物 (DeleteMemberDialog) と同じで、
+- * 「削除」を押してもデータは消えない (ダイアログが閉じるだけ)。
+- */
+-const DeleteMemberButton = ({ member }: { member: User }) => (
+-  <Dialog>
+-    <DialogTrigger asChild>
+-      <Button
+-        variant="ghost"
+-        size="icon"
+-        aria-label={`${member.slack_display_name} を削除`}
+-      >
+-        <Trash2 />
+-      </Button>
+-    </DialogTrigger>
+-    <DialogContent className="sm:max-w-md">
+-      <div className="grid gap-5">
+-        <DialogHeader>
+-          <DialogTitle>メンバーを削除</DialogTitle>
+-        </DialogHeader>
+-        <div className="grid gap-4">
+-          <div className="grid gap-2">
+-            {member.slack_display_name} を削除しますか？
+-          </div>
+-        </div>
+-        <DialogFooter>
+-          <DialogClose asChild>
+-            <Button variant="outline">キャンセル</Button>
+-          </DialogClose>
+-          <DialogClose asChild>
+-            <Button variant="destructive">削除</Button>
+-          </DialogClose>
+-        </DialogFooter>
+-      </div>
+-    </DialogContent>
+-  </Dialog>
++const TOP_PAGE_HREF = storyHref("ct組み合わせ表");
++
++/** パンくず。本物は BreadcrumbLink asChild で next/link の Link（/）を包む */
++const MemberBreadcrumb = () => (
++  <Breadcrumb>
++    <BreadcrumbList>
++      <BreadcrumbItem>
++        <BreadcrumbLink href={TOP_PAGE_HREF} target="_top">
++          CT組み合わせ表
++        </BreadcrumbLink>
++      </BreadcrumbItem>
++      <BreadcrumbSeparator />
++      <BreadcrumbItem>
++        <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
++      </BreadcrumbItem>
++    </BreadcrumbList>
++  </Breadcrumb>
+ );
+ 
+-type PageProps = {
+-  /** 参加者の人数 (このほかに不参加が1人いる) */
+-  participants: number;
+-  /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
+-  signedIn: boolean;
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
+ };
+ 
+-/**
+- * メンバー一覧ページ（src/app/member/page.tsx）の見た目を、モックデータで再現したもの。
+- * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
+- * (本物はサーバーアクションで DB に接続するため)。
+- */
+-const MemberPage = ({ participants, signedIn }: PageProps) => {
+-  const members = createMembers(participants);
++const MemberPage = ({ members, loginUser }: Props) => (
++  <PageFrame>
++    <div className="grid gap-2">
++      <MemberBreadcrumb />
++      <HeaderStandIn title="メンバー一覧" loginUser={loginUser} />
++    </div>
++    {members.length > 0 ? (
++      <div className="grid gap-3">
++        {members.map((member, index) => (
++          <Fragment key={member.slack_user_id}>
++            {index > 0 && <Separator />}
++            <MemberListItem
++              member={member}
++              action={
++                loginUser ? <DeleteMemberDialogStandIn member={member} /> : undefined
++              }
++            />
++          </Fragment>
++        ))}
++      </div>
++    ) : (
++      <p className="text-sm text-muted-foreground">
++        メンバーがいません。Slack でログインすると、メンバーとして追加されます。
++      </p>
++    )}
++  </PageFrame>
++);
+ 
+-  return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
+-        <div className="grid gap-2">
+-          <Breadcrumb>
+-            <BreadcrumbList>
+-              <BreadcrumbItem>
+-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+-                <BreadcrumbLink
+-                  href="/?path=/story/pages-ct組み合わせ表--default"
+-                  target="_top"
+-                >
+-                  CT組み合わせ表
+-                </BreadcrumbLink>
+-              </BreadcrumbItem>
+-              <BreadcrumbSeparator />
+-              <BreadcrumbItem>
+-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+-              </BreadcrumbItem>
+-            </BreadcrumbList>
+-          </Breadcrumb>
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
+-            {/* 本物は SigninWithSlackButton / UserDropdown */}
+-            {signedIn ? null : (
+-              <Button variant="outline">Sign in with Slack</Button>
+-            )}
+-          </div>
+-        </div>
+-        <section className="grid gap-3">
+-          {members.map((member) => (
+-            <Fragment key={member.id}>
+-              <MemberListItem
+-                member={member}
+-                action={
+-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+-                  signedIn && <DeleteMemberButton member={member} />
+-                }
+-              />
+-              <Separator />
+-            </Fragment>
+-          ))}
+-        </section>
+-      </main>
+-    </>
+-  );
+-};
+-
+ const meta = {
+   title: "Pages/メンバー一覧",
+   component: MemberPage,
+@@ -134,32 +81,75 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
++        component: [
++          "メンバー一覧。本番のパスは `/member`。",
++          "CT組み合わせ表の「参加メンバー ○人」から来る。参加メンバーと参加・不参加の状態を確かめ、ログイン中は不要になったメンバーを削除する。",
++          "",
++          "**構成**: `SiteHeader` → パンくず（CT組み合わせ表へ戻る）→ ページタイトルとログイン（`Header`）→ メンバーの行（`MemberListItem`、行の間に `Separator`）。",
++          "",
++          "**ログイン状態による違い**",
++          "- 未ログイン: 右上に Slack ログインボタン。行に操作は出さない",
++          "- ログイン中: 右上はユーザーメニュー（ログインボタンは出さない）。各行の右端に削除ボタンを出し、押すと確認ダイアログを挟む",
++          "",
++          "※ ログインボタン・ユーザーメニュー・削除ダイアログは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    signedIn: true,
++    members: createMembers(8),
+   },
+ } satisfies Meta<typeof MemberPage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** ログイン中。各行の右端に削除ボタンがあり、押すと確認ダイアログが開く */
++/** 未ログイン。参加 8 人と不参加 1 人。削除ボタンは出ない */
+ export const Default: Story = {};
+ 
+-/** ログインしていない状態（削除ボタンは出ない） */
+-export const SignedOut: Story = {
+-  args: { signedIn: false },
++/** ログイン中。各行に削除ボタンが出る（押すと確認ダイアログ） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** メンバーが少ない */
+-export const FewMembers: Story = {
+-  args: { participants: 2 },
++/** メンバーが多く、長い表示名が混ざるとき（ログイン中） */
++export const ManyMembersWithLongNames: Story = {
++  args: {
++    loginUser: createMember(0),
++    members: createMembers(22).map((m, i) =>
++      i % 5 === 1
++        ? { ...m, slack_display_name: `${m.slack_display_name}-design-unit-kobe-office` }
++        : m,
++    ),
++  },
+ };
++
++/** 全員が不参加 */
++export const AllNotParticipating: Story = {
++  args: {
++    members: createMembers(4).map((m) => ({ ...m, participate: false })),
++  },
++};
++
++/** メンバーが0人 */
++export const Empty: Story = {
++  args: { members: [] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <div className="grid gap-2">
++        <MemberBreadcrumb />
++        <HeaderStandIn title="メンバー一覧" />
++      </div>
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-09 21:02:26
+@@ -1,55 +1,63 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
++import { Users } from "lucide-react";
++import type { User } from "@/app/actions";
+ import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
+-import { SiteHeader } from "@/components/SiteHeader";
+-import { Button } from "@/components/ui/button";
+-import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
++import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import {
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-type PageProps = {
+-  /** 参加者の人数 */
+-  participants: number;
+-  /** 表示する週数（本番は5年分。Storybook では軽くするため絞る） */
+-  weeks: number;
++const MEMBER_PAGE_HREF = storyHref("メンバー一覧");
++
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
++  /** 表示する週の数 */
++  weeks?: number;
+ };
+ 
+-/**
+- * トップページ（src/app/page.tsx）の見た目を、モックデータで再現したもの。
+- * page.tsx はサーバー側で DB・Slack に接続するため、そのままは Storybook で動かせない。
+- * カード (CTScheduleCard) と組み合わせのロジックは本物を使い、ヘッダーのログインボタンだけ見た目の代用品にしている。
+- */
+-const CTSchedulePage = ({ participants, weeks }: PageProps) => {
+-  const members = createMembers(participants);
++/** 参加メンバーの人数。押すとメンバー一覧へ移動する（本物は next/link の Link で /member） */
++const ParticipantCountLink = ({ count }: { count: number }) => (
++  <a
++    href={MEMBER_PAGE_HREF}
++    target="_top"
++    className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
++  >
++    <Users aria-hidden className="size-4 text-muted-foreground" />
++    参加メンバー {count}人
++  </a>
++);
++
++const CTSchedulePage = ({ members, loginUser, weeks = 12 }: Props) => {
++  const participants = members.filter((m) => m.participate);
+   const schedules = createSchedules(members, weeks);
+ 
+   return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto max-w-7xl p-10">
+-        <div className="grid gap-5">
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
+-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
+-            <Button variant="outline">Sign in with Slack</Button>
+-          </div>
+-          <section>
+-            <p>
+-              現在のメンバー：
+-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+-              <a
+-                href="/?path=/story/pages-メンバー一覧--default"
+-                target="_top"
+-                className="underline"
+-              >
+-                {participants}人
+-              </a>
+-            </p>
+-          </section>
++    <PageFrame>
++      <div className="grid gap-2">
++        <HeaderStandIn title="CT組み合わせ表" loginUser={loginUser} />
++        <div>
++          <ParticipantCountLink count={participants.length} />
+         </div>
+-        <div className="mt-10">
+-          <CTScheduleCarousel schedules={schedules} />
+-        </div>
+-      </main>
+-    </>
++      </div>
++      {schedules.length > 0 ? (
++        <CTScheduleCarousel schedules={schedules} />
++      ) : (
++        <Alert variant="info">
++          <Users />
++          <AlertTitle>組み合わせを作れません</AlertTitle>
++          <AlertDescription>
++            CT に参加するメンバーが2人以上になると、組み合わせが表示されます。
++          </AlertDescription>
++        </Alert>
++      )}
++    </PageFrame>
+   );
+ };
+ 
+@@ -60,38 +68,71 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/）のトップページをモックデータで再現した画面。デザインシステムの変更が画面全体にどう効くかをここで確認する。",
++        component: [
++          "CT組み合わせ表。本番のパスは `/`（アプリのトップページ）。",
++          "チームメンバーが週の初めに「今週の相手は誰か」を確かめ、ハドルを始めるために開く。Slack のリンクやブックマークから直接来ることが多い。",
++          "",
++          "**構成**: `SiteHeader` → ページタイトルとログイン（`Header`）→ 参加メンバーの人数（メンバー一覧へのリンク）→ 週ごとのカード（`CTScheduleCarousel`）。",
++          "トップページなのでパンくずは付けない。",
++          "",
++          "※ ログインボタン・ユーザーメニューは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++          "組み合わせは本番と同じロジックで、Storybook を開いた日以降の月曜から作る（祝日はモックの `mockHolidays`）。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-    weeks: { control: { type: "range", min: 1, max: 52, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    weeks: 12,
++    members: createMembers(20),
+   },
+ } satisfies Meta<typeof CTSchedulePage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** 本番と同じ 20 人 */
++/** 未ログイン・参加 20 人（偶数）。右上に Slack ログインボタン */
+ export const Default: Story = {};
+ 
+-/** 参加人数が奇数（毎週1人がお休み） */
+-export const OddParticipants: Story = {
+-  args: { participants: 19 },
++/** ログイン中。右上はユーザーメニュー（アバター） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** 少人数 */
+-export const FewParticipants: Story = {
+-  args: { participants: 3 },
++/** 参加人数が奇数。毎週1人が「お休み」になる */
++export const OddMembers: Story = {
++  args: { members: createMembers(7) },
+ };
+ 
+-/** 参加者が1人以下（組み合わせが作れない） */
+-export const Empty: Story = {
+-  args: { participants: 1 },
++/** 参加人数が少ない（2人）。カードが短い */
++export const FewMembers: Story = {
++  args: { members: createMembers(2) },
+ };
++
++/** 長い表示名のメンバーが多いとき */
++export const LongNames: Story = {
++  args: {
++    members: createMembers(10).map((m) => ({
++      ...m,
++      slack_display_name: `${m.slack_display_name}-design-unit-kobe`,
++    })),
++  },
++};
++
++/** 参加メンバーが1人以下で、組み合わせを作れない */
++export const NoParticipants: Story = {
++  args: { members: [createMember(0), createMember(1, { participate: false })] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <HeaderStandIn title="CT組み合わせ表" />
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/MemberPage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/MemberPage.stories.tsx	2026-10-09 21:02:42
+@@ -1,8 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+-import { Trash2 } from "lucide-react";
+ import { Fragment } from "react";
++import type { User } from "@/app/actions";
+ import { MemberListItem } from "@/components/MemberListItem";
+-import { SiteHeader } from "@/components/SiteHeader";
+ import {
+   Breadcrumb,
+   BreadcrumbItem,
+@@ -11,122 +10,70 @@
+   BreadcrumbPage,
+   BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+-import { Button } from "@/components/ui/button";
+-import {
+-  Dialog,
+-  DialogClose,
+-  DialogContent,
+-  DialogFooter,
+-  DialogHeader,
+-  DialogTitle,
+-  DialogTrigger,
+-} from "@/components/ui/dialog";
+ import { Separator } from "@/components/ui/separator";
+-import { createMembers } from "@/src/design-system/mocks/ct";
+-import type { User } from "@/app/actions";
++import { createMember, createMembers } from "@/src/design-system/mocks/ct";
++import {
++  DeleteMemberDialogStandIn,
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-/**
+- * 削除ボタンの代用品。見た目と確認ダイアログは本物 (DeleteMemberDialog) と同じで、
+- * 「削除」を押してもデータは消えない (ダイアログが閉じるだけ)。
+- */
+-const DeleteMemberButton = ({ member }: { member: User }) => (
+-  <Dialog>
+-    <DialogTrigger asChild>
+-      <Button
+-        variant="ghost"
+-        size="icon"
+-        aria-label={`${member.slack_display_name} を削除`}
+-      >
+-        <Trash2 />
+-      </Button>
+-    </DialogTrigger>
+-    <DialogContent className="sm:max-w-md">
+-      <div className="grid gap-5">
+-        <DialogHeader>
+-          <DialogTitle>メンバーを削除</DialogTitle>
+-        </DialogHeader>
+-        <div className="grid gap-4">
+-          <div className="grid gap-2">
+-            {member.slack_display_name} を削除しますか？
+-          </div>
+-        </div>
+-        <DialogFooter>
+-          <DialogClose asChild>
+-            <Button variant="outline">キャンセル</Button>
+-          </DialogClose>
+-          <DialogClose asChild>
+-            <Button variant="destructive">削除</Button>
+-          </DialogClose>
+-        </DialogFooter>
+-      </div>
+-    </DialogContent>
+-  </Dialog>
++const TOP_PAGE_HREF = storyHref("ct組み合わせ表");
++
++/** パンくず。本物は BreadcrumbLink asChild で next/link の Link（/）を包む */
++const MemberBreadcrumb = () => (
++  <Breadcrumb>
++    <BreadcrumbList>
++      <BreadcrumbItem>
++        <BreadcrumbLink href={TOP_PAGE_HREF} target="_top">
++          CT組み合わせ表
++        </BreadcrumbLink>
++      </BreadcrumbItem>
++      <BreadcrumbSeparator />
++      <BreadcrumbItem>
++        <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
++      </BreadcrumbItem>
++    </BreadcrumbList>
++  </Breadcrumb>
+ );
+ 
+-type PageProps = {
+-  /** 参加者の人数 (このほかに不参加が1人いる) */
+-  participants: number;
+-  /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
+-  signedIn: boolean;
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
+ };
+ 
+-/**
+- * メンバー一覧ページ（src/app/member/page.tsx）の見た目を、モックデータで再現したもの。
+- * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
+- * (本物はサーバーアクションで DB に接続するため)。
+- */
+-const MemberPage = ({ participants, signedIn }: PageProps) => {
+-  const members = createMembers(participants);
++const MemberPage = ({ members, loginUser }: Props) => (
++  <PageFrame>
++    <div className="grid gap-2">
++      <MemberBreadcrumb />
++      <HeaderStandIn title="メンバー一覧" loginUser={loginUser} />
++    </div>
++    {members.length > 0 ? (
++      <div className="grid gap-3">
++        {members.map((member, index) => (
++          <Fragment key={member.slack_user_id}>
++            {index > 0 && <Separator />}
++            <MemberListItem
++              member={member}
++              action={
++                loginUser ? <DeleteMemberDialogStandIn member={member} /> : undefined
++              }
++            />
++          </Fragment>
++        ))}
++      </div>
++    ) : (
++      <p className="text-sm text-muted-foreground">
++        メンバーがいません。Slack でログインすると、メンバーとして追加されます。
++      </p>
++    )}
++  </PageFrame>
++);
+ 
+-  return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
+-        <div className="grid gap-2">
+-          <Breadcrumb>
+-            <BreadcrumbList>
+-              <BreadcrumbItem>
+-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+-                <BreadcrumbLink
+-                  href="/?path=/story/pages-ct組み合わせ表--default"
+-                  target="_top"
+-                >
+-                  CT組み合わせ表
+-                </BreadcrumbLink>
+-              </BreadcrumbItem>
+-              <BreadcrumbSeparator />
+-              <BreadcrumbItem>
+-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+-              </BreadcrumbItem>
+-            </BreadcrumbList>
+-          </Breadcrumb>
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
+-            {/* 本物は SigninWithSlackButton / UserDropdown */}
+-            {signedIn ? null : (
+-              <Button variant="outline">Sign in with Slack</Button>
+-            )}
+-          </div>
+-        </div>
+-        <section className="grid gap-3">
+-          {members.map((member) => (
+-            <Fragment key={member.id}>
+-              <MemberListItem
+-                member={member}
+-                action={
+-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+-                  signedIn && <DeleteMemberButton member={member} />
+-                }
+-              />
+-              <Separator />
+-            </Fragment>
+-          ))}
+-        </section>
+-      </main>
+-    </>
+-  );
+-};
+-
+ const meta = {
+   title: "Pages/メンバー一覧",
+   component: MemberPage,
+@@ -134,32 +81,75 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
++        component: [
++          "メンバー一覧。本番のパスは `/member`。",
++          "CT組み合わせ表の「参加メンバー ○人」から来る。参加メンバーと参加・不参加の状態を確かめ、ログイン中は不要になったメンバーを削除する。",
++          "",
++          "**構成**: `SiteHeader` → パンくず（CT組み合わせ表へ戻る）→ ページタイトルとログイン（`Header`）→ メンバーの行（`MemberListItem`、行の間に `Separator`）。",
++          "",
++          "**ログイン状態による違い**",
++          "- 未ログイン: 右上に Slack ログインボタン。行に操作は出さない",
++          "- ログイン中: 右上はユーザーメニュー（ログインボタンは出さない）。各行の右端に削除ボタンを出し、押すと確認ダイアログを挟む",
++          "",
++          "※ ログインボタン・ユーザーメニュー・削除ダイアログは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    signedIn: true,
++    members: createMembers(8),
+   },
+ } satisfies Meta<typeof MemberPage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** ログイン中。各行の右端に削除ボタンがあり、押すと確認ダイアログが開く */
++/** 未ログイン。参加 8 人と不参加 1 人。削除ボタンは出ない */
+ export const Default: Story = {};
+ 
+-/** ログインしていない状態（削除ボタンは出ない） */
+-export const SignedOut: Story = {
+-  args: { signedIn: false },
++/** ログイン中。各行に削除ボタンが出る（押すと確認ダイアログ） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** メンバーが少ない */
+-export const FewMembers: Story = {
+-  args: { participants: 2 },
++/** メンバーが多く、長い表示名が混ざるとき（ログイン中） */
++export const ManyMembersWithLongNames: Story = {
++  args: {
++    loginUser: createMember(0),
++    members: createMembers(22).map((m, i) =>
++      i % 5 === 1
++        ? { ...m, slack_display_name: `${m.slack_display_name}-design-unit-kobe-office` }
++        : m,
++    ),
++  },
+ };
++
++/** 全員が不参加 */
++export const AllNotParticipating: Story = {
++  args: {
++    members: createMembers(4).map((m) => ({ ...m, participate: false })),
++  },
++};
++
++/** メンバーが0人 */
++export const Empty: Story = {
++  args: { members: [] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <div className="grid gap-2">
++        <MemberBreadcrumb />
++        <HeaderStandIn title="メンバー一覧" />
++      </div>
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-09 21:02:26
+@@ -1,55 +1,63 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
++import { Users } from "lucide-react";
++import type { User } from "@/app/actions";
+ import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
+-import { SiteHeader } from "@/components/SiteHeader";
+-import { Button } from "@/components/ui/button";
+-import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
++import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import {
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-type PageProps = {
+-  /** 参加者の人数 */
+-  participants: number;
+-  /** 表示する週数（本番は5年分。Storybook では軽くするため絞る） */
+-  weeks: number;
++const MEMBER_PAGE_HREF = storyHref("メンバー一覧");
++
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
++  /** 表示する週の数 */
++  weeks?: number;
+ };
+ 
+-/**
+- * トップページ（src/app/page.tsx）の見た目を、モックデータで再現したもの。
+- * page.tsx はサーバー側で DB・Slack に接続するため、そのままは Storybook で動かせない。
+- * カード (CTScheduleCard) と組み合わせのロジックは本物を使い、ヘッダーのログインボタンだけ見た目の代用品にしている。
+- */
+-const CTSchedulePage = ({ participants, weeks }: PageProps) => {
+-  const members = createMembers(participants);
++/** 参加メンバーの人数。押すとメンバー一覧へ移動する（本物は next/link の Link で /member） */
++const ParticipantCountLink = ({ count }: { count: number }) => (
++  <a
++    href={MEMBER_PAGE_HREF}
++    target="_top"
++    className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
++  >
++    <Users aria-hidden className="size-4 text-muted-foreground" />
++    参加メンバー {count}人
++  </a>
++);
++
++const CTSchedulePage = ({ members, loginUser, weeks = 12 }: Props) => {
++  const participants = members.filter((m) => m.participate);
+   const schedules = createSchedules(members, weeks);
+ 
+   return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto max-w-7xl p-10">
+-        <div className="grid gap-5">
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
+-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
+-            <Button variant="outline">Sign in with Slack</Button>
+-          </div>
+-          <section>
+-            <p>
+-              現在のメンバー：
+-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+-              <a
+-                href="/?path=/story/pages-メンバー一覧--default"
+-                target="_top"
+-                className="underline"
+-              >
+-                {participants}人
+-              </a>
+-            </p>
+-          </section>
++    <PageFrame>
++      <div className="grid gap-2">
++        <HeaderStandIn title="CT組み合わせ表" loginUser={loginUser} />
++        <div>
++          <ParticipantCountLink count={participants.length} />
+         </div>
+-        <div className="mt-10">
+-          <CTScheduleCarousel schedules={schedules} />
+-        </div>
+-      </main>
+-    </>
++      </div>
++      {schedules.length > 0 ? (
++        <CTScheduleCarousel schedules={schedules} />
++      ) : (
++        <Alert variant="info">
++          <Users />
++          <AlertTitle>組み合わせを作れません</AlertTitle>
++          <AlertDescription>
++            CT に参加するメンバーが2人以上になると、組み合わせが表示されます。
++          </AlertDescription>
++        </Alert>
++      )}
++    </PageFrame>
+   );
+ };
+ 
+@@ -60,38 +68,71 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/）のトップページをモックデータで再現した画面。デザインシステムの変更が画面全体にどう効くかをここで確認する。",
++        component: [
++          "CT組み合わせ表。本番のパスは `/`（アプリのトップページ）。",
++          "チームメンバーが週の初めに「今週の相手は誰か」を確かめ、ハドルを始めるために開く。Slack のリンクやブックマークから直接来ることが多い。",
++          "",
++          "**構成**: `SiteHeader` → ページタイトルとログイン（`Header`）→ 参加メンバーの人数（メンバー一覧へのリンク）→ 週ごとのカード（`CTScheduleCarousel`）。",
++          "トップページなのでパンくずは付けない。",
++          "",
++          "※ ログインボタン・ユーザーメニューは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++          "組み合わせは本番と同じロジックで、Storybook を開いた日以降の月曜から作る（祝日はモックの `mockHolidays`）。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-    weeks: { control: { type: "range", min: 1, max: 52, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    weeks: 12,
++    members: createMembers(20),
+   },
+ } satisfies Meta<typeof CTSchedulePage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** 本番と同じ 20 人 */
++/** 未ログイン・参加 20 人（偶数）。右上に Slack ログインボタン */
+ export const Default: Story = {};
+ 
+-/** 参加人数が奇数（毎週1人がお休み） */
+-export const OddParticipants: Story = {
+-  args: { participants: 19 },
++/** ログイン中。右上はユーザーメニュー（アバター） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** 少人数 */
+-export const FewParticipants: Story = {
+-  args: { participants: 3 },
++/** 参加人数が奇数。毎週1人が「お休み」になる */
++export const OddMembers: Story = {
++  args: { members: createMembers(7) },
+ };
+ 
+-/** 参加者が1人以下（組み合わせが作れない） */
+-export const Empty: Story = {
+-  args: { participants: 1 },
++/** 参加人数が少ない（2人）。カードが短い */
++export const FewMembers: Story = {
++  args: { members: createMembers(2) },
+ };
++
++/** 長い表示名のメンバーが多いとき */
++export const LongNames: Story = {
++  args: {
++    members: createMembers(10).map((m) => ({
++      ...m,
++      slack_display_name: `${m.slack_display_name}-design-unit-kobe`,
++    })),
++  },
++};
++
++/** 参加メンバーが1人以下で、組み合わせを作れない */
++export const NoParticipants: Story = {
++  args: { members: [createMember(0), createMember(1, { participate: false })] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <HeaderStandIn title="CT組み合わせ表" />
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/MemberPage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/MemberPage.stories.tsx	2026-10-09 21:02:42
+@@ -1,8 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+-import { Trash2 } from "lucide-react";
+ import { Fragment } from "react";
++import type { User } from "@/app/actions";
+ import { MemberListItem } from "@/components/MemberListItem";
+-import { SiteHeader } from "@/components/SiteHeader";
+ import {
+   Breadcrumb,
+   BreadcrumbItem,
+@@ -11,122 +10,70 @@
+   BreadcrumbPage,
+   BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+-import { Button } from "@/components/ui/button";
+-import {
+-  Dialog,
+-  DialogClose,
+-  DialogContent,
+-  DialogFooter,
+-  DialogHeader,
+-  DialogTitle,
+-  DialogTrigger,
+-} from "@/components/ui/dialog";
+ import { Separator } from "@/components/ui/separator";
+-import { createMembers } from "@/src/design-system/mocks/ct";
+-import type { User } from "@/app/actions";
++import { createMember, createMembers } from "@/src/design-system/mocks/ct";
++import {
++  DeleteMemberDialogStandIn,
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-/**
+- * 削除ボタンの代用品。見た目と確認ダイアログは本物 (DeleteMemberDialog) と同じで、
+- * 「削除」を押してもデータは消えない (ダイアログが閉じるだけ)。
+- */
+-const DeleteMemberButton = ({ member }: { member: User }) => (
+-  <Dialog>
+-    <DialogTrigger asChild>
+-      <Button
+-        variant="ghost"
+-        size="icon"
+-        aria-label={`${member.slack_display_name} を削除`}
+-      >
+-        <Trash2 />
+-      </Button>
+-    </DialogTrigger>
+-    <DialogContent className="sm:max-w-md">
+-      <div className="grid gap-5">
+-        <DialogHeader>
+-          <DialogTitle>メンバーを削除</DialogTitle>
+-        </DialogHeader>
+-        <div className="grid gap-4">
+-          <div className="grid gap-2">
+-            {member.slack_display_name} を削除しますか？
+-          </div>
+-        </div>
+-        <DialogFooter>
+-          <DialogClose asChild>
+-            <Button variant="outline">キャンセル</Button>
+-          </DialogClose>
+-          <DialogClose asChild>
+-            <Button variant="destructive">削除</Button>
+-          </DialogClose>
+-        </DialogFooter>
+-      </div>
+-    </DialogContent>
+-  </Dialog>
++const TOP_PAGE_HREF = storyHref("ct組み合わせ表");
++
++/** パンくず。本物は BreadcrumbLink asChild で next/link の Link（/）を包む */
++const MemberBreadcrumb = () => (
++  <Breadcrumb>
++    <BreadcrumbList>
++      <BreadcrumbItem>
++        <BreadcrumbLink href={TOP_PAGE_HREF} target="_top">
++          CT組み合わせ表
++        </BreadcrumbLink>
++      </BreadcrumbItem>
++      <BreadcrumbSeparator />
++      <BreadcrumbItem>
++        <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
++      </BreadcrumbItem>
++    </BreadcrumbList>
++  </Breadcrumb>
+ );
+ 
+-type PageProps = {
+-  /** 参加者の人数 (このほかに不参加が1人いる) */
+-  participants: number;
+-  /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
+-  signedIn: boolean;
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
+ };
+ 
+-/**
+- * メンバー一覧ページ（src/app/member/page.tsx）の見た目を、モックデータで再現したもの。
+- * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
+- * (本物はサーバーアクションで DB に接続するため)。
+- */
+-const MemberPage = ({ participants, signedIn }: PageProps) => {
+-  const members = createMembers(participants);
++const MemberPage = ({ members, loginUser }: Props) => (
++  <PageFrame>
++    <div className="grid gap-2">
++      <MemberBreadcrumb />
++      <HeaderStandIn title="メンバー一覧" loginUser={loginUser} />
++    </div>
++    {members.length > 0 ? (
++      <div className="grid gap-3">
++        {members.map((member, index) => (
++          <Fragment key={member.slack_user_id}>
++            {index > 0 && <Separator />}
++            <MemberListItem
++              member={member}
++              action={
++                loginUser ? <DeleteMemberDialogStandIn member={member} /> : undefined
++              }
++            />
++          </Fragment>
++        ))}
++      </div>
++    ) : (
++      <p className="text-sm text-muted-foreground">
++        メンバーがいません。Slack でログインすると、メンバーとして追加されます。
++      </p>
++    )}
++  </PageFrame>
++);
+ 
+-  return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
+-        <div className="grid gap-2">
+-          <Breadcrumb>
+-            <BreadcrumbList>
+-              <BreadcrumbItem>
+-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+-                <BreadcrumbLink
+-                  href="/?path=/story/pages-ct組み合わせ表--default"
+-                  target="_top"
+-                >
+-                  CT組み合わせ表
+-                </BreadcrumbLink>
+-              </BreadcrumbItem>
+-              <BreadcrumbSeparator />
+-              <BreadcrumbItem>
+-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+-              </BreadcrumbItem>
+-            </BreadcrumbList>
+-          </Breadcrumb>
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
+-            {/* 本物は SigninWithSlackButton / UserDropdown */}
+-            {signedIn ? null : (
+-              <Button variant="outline">Sign in with Slack</Button>
+-            )}
+-          </div>
+-        </div>
+-        <section className="grid gap-3">
+-          {members.map((member) => (
+-            <Fragment key={member.id}>
+-              <MemberListItem
+-                member={member}
+-                action={
+-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+-                  signedIn && <DeleteMemberButton member={member} />
+-                }
+-              />
+-              <Separator />
+-            </Fragment>
+-          ))}
+-        </section>
+-      </main>
+-    </>
+-  );
+-};
+-
+ const meta = {
+   title: "Pages/メンバー一覧",
+   component: MemberPage,
+@@ -134,32 +81,75 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
++        component: [
++          "メンバー一覧。本番のパスは `/member`。",
++          "CT組み合わせ表の「参加メンバー ○人」から来る。参加メンバーと参加・不参加の状態を確かめ、ログイン中は不要になったメンバーを削除する。",
++          "",
++          "**構成**: `SiteHeader` → パンくず（CT組み合わせ表へ戻る）→ ページタイトルとログイン（`Header`）→ メンバーの行（`MemberListItem`、行の間に `Separator`）。",
++          "",
++          "**ログイン状態による違い**",
++          "- 未ログイン: 右上に Slack ログインボタン。行に操作は出さない",
++          "- ログイン中: 右上はユーザーメニュー（ログインボタンは出さない）。各行の右端に削除ボタンを出し、押すと確認ダイアログを挟む",
++          "",
++          "※ ログインボタン・ユーザーメニュー・削除ダイアログは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    signedIn: true,
++    members: createMembers(8),
+   },
+ } satisfies Meta<typeof MemberPage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** ログイン中。各行の右端に削除ボタンがあり、押すと確認ダイアログが開く */
++/** 未ログイン。参加 8 人と不参加 1 人。削除ボタンは出ない */
+ export const Default: Story = {};
+ 
+-/** ログインしていない状態（削除ボタンは出ない） */
+-export const SignedOut: Story = {
+-  args: { signedIn: false },
++/** ログイン中。各行に削除ボタンが出る（押すと確認ダイアログ） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** メンバーが少ない */
+-export const FewMembers: Story = {
+-  args: { participants: 2 },
++/** メンバーが多く、長い表示名が混ざるとき（ログイン中） */
++export const ManyMembersWithLongNames: Story = {
++  args: {
++    loginUser: createMember(0),
++    members: createMembers(22).map((m, i) =>
++      i % 5 === 1
++        ? { ...m, slack_display_name: `${m.slack_display_name}-design-unit-kobe-office` }
++        : m,
++    ),
++  },
+ };
++
++/** 全員が不参加 */
++export const AllNotParticipating: Story = {
++  args: {
++    members: createMembers(4).map((m) => ({ ...m, participate: false })),
++  },
++};
++
++/** メンバーが0人 */
++export const Empty: Story = {
++  args: { members: [] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <div className="grid gap-2">
++        <MemberBreadcrumb />
++        <HeaderStandIn title="メンバー一覧" />
++      </div>
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/CTSchedulePage.stories.tsx	2026-10-09 21:02:26
+@@ -1,55 +1,63 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
++import { Users } from "lucide-react";
++import type { User } from "@/app/actions";
+ import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
+-import { SiteHeader } from "@/components/SiteHeader";
+-import { Button } from "@/components/ui/button";
+-import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
++import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
++import {
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-type PageProps = {
+-  /** 参加者の人数 */
+-  participants: number;
+-  /** 表示する週数（本番は5年分。Storybook では軽くするため絞る） */
+-  weeks: number;
++const MEMBER_PAGE_HREF = storyHref("メンバー一覧");
++
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
++  /** 表示する週の数 */
++  weeks?: number;
+ };
+ 
+-/**
+- * トップページ（src/app/page.tsx）の見た目を、モックデータで再現したもの。
+- * page.tsx はサーバー側で DB・Slack に接続するため、そのままは Storybook で動かせない。
+- * カード (CTScheduleCard) と組み合わせのロジックは本物を使い、ヘッダーのログインボタンだけ見た目の代用品にしている。
+- */
+-const CTSchedulePage = ({ participants, weeks }: PageProps) => {
+-  const members = createMembers(participants);
++/** 参加メンバーの人数。押すとメンバー一覧へ移動する（本物は next/link の Link で /member） */
++const ParticipantCountLink = ({ count }: { count: number }) => (
++  <a
++    href={MEMBER_PAGE_HREF}
++    target="_top"
++    className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
++  >
++    <Users aria-hidden className="size-4 text-muted-foreground" />
++    参加メンバー {count}人
++  </a>
++);
++
++const CTSchedulePage = ({ members, loginUser, weeks = 12 }: Props) => {
++  const participants = members.filter((m) => m.participate);
+   const schedules = createSchedules(members, weeks);
+ 
+   return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto max-w-7xl p-10">
+-        <div className="grid gap-5">
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
+-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
+-            <Button variant="outline">Sign in with Slack</Button>
+-          </div>
+-          <section>
+-            <p>
+-              現在のメンバー：
+-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+-              <a
+-                href="/?path=/story/pages-メンバー一覧--default"
+-                target="_top"
+-                className="underline"
+-              >
+-                {participants}人
+-              </a>
+-            </p>
+-          </section>
++    <PageFrame>
++      <div className="grid gap-2">
++        <HeaderStandIn title="CT組み合わせ表" loginUser={loginUser} />
++        <div>
++          <ParticipantCountLink count={participants.length} />
+         </div>
+-        <div className="mt-10">
+-          <CTScheduleCarousel schedules={schedules} />
+-        </div>
+-      </main>
+-    </>
++      </div>
++      {schedules.length > 0 ? (
++        <CTScheduleCarousel schedules={schedules} />
++      ) : (
++        <Alert variant="info">
++          <Users />
++          <AlertTitle>組み合わせを作れません</AlertTitle>
++          <AlertDescription>
++            CT に参加するメンバーが2人以上になると、組み合わせが表示されます。
++          </AlertDescription>
++        </Alert>
++      )}
++    </PageFrame>
+   );
+ };
+ 
+@@ -60,38 +68,71 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/）のトップページをモックデータで再現した画面。デザインシステムの変更が画面全体にどう効くかをここで確認する。",
++        component: [
++          "CT組み合わせ表。本番のパスは `/`（アプリのトップページ）。",
++          "チームメンバーが週の初めに「今週の相手は誰か」を確かめ、ハドルを始めるために開く。Slack のリンクやブックマークから直接来ることが多い。",
++          "",
++          "**構成**: `SiteHeader` → ページタイトルとログイン（`Header`）→ 参加メンバーの人数（メンバー一覧へのリンク）→ 週ごとのカード（`CTScheduleCarousel`）。",
++          "トップページなのでパンくずは付けない。",
++          "",
++          "※ ログインボタン・ユーザーメニューは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++          "組み合わせは本番と同じロジックで、Storybook を開いた日以降の月曜から作る（祝日はモックの `mockHolidays`）。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-    weeks: { control: { type: "range", min: 1, max: 52, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    weeks: 12,
++    members: createMembers(20),
+   },
+ } satisfies Meta<typeof CTSchedulePage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** 本番と同じ 20 人 */
++/** 未ログイン・参加 20 人（偶数）。右上に Slack ログインボタン */
+ export const Default: Story = {};
+ 
+-/** 参加人数が奇数（毎週1人がお休み） */
+-export const OddParticipants: Story = {
+-  args: { participants: 19 },
++/** ログイン中。右上はユーザーメニュー（アバター） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** 少人数 */
+-export const FewParticipants: Story = {
+-  args: { participants: 3 },
++/** 参加人数が奇数。毎週1人が「お休み」になる */
++export const OddMembers: Story = {
++  args: { members: createMembers(7) },
+ };
+ 
+-/** 参加者が1人以下（組み合わせが作れない） */
+-export const Empty: Story = {
+-  args: { participants: 1 },
++/** 参加人数が少ない（2人）。カードが短い */
++export const FewMembers: Story = {
++  args: { members: createMembers(2) },
+ };
++
++/** 長い表示名のメンバーが多いとき */
++export const LongNames: Story = {
++  args: {
++    members: createMembers(10).map((m) => ({
++      ...m,
++      slack_display_name: `${m.slack_display_name}-design-unit-kobe`,
++    })),
++  },
++};
++
++/** 参加メンバーが1人以下で、組み合わせを作れない */
++export const NoParticipants: Story = {
++  args: { members: [createMember(0), createMember(1, { participate: false })] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <HeaderStandIn title="CT組み合わせ表" />
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};
+--- /Users/aito/ct-schedule/src/design-system/pages/MemberPage.stories.tsx	2026-10-08 14:43:56
++++ src/design-system/pages/MemberPage.stories.tsx	2026-10-09 21:02:42
+@@ -1,8 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+-import { Trash2 } from "lucide-react";
+ import { Fragment } from "react";
++import type { User } from "@/app/actions";
+ import { MemberListItem } from "@/components/MemberListItem";
+-import { SiteHeader } from "@/components/SiteHeader";
+ import {
+   Breadcrumb,
+   BreadcrumbItem,
+@@ -11,122 +10,70 @@
+   BreadcrumbPage,
+   BreadcrumbSeparator,
+ } from "@/components/ui/breadcrumb";
+-import { Button } from "@/components/ui/button";
+-import {
+-  Dialog,
+-  DialogClose,
+-  DialogContent,
+-  DialogFooter,
+-  DialogHeader,
+-  DialogTitle,
+-  DialogTrigger,
+-} from "@/components/ui/dialog";
+ import { Separator } from "@/components/ui/separator";
+-import { createMembers } from "@/src/design-system/mocks/ct";
+-import type { User } from "@/app/actions";
++import { createMember, createMembers } from "@/src/design-system/mocks/ct";
++import {
++  DeleteMemberDialogStandIn,
++  HeaderStandIn,
++  PageError,
++  PageFrame,
++  PageLoading,
++  storyHref,
++} from "./PageStandIns";
+ 
+-/**
+- * 削除ボタンの代用品。見た目と確認ダイアログは本物 (DeleteMemberDialog) と同じで、
+- * 「削除」を押してもデータは消えない (ダイアログが閉じるだけ)。
+- */
+-const DeleteMemberButton = ({ member }: { member: User }) => (
+-  <Dialog>
+-    <DialogTrigger asChild>
+-      <Button
+-        variant="ghost"
+-        size="icon"
+-        aria-label={`${member.slack_display_name} を削除`}
+-      >
+-        <Trash2 />
+-      </Button>
+-    </DialogTrigger>
+-    <DialogContent className="sm:max-w-md">
+-      <div className="grid gap-5">
+-        <DialogHeader>
+-          <DialogTitle>メンバーを削除</DialogTitle>
+-        </DialogHeader>
+-        <div className="grid gap-4">
+-          <div className="grid gap-2">
+-            {member.slack_display_name} を削除しますか？
+-          </div>
+-        </div>
+-        <DialogFooter>
+-          <DialogClose asChild>
+-            <Button variant="outline">キャンセル</Button>
+-          </DialogClose>
+-          <DialogClose asChild>
+-            <Button variant="destructive">削除</Button>
+-          </DialogClose>
+-        </DialogFooter>
+-      </div>
+-    </DialogContent>
+-  </Dialog>
++const TOP_PAGE_HREF = storyHref("ct組み合わせ表");
++
++/** パンくず。本物は BreadcrumbLink asChild で next/link の Link（/）を包む */
++const MemberBreadcrumb = () => (
++  <Breadcrumb>
++    <BreadcrumbList>
++      <BreadcrumbItem>
++        <BreadcrumbLink href={TOP_PAGE_HREF} target="_top">
++          CT組み合わせ表
++        </BreadcrumbLink>
++      </BreadcrumbItem>
++      <BreadcrumbSeparator />
++      <BreadcrumbItem>
++        <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
++      </BreadcrumbItem>
++    </BreadcrumbList>
++  </Breadcrumb>
+ );
+ 
+-type PageProps = {
+-  /** 参加者の人数 (このほかに不参加が1人いる) */
+-  participants: number;
+-  /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
+-  signedIn: boolean;
++type Props = {
++  members: User[];
++  /** ログイン中のユーザー。無ければ未ログイン */
++  loginUser?: User;
+ };
+ 
+-/**
+- * メンバー一覧ページ（src/app/member/page.tsx）の見た目を、モックデータで再現したもの。
+- * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
+- * (本物はサーバーアクションで DB に接続するため)。
+- */
+-const MemberPage = ({ participants, signedIn }: PageProps) => {
+-  const members = createMembers(participants);
++const MemberPage = ({ members, loginUser }: Props) => (
++  <PageFrame>
++    <div className="grid gap-2">
++      <MemberBreadcrumb />
++      <HeaderStandIn title="メンバー一覧" loginUser={loginUser} />
++    </div>
++    {members.length > 0 ? (
++      <div className="grid gap-3">
++        {members.map((member, index) => (
++          <Fragment key={member.slack_user_id}>
++            {index > 0 && <Separator />}
++            <MemberListItem
++              member={member}
++              action={
++                loginUser ? <DeleteMemberDialogStandIn member={member} /> : undefined
++              }
++            />
++          </Fragment>
++        ))}
++      </div>
++    ) : (
++      <p className="text-sm text-muted-foreground">
++        メンバーがいません。Slack でログインすると、メンバーとして追加されます。
++      </p>
++    )}
++  </PageFrame>
++);
+ 
+-  return (
+-    <>
+-      <SiteHeader />
+-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
+-        <div className="grid gap-2">
+-          <Breadcrumb>
+-            <BreadcrumbList>
+-              <BreadcrumbItem>
+-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+-                <BreadcrumbLink
+-                  href="/?path=/story/pages-ct組み合わせ表--default"
+-                  target="_top"
+-                >
+-                  CT組み合わせ表
+-                </BreadcrumbLink>
+-              </BreadcrumbItem>
+-              <BreadcrumbSeparator />
+-              <BreadcrumbItem>
+-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+-              </BreadcrumbItem>
+-            </BreadcrumbList>
+-          </Breadcrumb>
+-          <div className="flex items-center justify-between gap-10">
+-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
+-            {/* 本物は SigninWithSlackButton / UserDropdown */}
+-            {signedIn ? null : (
+-              <Button variant="outline">Sign in with Slack</Button>
+-            )}
+-          </div>
+-        </div>
+-        <section className="grid gap-3">
+-          {members.map((member) => (
+-            <Fragment key={member.id}>
+-              <MemberListItem
+-                member={member}
+-                action={
+-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+-                  signedIn && <DeleteMemberButton member={member} />
+-                }
+-              />
+-              <Separator />
+-            </Fragment>
+-          ))}
+-        </section>
+-      </main>
+-    </>
+-  );
+-};
+-
+ const meta = {
+   title: "Pages/メンバー一覧",
+   component: MemberPage,
+@@ -134,32 +81,75 @@
+     layout: "fullscreen",
+     docs: {
+       description: {
+-        component:
+-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
++        component: [
++          "メンバー一覧。本番のパスは `/member`。",
++          "CT組み合わせ表の「参加メンバー ○人」から来る。参加メンバーと参加・不参加の状態を確かめ、ログイン中は不要になったメンバーを削除する。",
++          "",
++          "**構成**: `SiteHeader` → パンくず（CT組み合わせ表へ戻る）→ ページタイトルとログイン（`Header`）→ メンバーの行（`MemberListItem`、行の間に `Separator`）。",
++          "",
++          "**ログイン状態による違い**",
++          "- 未ログイン: 右上に Slack ログインボタン。行に操作は出さない",
++          "- ログイン中: 右上はユーザーメニュー（ログインボタンは出さない）。各行の右端に削除ボタンを出し、押すと確認ダイアログを挟む",
++          "",
++          "※ ログインボタン・ユーザーメニュー・削除ダイアログは Storybook で動かないため代用品（`PageStandIns.tsx`）を使っている。",
++        ].join("\n"),
+       },
+     },
+   },
+-  argTypes: {
+-    participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+-  },
+   args: {
+-    participants: 20,
+-    signedIn: true,
++    members: createMembers(8),
+   },
+ } satisfies Meta<typeof MemberPage>;
+ 
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** ログイン中。各行の右端に削除ボタンがあり、押すと確認ダイアログが開く */
++/** 未ログイン。参加 8 人と不参加 1 人。削除ボタンは出ない */
+ export const Default: Story = {};
+ 
+-/** ログインしていない状態（削除ボタンは出ない） */
+-export const SignedOut: Story = {
+-  args: { signedIn: false },
++/** ログイン中。各行に削除ボタンが出る（押すと確認ダイアログ） */
++export const LoggedIn: Story = {
++  args: { loginUser: createMember(0) },
+ };
+ 
+-/** メンバーが少ない */
+-export const FewMembers: Story = {
+-  args: { participants: 2 },
++/** メンバーが多く、長い表示名が混ざるとき（ログイン中） */
++export const ManyMembersWithLongNames: Story = {
++  args: {
++    loginUser: createMember(0),
++    members: createMembers(22).map((m, i) =>
++      i % 5 === 1
++        ? { ...m, slack_display_name: `${m.slack_display_name}-design-unit-kobe-office` }
++        : m,
++    ),
++  },
+ };
++
++/** 全員が不参加 */
++export const AllNotParticipating: Story = {
++  args: {
++    members: createMembers(4).map((m) => ({ ...m, participate: false })),
++  },
++};
++
++/** メンバーが0人 */
++export const Empty: Story = {
++  args: { members: [] },
++};
++
++/** 読み込み中（本物は app/loading.tsx） */
++export const Loading: Story = {
++  render: () => <PageLoading />,
++};
++
++/** データの取得に失敗した */
++export const LoadError: Story = {
++  render: () => (
++    <PageFrame>
++      <div className="grid gap-2">
++        <MemberBreadcrumb />
++        <HeaderStandIn title="メンバー一覧" />
++      </div>
++      <PageError message="データベースに接続できませんでした。時間をおいて再読み込みしてください。" />
++    </PageFrame>
++  ),
++};

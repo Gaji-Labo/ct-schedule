@@ -21,7 +21,7 @@ mkdir -p "$dest"
 # 検証の材料 (experiments/) とビルド成果物・秘密情報は持ち込まない
 rsync -a \
   --exclude .git --exclude node_modules --exclude storybook-static --exclude .next \
-  --exclude '.env*' --exclude .vercel --exclude experiments \
+  --exclude '.env*' --exclude .vercel --exclude experiments --exclude .implement-ui --exclude .claude/launch.json \
   "$repo/" "$dest/"
 
 if [ "$kind" = reproduce ]; then

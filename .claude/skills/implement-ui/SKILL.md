@@ -94,11 +94,16 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
       "decision": "どう決めたか",
       "reason": "なぜそうしたか",
       "basis": "既存コードから類推 | 一般的な慣習 | 依頼文から解釈 | 根拠なし",
-      "missing_rule": "どこに何が書いてあれば迷わなかったか"
+      "fix": {
+        "where": "どこに書いてあれば迷わなかったか (例: DESIGN.md「余白・サイズ」、src/design-system/guidelines/Carousel.mdx、Skill implement-ui「画面の Story」)",
+        "what": "何が書いてあれば迷わなかったか (足すルール・値・OK/NG 例をそのまま書ける形で)"
+      }
     }
   ]
 }
 ```
+
+`fix` は DESIGN.md「フィードバックの戻し先」の表に沿って書く。`where` はファイル名と見出しまで具体的に、`what` はそのまま追記できる文にする。推測ではなく作業中につまずいたこと（エラー、やり直し）も、ルールを直せば防げたなら `guesses` に入れる。
 
 `guesses` が空になることはほぼない。迷わなかったと思っても、書かれていないことを自分で決めた箇所がないか見直す。
 

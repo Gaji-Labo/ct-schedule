@@ -31,9 +31,10 @@ if [ "$kind" = reproduce ]; then
   done
 fi
 
-# 推測リストと行動ログの HTML (このサンドボックスで行われた全セッション分を作り直す)
-bun .claude/skills/implement-ui/report.ts --all-sessions --out "$out/report.html"
-[ -f .implement-ui/report.json ] && cp .implement-ui/report.json "$out/report.json"
-
 [ -f "$out/notes.md" ] || cp "$repo/experiments/results/_template.md" "$out/notes.md"
+
+# 評価シート・推測リスト・戻し先の候補・行動ログを1枚の HTML にする (このサンドボックスで行われた全セッション分)
+# notes.md を書き直したら、もう一度このスクリプトを実行すれば HTML に反映される
+bun "$repo/.claude/skills/implement-ui/report.ts" --root "$src" --all-sessions --notes "$out/notes.md" --out "$out/report.html"
+[ -f .implement-ui/report.json ] && cp .implement-ui/report.json "$out/report.json"
 echo "集めました: $out"
