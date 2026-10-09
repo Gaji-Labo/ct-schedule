@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { PrimitivePalette, SemanticColorTable } from "./TokenDocs";
+import { BrandPalette, PrimitivePalette, SemanticColorTable } from "./TokenDocs";
 
 <Meta title="Foundations/Colors" />
 
@@ -17,3 +17,12 @@ import { PrimitivePalette, SemanticColorTable } from "./TokenDocs";
 Semantic トークンの参照先になる生の色値です。**コンポーネントからは直接使いません。**
 
 <PrimitivePalette />
+
+## Brand (Gaji-Labo)
+
+Gaji-Labo のブランドカラーです。出典は Figma「Gaji-Labo Styles」の Gaji-Labo Colors（Main は Web Site、Accent は Blog の定義）。
+用途は Web サイト・ブログでの使われ方をそのまま載せています。
+
+**Primitive なので、コンポーネントからは直接使いません。** アプリで使うときは、用途に合う Semantic トークンを追加し、その参照先にします（DESIGN.md「色」）。
+
+<BrandPalette />

@@ -21,6 +21,7 @@ const preview: Preview = {
           "UI",
           "Domain",
           "Patterns",
+          "Pages",
         ],
       },
     },

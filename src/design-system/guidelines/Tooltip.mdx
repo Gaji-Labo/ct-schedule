@@ -1,0 +1,48 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Headphones } from "lucide-react";
+import { Button } from "../../app/components/ui/button";
+import * as TooltipStories from "../../app/components/ui/tooltip.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+import { MockTooltip } from "./GuidelineMocks";
+
+<Meta of={TooltipStories} name="ガイドライン" />
+
+# Tooltip ガイドライン
+
+見本は見た目だけを再現した静止画（本物は「Docs」タブで確認できる）。
+
+<UsageRules
+  ok={[
+    <>フォーカスできる要素（<code>Button</code> / リンク）をトリガーにし、<code>TooltipTrigger asChild</code> で包む。</>,
+    <>1 行の短い補足にとどめる（「ハドルを開始」）。</>,
+    <>アイコンだけのボタンの名前を目に見える形で補う。ボタン自体にも <code>aria-label</code> を付ける。</>,
+  ]}
+  ng={[
+    <>操作に欠かせない情報（エラー・必須条件・注意）を Tooltip だけに入れない → 画面に常に見える文字で書く。タッチ端末ではそもそも見えない。</>,
+    <>フォーカスできない要素（ただのアイコン・<code>span</code>）だけに付けない → キーボードで表示できない。</>,
+    <>長い説明やリンク・ボタンを入れない → 押せない吹き出しの中に操作を置かない。</>,
+  ]}
+/>
+
+<DoDont
+  title="補足にとどめる（必須の情報は入れない）"
+  note="常に見える場所との使い分け"
+  good={{
+    example: (
+      <MockTooltip
+        content="ハドルを開始"
+        trigger={<Button variant="outline" size="icon" aria-label="ハドルを開始"><Headphones /></Button>}
+      />
+    ),
+    caption: "何をするボタンかを短く補う。ボタン自体にも同じ名前（aria-label）を付ける。",
+  }}
+  dont={{
+    example: (
+      <MockTooltip
+        content="uチャンネルが未設定のため使えません。プロフィールから設定してください"
+        trigger={<Button variant="outline" size="icon" aria-label="ハドルを開始"><Headphones /></Button>}
+      />
+    ),
+    caption: "使えない理由や設定方法は、ホバーしないと見えない場所に置かない。画面に文字で出す。",
+  }}
+/>

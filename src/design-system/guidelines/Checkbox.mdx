@@ -1,0 +1,79 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Checkbox } from "../../app/components/ui/checkbox";
+import { Label } from "../../app/components/ui/label";
+import * as CheckboxStories from "../../app/components/ui/checkbox.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={CheckboxStories} name="ガイドライン" />
+
+# Checkbox ガイドライン
+
+<UsageRules
+  ok={[
+    <>必ず <code>Label</code> と並べ、<code>id</code> と <code>htmlFor</code> で結ぶ。文字を押しても切り替わるようにする。</>,
+    <>ラベルは肯定形で書き、チェック = 有効にそろえる（「CTに参加する」）。</>,
+    <>選択肢が複数あるときは縦に並べる（<code>grid gap-2</code> / <code>flex flex-col gap-2</code>）。2 つでも縦。</>,
+    <>複数のまとまりがあるときは、見出し（<code>Label</code> や <code>fieldset</code> / <code>legend</code>）で区切る。</>,
+  ]}
+  ng={[
+    <>1 つだけ選ぶ（排他の）選択に使わない → <code>Select</code>。</>,
+    <>ラベルを否定形にしない（「通知を受け取らない」など） → チェックで二重否定になる。</>,
+    <>チェックした瞬間に保存・送信しない → 保存ボタンで確定する。</>,
+    <>選択肢を横に並べない → 視線が左右に飛び、追加や折り返しで崩れる。</>,
+    <>チェックボックスとテキストを別々に置いて結ばない → 文字を押しても切り替わらず、読み上げで名前も伝わらない。</>,
+  ]}
+/>
+
+<DoDont
+  title="ラベルと結び付ける"
+  note="押せる範囲と名前"
+  good={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Checkbox id="gl-participate" />
+        <Label htmlFor="gl-participate">CTに参加する</Label>
+      </div>
+    ),
+    caption: "Label の htmlFor で結ぶ。文字を押しても切り替わり、読み上げでも名前が伝わる。",
+  }}
+  dont={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Checkbox />
+        <span className="text-sm font-medium">CTに参加する</span>
+      </div>
+    ),
+    caption: "ただの文字を横に置くだけでは、文字を押しても切り替わらず、名前も結び付かない。",
+  }}
+/>
+
+<DoDont
+  title="選択肢は縦に並べる"
+  note="レイアウトの原則"
+  good={{
+    example: (
+      <div className="grid gap-2">
+        {["祝日名", "不参加のメンバー", "過去の週"].map((t, i) => (
+          <div key={t} className="flex items-center gap-2">
+            <Checkbox id={`gl-v-${i}`} defaultChecked={i === 0} />
+            <Label htmlFor={`gl-v-${i}`}>{t}</Label>
+          </div>
+        ))}
+      </div>
+    ),
+    caption: "上から下へ一度に読める。選択肢が増えても自然に伸びる。",
+  }}
+  dont={{
+    example: (
+      <div className="flex flex-wrap gap-6">
+        {["祝日名", "不参加のメンバー", "過去の週"].map((t, i) => (
+          <div key={t} className="flex items-center gap-2">
+            <Checkbox id={`gl-h-${i}`} defaultChecked={i === 0} />
+            <Label htmlFor={`gl-h-${i}`}>{t}</Label>
+          </div>
+        ))}
+      </div>
+    ),
+    caption: "横に並べると視線が左右に飛び、どのチェックがどの文字のものか分かりにくい。",
+  }}
+/>

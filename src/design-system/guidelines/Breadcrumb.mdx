@@ -1,0 +1,57 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../../app/components/ui/breadcrumb";
+import * as BreadcrumbStories from "../../app/components/ui/breadcrumb.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={BreadcrumbStories} name="ガイドライン" />
+
+# Breadcrumb ガイドライン
+
+<UsageRules
+  ok={[
+    <>上の階層は <code>BreadcrumbLink</code>、最後の今いるページは <code>BreadcrumbPage</code>（リンクにしない。<code>aria-current="page"</code> が付く）。</>,
+    <>ページタイトルのすぐ上に置き、今いるページの名前はタイトルと同じ表記にする。</>,
+    <>アプリ内のリンクは <code>BreadcrumbLink asChild</code> で <code>next/link</code> の <code>Link</code> を包む。</>,
+  ]}
+  ng={[
+    <>今いるページをリンクにしない → 押しても同じページで、現在地も示せない。</>,
+    <>階層の無いページ（トップページ）に置かない → 2 階層目以降だけに使う。</>,
+    <>パンくずとページタイトルで名前を変えない（「参加者一覧」と「メンバー一覧」など） → 同じページを 2 つの名前で呼ばない。</>,
+  ]}
+/>
+
+<DoDont
+  title="末尾（今いるページ）はリンクにしない"
+  note="現在地の示し方"
+  good={{
+    example: (
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbPage>メンバー一覧</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    ),
+    caption: "今いるページは BreadcrumbPage。リンクにせず、現在地として示す。",
+  }}
+  dont={{
+    example: (
+      <Breadcrumb aria-label="パンくずリスト（悪い例）">
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem><BreadcrumbLink href="#">メンバー一覧</BreadcrumbLink></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    ),
+    caption: "今いるページへのリンクは押しても意味がなく、どこにいるのかも伝わらない。",
+  }}
+/>
