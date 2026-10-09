@@ -131,6 +131,7 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 | 主要アクション / 副次アクション | `Button` の `variant="default"` / `"outline"` |
 | 削除・エラー | `destructive` 系、`Button variant="destructive"` |
 | 成功・参加中 | `bg-success` |
+| メッセージの色（Alert・toast・Badge の状態色） | `feedback-{info,success,warning,destructive}-{subtle,foreground,border,icon}`。部品の variant 経由で使い、直接クラスを書かない |
 | 祝日の週のカード背景 | `bg-status-holiday` |
 | 「お休み」「祝日名」ラベル | `bg-status-rest text-status-rest-foreground` |
 | 今週の強調枠 | `border-highlight-current` |
@@ -160,6 +161,8 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 
 使えるコンポーネントは `src/app/components/ui/`（shadcn/ui ベース）にある。Storybook に Story があるものは、docs の「使い分け」に従う。
 
+組み合わせ方・並べ方の OK / NG は、Storybook の各コンポーネントの「ガイドライン」ページにまとめる（例: UI/Button › ガイドライン）。部品と Good / Don't の見本は `src/design-system/guidelines/GuidelineBlocks.tsx` を使う。
+
 | やりたいこと | 使うもの |
 | --- | --- |
 | ボタン・リンク風の操作 | `Button`（リンクは `asChild` で `<a>` / `Link` を包む） |
@@ -174,6 +177,7 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 | 区切り線 | `Separator` |
 | 読み込み中 | `Spinner` |
 | 操作結果の通知 | `toast`（sonner） |
+| ページ内に残すお知らせ・注意・エラー | `Alert`（`info` / `success` / `warning` / `destructive`。色の意味を持たせないときは `default`） |
 | 横に送って見せる（カード列など） | `Carousel`。CT の週カードは `CTScheduleCarousel`（初期表示は「次の週」だけ、進めると「前の週」が出る） |
 | ページ最上部の帯（左上にロゴ） | `SiteHeader`（中に `GajiLaboLogo`）。ページタイトルとログインは、その下の `Header` |
 | Gaji-Labo のロゴ | `GajiLaboLogo`（色は親の文字色。高さを `h-*` で指定） |
@@ -232,6 +236,7 @@ Storybook で次を確認する。
 | 意味のある色が足りない | Semantic トークンを追加（3箇所を揃える） |
 | 判断の前提が AI に伝わっていない | 本書の「デザインシステムの文脈」「アプリごとの文脈」「デザイン原則」に追記 |
 | 部品の使い分けを間違える | その部品の Story の docs（`parameters.docs.description`）に使い分けを追記 |
+| 部品の組み合わせ方・並べ方を間違える | その部品の「ガイドライン」ページ（`src/design-system/guidelines/`）に OK / NG を追記 |
 
 ## 参照
 

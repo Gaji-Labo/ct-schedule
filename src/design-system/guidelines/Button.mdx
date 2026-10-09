@@ -1,0 +1,130 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Trash2 } from "lucide-react";
+import { Button } from "../../app/components/ui/button";
+import * as ButtonStories from "../../app/components/ui/button.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={ButtonStories} name="ガイドライン" />
+
+# Button ガイドライン
+
+組み合わせ方・並べ方の OK / NG。variant や size の意味は「Docs」タブを参照。
+
+<UsageRules
+  ok={[
+    <>主要アクションは 1 画面（1 ダイアログ）に <code>variant="default"</code> を 1 つ。副次は <code>outline</code> / <code>ghost</code>。</>,
+    <>削除など取り消せない操作は <code>destructive</code>。確認ダイアログの実行ボタンに使う。</>,
+    <>送信中は <code>disabled</code> にして <code>Spinner</code> を並べ、二重送信を防ぐ。</>,
+    <>画面の主導線を遷移で作るときだけ、<code>asChild</code> で <code>Link</code> を包んでボタンの見た目にする。</>,
+  ]}
+  ng={[
+    <>通常のページ遷移（本文中・一覧の中など）を <code>Button</code> で作らない → <code>Link</code>（テキストリンク）を使う。</>,
+    <>1 画面に <code>variant="default"</code> を複数置かない → 主従が伝わらない。副次は <code>outline</code> / <code>ghost</code>。</>,
+    <><code>className</code> で色を上書きしない（<code>bg-red-500</code> など） → 色は <code>variant</code> で決める。</>,
+    <>アイコンだけのボタンを <code>aria-label</code> なしで置かない → <code>size="icon"</code> に <code>aria-label</code> を付ける（必要なら <code>Tooltip</code> も）。</>,
+    <>一覧の各行に同じラベル（「削除」など）のボタンを並べたままにしない → <code>aria-label</code> に対象を含めて一意にする（例: 「山田 を削除」）。</>,
+    <>サイズの違うボタンを隣り合わせに置かない → 同じ並びは同じ <code>size</code>（既定は <code>default</code>）。</>,
+    <>塗りのボタン（<code>default</code> と <code>destructive</code> など）を 2 つ並べない → 塗りは 1 つにして、もう一方は <code>outline</code> / <code>ghost</code>。</>,
+  ]}
+/>
+
+<DoDont
+  title={<>削除など取り消せない操作は <code>destructive</code></>}
+  note="色でも危険を伝える"
+  good={{
+    example: (
+      <div className="flex gap-2">
+        <Button variant="outline">キャンセル</Button>
+        <Button variant="destructive"><Trash2 />削除する</Button>
+      </div>
+    ),
+    caption: "取り消せない操作は destructive。色でも危険を示す。",
+  }}
+  dont={{
+    example: (
+      <div className="flex gap-2">
+        <Button variant="outline">キャンセル</Button>
+        <Button>削除する</Button>
+      </div>
+    ),
+    caption: "削除を default にすると、保存などの通常の操作と見分けがつかず、誤操作を招く。",
+  }}
+/>
+
+<DoDont
+  title="ページ遷移はリンクで作る"
+  note="要素の役割を合わせる"
+  good={{
+    example: (
+      <a href="#" className="text-sm text-foreground underline">メンバー一覧を見る</a>
+    ),
+    caption: "遷移はリンク。読み上げで「リンク」と伝わり、新しいタブで開く・右クリックなども使える。",
+  }}
+  dont={{
+    example: <Button variant="outline">メンバー一覧を見る</Button>,
+    caption: "遷移をボタンで作らない。役割が「ボタン」になり、リンクとしての操作ができなくなる。",
+  }}
+/>
+
+<DoDont
+  title="並べるボタンのサイズを揃える"
+  note="ボタンを並べるときの注意"
+  good={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Button variant="outline">キャンセル</Button>
+        <Button>保存する</Button>
+      </div>
+    ),
+    caption: "並ぶボタンは同じサイズに揃え、主従は variant（default / outline）で表す。",
+  }}
+  dont={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm">キャンセル</Button>
+        <Button size="lg">保存する</Button>
+      </div>
+    ),
+    caption: "サイズの違うボタンを隣り合わせに置かない。",
+  }}
+/>
+
+<DoDont
+  title="塗りのボタンは 1 つだけ"
+  note="主従をはっきりさせる"
+  good={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Button variant="outline">確認する</Button>
+        <Button>保存する</Button>
+      </div>
+    ),
+    caption: "主アクション 1 つだけを塗りで強調し、副アクションは outline / ghost で抑える。",
+  }}
+  dont={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Button variant="destructive">確認する</Button>
+        <Button>保存する</Button>
+      </div>
+    ),
+    caption: "色の違う塗りのボタンを 2 つ並べない。どちらが主なのか伝わらない。",
+  }}
+/>
+
+<DoDont
+  title="アイコンだけのボタンには名前を付ける"
+  note="見えない名前も設計する"
+  good={{
+    example: (
+      <Button variant="ghost" size="icon" aria-label="山田 を削除"><Trash2 /></Button>
+    ),
+    caption: <>アイコンだけのボタンには <code>aria-label</code> で「何をするか」と「何に対してか」を付ける。</>,
+  }}
+  dont={{
+    example: (
+      <Button variant="ghost" size="icon"><Trash2 /></Button>
+    ),
+    caption: "名前のないアイコンボタンは、読み上げでは「ボタン」としか伝わらない（見た目は同じでも NG）。",
+  }}
+/>

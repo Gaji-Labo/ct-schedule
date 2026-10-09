@@ -19,6 +19,7 @@ const meta = {
           "- `secondary`: 控えめな補足情報",
           "- `destructive`: エラー・要対応の状態",
           "- `outline`: 面を持たせず、文字と枠だけで示したいとき",
+          "- `info` / `success` / `warning`: 状態の色付きパターン（Alert・toast と同じ `feedback-*` トークン）。例: 参加中 = `success`、未設定 = `warning`",
           "",
           "**CT 固有のラベル（お休み・祝日名）について**",
           "DESIGN.md では `bg-status-rest text-status-rest-foreground` + `rounded-full` を使うことになっているが、",
@@ -31,7 +32,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "destructive", "outline"],
+      options: ["default", "secondary", "destructive", "outline", "info", "success", "warning"],
       description: "見た目の種類。用途に応じて選ぶ",
       table: { defaultValue: { summary: "default" } },
     },
@@ -78,4 +79,16 @@ export const Outline: Story = {
 /** ラベルは短く保つ。長い文言でも折り返さず1行に収まるか確認する */
 export const LongText: Story = {
   args: { variant: "secondary", children: "スポーツの日（振替休日）" },
+};
+
+/** 状態の色付きパターン（Alert・toast と同じ色） */
+export const StatusColors: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge {...args} variant="info">お知らせ</Badge>
+      <Badge {...args} variant="success">参加中</Badge>
+      <Badge {...args} variant="warning">未設定</Badge>
+      <Badge {...args} variant="destructive">エラー</Badge>
+    </div>
+  ),
 };

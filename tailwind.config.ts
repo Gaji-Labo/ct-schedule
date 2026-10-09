@@ -89,6 +89,32 @@ export default {
   					foreground: 'hsl(var(--avatar-7-foreground))'
   				},
   			},
+  			feedback: {
+  				info: {
+  					subtle: 'hsl(var(--feedback-info-subtle))',
+  					foreground: 'hsl(var(--feedback-info-foreground))',
+  					border: 'hsl(var(--feedback-info-border))',
+  					icon: 'hsl(var(--feedback-info-icon))',
+  				},
+  				success: {
+  					subtle: 'hsl(var(--feedback-success-subtle))',
+  					foreground: 'hsl(var(--feedback-success-foreground))',
+  					border: 'hsl(var(--feedback-success-border))',
+  					icon: 'hsl(var(--feedback-success-icon))',
+  				},
+  				warning: {
+  					subtle: 'hsl(var(--feedback-warning-subtle))',
+  					foreground: 'hsl(var(--feedback-warning-foreground))',
+  					border: 'hsl(var(--feedback-warning-border))',
+  					icon: 'hsl(var(--feedback-warning-icon))',
+  				},
+  				destructive: {
+  					subtle: 'hsl(var(--feedback-destructive-subtle))',
+  					foreground: 'hsl(var(--feedback-destructive-foreground))',
+  					border: 'hsl(var(--feedback-destructive-border))',
+  					icon: 'hsl(var(--feedback-destructive-icon))',
+  				},
+  			},
   			'site-header': {
   				DEFAULT: 'hsl(var(--site-header))',
   				foreground: 'hsl(var(--site-header-foreground))'

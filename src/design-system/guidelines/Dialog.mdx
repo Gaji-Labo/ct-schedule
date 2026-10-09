@@ -1,0 +1,52 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Button } from "../../app/components/ui/button";
+import * as DialogStories from "../../app/components/ui/dialog.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+import { MockDialog } from "./GuidelineMocks";
+
+<Meta of={DialogStories} name="ガイドライン" />
+
+# Dialog ガイドライン
+
+見本は見た目だけを再現した静止画（本物は「Docs」タブで開ける）。
+
+<UsageRules
+  ok={[
+    <>操作を止めて判断を求めるときに使う（削除の確認、短い入力フォーム）。</>,
+    <>取り消せない操作の確認では、実行ボタンを <code>destructive</code> にし、取り消せないことを本文に書く。</>,
+    <><code>DialogTitle</code> を必ず付ける（何のダイアログかが読み上げで伝わる）。</>,
+    <>キャンセル（<code>outline</code>）→ 実行の順で右寄せに並べる。× と Esc でも閉じられる状態を保つ。</>,
+  ]}
+  ng={[
+    <>情報を見せるだけに使わない → ページ内に表示する。結果の通知は toast。</>,
+    <>閉じる手段（キャンセル・×・Esc）を消さない → ユーザーが抜け出せなくなる。</>,
+    <>削除の実行ボタンを <code>default</code>（肯定の色）にしない → 危険な操作だと伝わらない。</>,
+    <>ダイアログの中からさらにダイアログを開かない → 今どこにいるか分からなくなる。</>,
+    <>幅を任意値で決めない（<code>sm:max-w-[425px]</code> など） → 既定の幅か <code>sm:max-w-md</code> を使う。</>,
+  ]}
+/>
+
+<DoDont
+  title="取り消せない操作の確認は destructive"
+  note="確認ダイアログ"
+  good={{
+    example: (
+      <MockDialog
+        title="メンバーを削除"
+        description="山田 を削除しますか？この操作は取り消せません。"
+        footer={<><Button variant="outline">キャンセル</Button><Button variant="destructive">削除</Button></>}
+      />
+    ),
+    caption: "実行ボタンは destructive。取り消せないことを本文でもはっきり書く。",
+  }}
+  dont={{
+    example: (
+      <MockDialog
+        title="確認"
+        description="よろしいですか？"
+        footer={<><Button variant="outline">いいえ</Button><Button>はい</Button></>}
+      />
+    ),
+    caption: "「はい / いいえ」と肯定の色では、何が起きるのか・危険なのかが伝わらない。ボタンには動詞（「削除」）を書く。",
+  }}
+/>

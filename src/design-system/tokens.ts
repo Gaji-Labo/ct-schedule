@@ -81,6 +81,24 @@ export const semanticColors: ColorTokenGroup[] = [
     ],
   },
   {
+    title: "Feedback message",
+    description: "Alert・toast・Badge の色付きパターン。subtle=背景 / foreground=文字 / border=枠線 / icon=アイコン。組み合わせで使い、文字色を単体で他に流用しない",
+    tokens: [
+      { name: "feedback-info-subtle", tailwind: "bg-feedback-info-subtle", usage: "お知らせ・情報の背景" },
+      { name: "feedback-info-foreground", tailwind: "text-feedback-info-foreground", usage: "お知らせ・情報の文字" },
+      { name: "feedback-info-icon", tailwind: "text-feedback-info-icon", usage: "お知らせ・情報のアイコン" },
+      { name: "feedback-success-subtle", tailwind: "bg-feedback-success-subtle", usage: "成功・完了の背景" },
+      { name: "feedback-success-foreground", tailwind: "text-feedback-success-foreground", usage: "成功・完了の文字" },
+      { name: "feedback-success-icon", tailwind: "text-feedback-success-icon", usage: "成功・完了のアイコン" },
+      { name: "feedback-warning-subtle", tailwind: "bg-feedback-warning-subtle", usage: "注意の背景" },
+      { name: "feedback-warning-foreground", tailwind: "text-feedback-warning-foreground", usage: "注意の文字" },
+      { name: "feedback-warning-icon", tailwind: "text-feedback-warning-icon", usage: "注意のアイコン" },
+      { name: "feedback-destructive-subtle", tailwind: "bg-feedback-destructive-subtle", usage: "エラー・失敗の背景" },
+      { name: "feedback-destructive-foreground", tailwind: "text-feedback-destructive-foreground", usage: "エラー・失敗の文字" },
+      { name: "feedback-destructive-icon", tailwind: "text-feedback-destructive-icon", usage: "エラー・失敗のアイコン" },
+    ],
+  },
+  {
     title: "Domain (CTスケジュール)",
     description: "このアプリ固有の意味を持つ色。gray-* を直接書かずにこちらを使う",
     tokens: [
@@ -126,8 +144,10 @@ export const primitiveColors: { title: string; names: string[] }[] = [
       (step) => `neutral-${step}`,
     ),
   },
-  { title: "Red", names: ["red-500", "red-800"] },
-  { title: "Green", names: ["green-500", "green-700"] },
+  { title: "Red", names: ["red-50", "red-200", "red-400", "red-500", "red-700", "red-800", "red-950"] },
+  { title: "Green", names: ["green-50", "green-200", "green-400", "green-500", "green-700", "green-800", "green-950"] },
+  { title: "Amber", names: ["amber-50", "amber-200", "amber-400", "amber-700", "amber-800", "amber-900", "amber-950"] },
+  { title: "Sky", names: ["sky-200", "sky-400", "sky-800", "sky-950"] },
 ];
 
 export type BrandColor = {

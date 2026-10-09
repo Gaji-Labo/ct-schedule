@@ -22,7 +22,11 @@ const meta = {
           "**使い分け**",
           "- `toast.success`: 保存・追加・削除などが完了した（例: 「山田 を削除しました」）",
           "- `toast.error`: 失敗した。何が失敗したかを書く（例: 「メンバーの削除に失敗しました」）",
-          "- `toast`: 上記以外のお知らせ。`description` で補足を付けられる",
+          "- `toast.warning`: 注意（例: 「uチャンネルが未設定のため、ハドルを開始できません」）",
+          "- `toast.info`: 補足のお知らせ",
+          "- `toast`: 色の意味を持たない通知。`description` で補足を付けられる",
+          "",
+          "色は Alert と同じ Semantic トークン `feedback-*`（success / destructive / warning / info）。",
           "",
           "ユーザーの判断が必要な内容（削除の確認など）は toast ではなく `Dialog` を使う。",
         ].join("\n"),
@@ -40,12 +44,24 @@ const meta = {
     position: "top-center",
   },
   render: (args) => (
-    <div className="flex min-h-96 items-center justify-center gap-2">
+    <div className="flex min-h-96 flex-wrap items-center justify-center gap-2">
       <Button variant="outline" onClick={() => toast.success("山田 を削除しました")}>
         成功
       </Button>
       <Button variant="outline" onClick={() => toast.error("メンバーの削除に失敗しました")}>
         失敗
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => toast.warning("uチャンネルが未設定のため、ハドルを開始できません")}
+      >
+        注意
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => toast.info("次回の CT は祝日のためお休みです")}
+      >
+        情報
       </Button>
       <Button
         variant="outline"

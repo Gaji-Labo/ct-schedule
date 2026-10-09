@@ -1,0 +1,84 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Checkbox } from "../../app/components/ui/checkbox";
+import { Label } from "../../app/components/ui/label";
+import * as SonnerStories from "../../app/components/ui/sonner.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+import { MockToast } from "./GuidelineMocks";
+
+<Meta of={SonnerStories} name="ガイドライン" />
+
+# Sonner（toast）ガイドライン
+
+操作結果の通知（toast）の OK / NG。見本は見た目だけを再現した静止画（本物は「Docs」タブで出せる）。
+
+> **方針**: CT スケジュールでは、保存・追加・削除の結果を toast で知らせる。
+> toast は数秒で消えるため、「見逃しても困らない結果のお知らせ」にだけ使い、残しておくべき情報や判断が要る内容には使わない。
+
+<UsageRules
+  ok={[
+    <>保存・追加・削除など、ユーザーが行った操作の結果を知らせる（<code>toast.success</code>）。</>,
+    <>失敗したときは必ず知らせる（<code>toast.error</code>）。何が失敗したかを書く（「メンバーの削除に失敗しました」）。</>,
+    <>成功の文言は「○○ を△△しました」の形で、対象と結果が分かるようにする（「山田 を削除しました」）。</>,
+    <>Toaster はアプリ全体で 1 つ（<code>layout.tsx</code>）。画面からは <code>toast()</code> を呼ぶだけにする。</>,
+  ]}
+  ng={[
+    <>判断が要る内容（削除の確認など）に使わない → <code>Dialog</code>。</>,
+    <>残しておくべき情報（ずっと有効なお知らせ・手順）に使わない → 消えてしまう。ページ内に表示する。</>,
+    <>入力欄 1 つのエラー（形式の間違いなど）に使わない → 入力欄のすぐ下に文字で出す。</>,
+    <>画面を見れば結果が分かる操作（チェックを入れた・カードが増えた）にまで出さない → 何にでも出すと、本当に伝えたい失敗が埋もれる。</>,
+    <>失敗を成功と同じ見た目で出さない → <code>toast.error</code> を使う。</>,
+    <>toast の中にしか無いボタン（「元に戻す」など）を、唯一の手段にしない → 消える前に押せない人がいる。</>,
+  ]}
+/>
+
+<DoDont
+  title="結果は対象と一緒に伝える"
+  note="何が起きたか分かる文言"
+  good={{
+    example: <MockToast kind="success" title="山田 を削除しました" />,
+    caption: "誰に・何をしたかが分かる。一覧を見直さなくても結果を確かめられる。",
+  }}
+  dont={{
+    example: <MockToast title="完了しました" />,
+    caption: "何が完了したのか分からない。複数の操作をしたあとだと特に迷う。",
+  }}
+/>
+
+<DoDont
+  title="見れば分かる操作には出さない"
+  note="出す / 出さないの判断"
+  good={{
+    example: (
+      <div className="flex items-center gap-2">
+        <Checkbox id="gl-t1" defaultChecked />
+        <Label htmlFor="gl-t1">祝日名を表示する</Label>
+      </div>
+    ),
+    caption: "チェックが入ったこと自体が結果。メッセージを足しても情報は増えない。",
+  }}
+  dont={{
+    example: (
+      <div className="grid w-full gap-3">
+        <div className="flex items-center gap-2">
+          <Checkbox id="gl-t2" defaultChecked />
+          <Label htmlFor="gl-t2">祝日名を表示する</Label>
+        </div>
+        <MockToast kind="success" title="設定を更新しました" />
+      </div>
+    ),
+    caption: "切り替えるたびに toast を出すと画面が騒がしくなり、本当に伝えたい失敗が埋もれる。",
+  }}
+/>
+
+<DoDont
+  title="確認が要る操作は toast ではなく Dialog"
+  note="判断を求めるとき"
+  good={{
+    example: <MockToast kind="success" title="山田 を削除しました" description="（削除の前に Dialog で確認済み）" />,
+    caption: "取り消せない操作は Dialog で確認してから実行し、結果だけを toast で知らせる。",
+  }}
+  dont={{
+    example: <MockToast title="山田 を削除しますか？" description="5 秒以内に「元に戻す」を押すと取り消せます" />,
+    caption: "判断を toast に任せると、読み終える前に消えて、意図しない削除が起きる。",
+  }}
+/>

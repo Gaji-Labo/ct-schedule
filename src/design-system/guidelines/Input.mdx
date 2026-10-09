@@ -1,0 +1,46 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Input } from "../../app/components/ui/input";
+import { Label } from "../../app/components/ui/label";
+import * as InputStories from "../../app/components/ui/input.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={InputStories} name="ガイドライン" />
+
+# Input ガイドライン
+
+<UsageRules
+  ok={[
+    <>必ず見えるラベル（<code>Label</code>）を付け、<code>htmlFor</code> / <code>id</code> で結ぶ。</>,
+    <>placeholder は入力例にとどめる（「例: 1234」）。</>,
+    <>内容に合った <code>type</code> を使う（<code>number</code> / <code>email</code> / <code>search</code> など。スマホのキーボードも変わる）。</>,
+    <>検索は Enter か検索ボタンで確定してから結果を更新する。</>,
+  ]}
+  ng={[
+    <>placeholder をラベル代わりにしない → 入力すると消え、色も薄く、読み上げでも安定して伝わらない。</>,
+    <>入力のたびに検索・結果を更新しない → 入力の途中で画面が動き、読み上げでは入力中の文字と結果の告知が重なる。</>,
+    <>エラーを色（<code>border-red-500</code> など）を直書きして示さない → エラー表示は部品側で用意してから使う。</>,
+    <>長い文章の入力に使わない → 複数行の入力欄を用意する。</>,
+  ]}
+/>
+
+<DoDont
+  title="ラベルは見える形で付ける"
+  note="placeholder に頼らない"
+  good={{
+    example: (
+      <div className="grid w-64 gap-2">
+        <Label htmlFor="gl-emp">社員番号</Label>
+        <Input id="gl-emp" type="number" placeholder="例: 1234" />
+      </div>
+    ),
+    caption: "見えるラベルを結び付け、placeholder は入力例にとどめる。",
+  }}
+  dont={{
+    example: (
+      <div className="w-64">
+        <Input type="number" placeholder="社員番号" />
+      </div>
+    ),
+    caption: "placeholder をラベル代わりにすると、入力した瞬間に何の欄か分からなくなる。",
+  }}
+/>

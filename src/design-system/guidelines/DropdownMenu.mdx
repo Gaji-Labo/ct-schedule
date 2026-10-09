@@ -1,0 +1,55 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Copy, LogOut, Pencil, Trash2, UserRound } from "lucide-react";
+import * as DropdownMenuStories from "../../app/components/ui/dropdown-menu.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+import { MockMenu } from "./GuidelineMocks";
+
+<Meta of={DropdownMenuStories} name="ガイドライン" />
+
+# DropdownMenu ガイドライン
+
+見本は見た目だけを再現した静止画（本物は「Docs」タブで開ける）。
+
+<UsageRules
+  ok={[
+    <>普段は隠しておいてよい「その場の操作」をまとめる（編集・複製・削除、ユーザーメニュー）。</>,
+    <>トリガーがアイコンだけなら、<code>aria-label</code> に対象を含める（例: 「山田 のメニュー」）。</>,
+    <>削除など取り消せない操作は、区切り線（<code>DropdownMenuSeparator</code>）の下・末尾に置く。</>,
+    <>アイコンを付けるなら、同じメニューの全項目に付ける（または全項目で外す）。</>,
+    <>画面の右端にあるトリガーは <code>align="end"</code> で右にそろえる。</>,
+    <>今は実行できない操作は消さずに <code>disabled</code> で残す（何ができるかを伝える）。</>,
+  ]}
+  ng={[
+    <>ページ遷移のリンクばかりを並べない → ナビゲーションやリンクにする（遷移を混ぜるなら <code>asChild</code> で <code>Link</code> を包む）。</>,
+    <>値の選択（並べ替え・絞り込みの選択肢）に使わない → <code>Select</code>。今どれが選ばれているかが見えなくなる。</>,
+    <>メニューの中に入力欄を置かない → 入力が要るなら <code>Dialog</code>。</>,
+    <>操作が 1〜2 個しかないのにメニューに畳まない → <code>Button</code> を直接並べる方が速い。</>,
+    <>一部の項目だけにアイコンを付けない → 文字の書き出し位置がずれて読みにくい。</>,
+  ]}
+/>
+
+<DoDont
+  title="取り消せない操作は区切って末尾に"
+  note="誤操作を防ぐ"
+  good={{
+    example: <MockMenu items={[<><Pencil />編集</>, <><Copy />複製</>, "---", <><Trash2 />削除</>]} />,
+    caption: "削除は区切り線の下・末尾に置き、ほかの操作と離す。",
+  }}
+  dont={{
+    example: <MockMenu items={[<><Pencil />編集</>, <><Trash2 />削除</>, <><Copy />複製</>]} />,
+    caption: "削除がほかの操作の間にあると、押し間違えやすい。",
+  }}
+/>
+
+<DoDont
+  title="アイコンの有無をそろえる"
+  note="視線と整列"
+  good={{
+    example: <MockMenu label="山田" items={[<><UserRound />プロフィール編集</>, <><LogOut />ログアウト</>]} />,
+    caption: "全項目にアイコンを付ける（または全部外す）。文字の書き出しがそろって読みやすい。",
+  }}
+  dont={{
+    example: <MockMenu label="山田" items={[<><UserRound />プロフィール編集</>, <>ログアウト</>]} />,
+    caption: "一部だけアイコンがあると、文字の書き出し位置がずれて視線が乱れる。",
+  }}
+/>
