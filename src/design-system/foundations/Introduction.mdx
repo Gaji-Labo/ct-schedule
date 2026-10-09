@@ -1,0 +1,35 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Foundations/Introduction" />
+
+# CTスケジュール デザインシステム
+
+CTスケジュールの UI を組み立てるための部品とルールをまとめたカタログです。
+人と AI のどちらが新しい画面を実装する場合も、ここにあるトークンとコンポーネントだけで組み立てることを目指します。
+
+## 構成
+
+| レイヤー | 置き場所 | 内容 |
+| --- | --- | --- |
+| Foundations | `src/app/globals.css` / `tailwind.config.ts` / `src/design-system/tokens.ts` | 色・タイポグラフィ・余白・角丸・影 |
+| UI | `src/app/components/ui/` | shadcn/ui ベースの汎用コンポーネント |
+| Domain | `src/app/components/` | CTスケジュール固有のコンポーネント (予定) |
+| Patterns | — | 画面レイアウトの型 (予定) |
+
+## 基本ルール
+
+ルールの正本はリポジトリ直下の `DESIGN.md` です（文脈・原則・禁止事項・フィードバックの戻し先）。実装の手順と検証方法は Skill `.claude/skills/implement-ui/SKILL.md` にあります。ここでは要点だけを載せます。
+違反の一部は `bun run lint` の `design-system/*` ルールで検出されます。
+
+1. **色は Semantic トークンだけを使う。** `bg-gray-100` や `#e5e5e5` を直接書かない。
+   該当するトークンが無ければ、トークンを追加してから使う。
+2. **既存コンポーネントを優先する。** `<button className="...">` を自作せず、`Button` の `variant` / `size` から選ぶ。
+3. **見た目の調整は variant で行う。** `className` での上書きは余白やレイアウトの調整にとどめる。
+4. **ライト・ダーク両方で確認する。** ツールバーのテーマ切替で表示を確かめる。
+
+## トークンの2層構造
+
+- **Primitive**: `--neutral-100` などの生の色値。Semantic トークンを定義するときにだけ使う
+- **Semantic**: `--primary` や `--status-rest` など、用途に名前を付けたトークン。コンポーネントからはこちらだけを使う
+
+ブランドカラーを決めるときは、Primitive を追加して Semantic の参照先を差し替えれば、コンポーネント側は変更せずに済みます。

@@ -1,0 +1,61 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Checkbox } from "../../app/components/ui/checkbox";
+import { Label } from "../../app/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../app/components/ui/select";
+import * as SelectStories from "../../app/components/ui/select.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={SelectStories} name="ガイドライン" />
+
+# Select ガイドライン
+
+<UsageRules
+  ok={[
+    <>決まった選択肢から 1 つだけ選ぶ入力に使う。</>,
+    <>見えるラベル（<code>Label</code>）を付け、<code>SelectTrigger</code> の <code>id</code> と結ぶ。</>,
+    <>未選択のときは、何を選ぶ欄かが分かる placeholder を出す（「uチャンネルを選択」）。</>,
+    <>選択肢が多いときは <code>SelectGroup</code> + <code>SelectLabel</code> で分類する。</>,
+  ]}
+  ng={[
+    <>複数を選ぶ入力に使わない → <code>Checkbox</code> を縦に並べる。</>,
+    <>1 つだけ選ぶ入力に <code>Checkbox</code> を並べない → 複数選べるように見えて迷う。<code>Select</code> を使う。</>,
+    <>選んだ瞬間に保存・送信・ページ遷移をしない → 保存ボタンで確定する。</>,
+    <>ラベルなしで置かない → 何を選ぶ欄か伝わらない。</>,
+    <>メニュー（操作の実行）の代わりに使わない → <code>DropdownMenu</code>。</>,
+  ]}
+/>
+
+<DoDont
+  title="1 つだけ選ぶなら Select"
+  note="用途の使い分け"
+  good={{
+    example: (
+      <div className="grid w-56 gap-2">
+        <Label htmlFor="gl-sort">並び順</Label>
+        <Select defaultValue="number">
+          <SelectTrigger id="gl-sort"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="number">社員番号順</SelectItem>
+            <SelectItem value="name">名前順</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    ),
+    caption: "1 つだけ選ぶ入力は Select。選べるのは 1 つだと見た目で分かる。",
+  }}
+  dont={{
+    example: (
+      <div className="grid gap-2">
+        <div className="flex items-center gap-2"><Checkbox id="gl-s1" defaultChecked /><Label htmlFor="gl-s1">社員番号順</Label></div>
+        <div className="flex items-center gap-2"><Checkbox id="gl-s2" /><Label htmlFor="gl-s2">名前順</Label></div>
+      </div>
+    ),
+    caption: "チェックボックスで 1 つだけ選ばせると、複数選べるように見えて迷う。",
+  }}
+/>

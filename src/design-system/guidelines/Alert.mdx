@@ -1,0 +1,82 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { CircleAlert, CircleCheck, TriangleAlert } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "../../app/components/ui/alert";
+import * as AlertStories from "../../app/components/ui/alert.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={AlertStories} name="ガイドライン" />
+
+# Alert ガイドライン
+
+<UsageRules
+  ok={[
+    <>ページの中に残しておくお知らせ・注意・エラーに使う（読み終えるまで消えない）。</>,
+    <>variant は内容の意味で選ぶ（お知らせ = <code>info</code>、完了 = <code>success</code>、注意 = <code>warning</code>、エラー = <code>destructive</code>）。</>,
+    <><code>AlertTitle</code> で結論を一言で書き、<code>AlertDescription</code> で理由と次にすることを書く。</>,
+    <>アイコンは variant の意味に合わせる（お知らせ = ⓘ、完了 = ✓、注意 = △、エラー = ⚠）。</>,
+    <>リンクを置くなら、リンクだけ読んでも行き先が分かる文言にする（「プロフィールを設定する」）。</>,
+  ]}
+  ng={[
+    <>操作の結果を一時的に知らせるだけの用途に使わない → <code>toast</code>。</>,
+    <>判断を求める確認に使わない → <code>Dialog</code>。</>,
+    <>入力欄 1 つのエラーをページ上部の Alert だけで示さない → 入力欄のすぐ下に文字で出す。</>,
+    <>variant を色の好みで選ばない → エラーに <code>success</code> を使うなど、色・アイコンと文言を矛盾させない。</>,
+    <><code>className</code> で色を付けない（<code>text-red-500</code> など） → variant を使う。足りなければ variant を追加する。</>,
+    <>リンクの文言を「こちら」「詳細」にしない → 読み上げでリンクだけを一覧にしたとき、行き先が分からない。</>,
+    <>1 画面に何個も並べない → 本当に伝えたいものが埋もれる。</>,
+  ]}
+/>
+
+<DoDont
+  title="内容に合った variant を選ぶ"
+  note="意味と色・アイコンを一致させる"
+  good={{
+    example: (
+      <Alert variant="destructive">
+        <CircleAlert aria-hidden />
+        <AlertTitle>組み合わせを読み込めませんでした</AlertTitle>
+        <AlertDescription>時間をおいて再読み込みしてください。</AlertDescription>
+      </Alert>
+    ),
+    caption: "エラーは destructive と ⚠ のアイコン。文言・色・アイコンの意味がそろっている。",
+  }}
+  dont={{
+    example: (
+      <Alert variant="success">
+        <CircleCheck aria-hidden />
+        <AlertTitle>組み合わせを読み込めませんでした</AlertTitle>
+        <AlertDescription>時間をおいて再読み込みしてください。</AlertDescription>
+      </Alert>
+    ),
+    caption: "エラーの文言に緑とチェックを使うと、成功なのか失敗なのか混乱する。",
+  }}
+/>
+
+<DoDont
+  title="結論と、次にすることを書く"
+  note="読んで行動できる文言"
+  good={{
+    example: (
+      <Alert variant="warning">
+        <TriangleAlert aria-hidden />
+        <AlertTitle>uチャンネルが未設定です</AlertTitle>
+        <AlertDescription>
+          ハドルを始めるには、<a href="#" className="underline">プロフィールで uチャンネルを設定</a>してください。
+        </AlertDescription>
+      </Alert>
+    ),
+    caption: "何が起きているか（タイトル）と、どうすればいいか（本文・リンク）が分かる。リンクも行き先が分かる文言。",
+  }}
+  dont={{
+    example: (
+      <Alert variant="destructive">
+        <CircleAlert aria-hidden />
+        <AlertTitle>エラー</AlertTitle>
+        <AlertDescription>
+          詳しくは<a href="#" className="underline">こちら</a>。
+        </AlertDescription>
+      </Alert>
+    ),
+    caption: "「エラー」「こちら」だけでは、何が起きていて何をすればいいのか分からない。",
+  }}
+/>

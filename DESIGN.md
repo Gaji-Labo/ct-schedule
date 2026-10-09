@@ -1,0 +1,224 @@
+# DESIGN.md
+
+Gaji-Labo の社内アプリの UI を実装するときのルールと判断材料。人も AI エージェントも、新しい画面・コンポーネントを作る前にこのファイルを読む。
+
+ルールと部品は社内アプリ共通のもの。現在は最初の対象である CT スケジュールで整備しており、文中の画面例・トークン例は CT スケジュールのものを使っている。
+
+> **ステータス: 叩き台 (土台整備中)**
+> 構造とルールの置き場所を先に用意した段階。
+
+この文書は [デザインハーネス](https://design-harness.com/) の4層モデル（制約・文脈・検証・評価）に沿って構成している。
+
+| 層 | このリポジトリでの実体 |
+| --- | --- |
+| 制約 | Semantic トークン (`src/app/globals.css`, `tailwind.config.ts`)、コンポーネント (`src/app/components/`)、本書の「禁止事項」 |
+| 文脈 | 本書の「デザインシステムの文脈」「アプリごとの文脈」「デザイン原則」、Storybook の Story |
+| 検証 | ESLint の `design-system/*` ルール、Storybook の a11y チェック、Skill `implement-ui` の検証手順 |
+| 評価 | 本書の「フィードバックの戻し先」 |
+
+---
+
+## 1. デザインシステムの文脈（社内アプリ共通）
+
+### このデザインシステムの位置づけ
+
+このデザインシステムは、Gaji-Labo の**社内アプリ**で使うためのもの。最初の対象が CT スケジュールで、今後ほかの社内アプリにも広げる。
+
+- **使う人もつくる人も Gaji-Labo のメンバー**。デザイナー・エンジニアが職種をまたいで、それぞれ画面や部品を足していく
+- 社内アプリは「本業の合間に、手が空いた人が触る」ことが多い。**誰が・いつ触っても同じ品質で作れる**ことを最優先にする
+- ここで作った部品・ルールは、Gaji-Labo がクライアントのプロダクトで実践していることの社内版でもある。社内でも手を抜かない
+
+### Gaji-Labo の文化とデザインシステム
+
+Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を生み出す」。バリューは**オーナーシップ・レジリエンス・誠実さ**で、チームとして「機能ではなく、価値をユーザーに届ける」ことを大事にしている（[Culture Deck](https://speakerdeck.com/gaji/gaji-labo-culture-deck)）。
+
+日々の行動指針である [Gaji-Labo スタイル](https://speakerdeck.com/gaji/gaji-labo-style) を、デザインシステムの運用では次のように読み替える。
+
+| Gaji-Labo スタイル | デザインシステムでの実践 |
+| --- | --- |
+| 知見を個人で溜め込まない | 判断の理由は本書と Story の docs に書く。口頭やレビューコメントだけで終わらせない |
+| いつも同じ人に頼らない | 特定の人に聞かないと作れない状態をなくす。本書と Storybook を見れば誰でも（AI でも）同じ画面が作れるようにする |
+| 説明できないことをしない | 色・部品・余白は「なぜそれか」を説明できるものだけを使う（トークンの用途、variant の使い分け） |
+| 短期視点だけで判断しない | 手早い独自スタイルより、部品やトークンを増やす方を選ぶ（「部品の組み合わせで作る」） |
+| 問題を見て見ぬふりしない | 既知の違反は放置せずリストに残し、置き換えたら外す（`eslint.config.mjs` の既知の違反リスト） |
+| 専門外の視点や経験を軽視しない | デザイナーとエンジニアが同じ Storybook・同じ言葉（トークン名・部品名）で話す |
+| やったふりで誤魔化さない | 「画面ができた」ではなく「使う人の目的が達成できる」かで確かめる（検証・状態の網羅） |
+
+## 2. アプリごとの文脈
+
+アプリ固有の目的・画面・利用シーン・原則はここに書く。社内アプリを追加したら、同じ形で見出しを足す。
+
+### CT スケジュール
+
+#### 何のアプリか
+
+チーム内で2人1組の CT（コミュニケーションタイム）を毎週組み合わせ、一覧で見せるアプリ。
+
+- CT は毎週月曜に実施する。組み合わせはラウンドロビンで自動生成され、毎週相手が変わる
+- 参加人数が奇数の週は、1人が「お休み」になる
+- 祝日の週は、カードに祝日名を表示する
+- Slack でログインし、相手との Slack ハドルをワンクリックで始められる
+
+#### 主な画面
+
+| 画面 | パス | 目的 |
+| --- | --- | --- |
+| CT組み合わせ表 | `/` | 今週以降の組み合わせを週ごとのカードで横に並べて見せる |
+| メンバー一覧 | `/member` | 参加メンバーと参加・不参加の状態を見せる、削除する |
+
+#### ユーザーと利用シーン
+
+- チームメンバーが「今週の相手は誰か」を確かめるために、週の初めに開く
+- 滞在時間は短い。目的は「相手を知る → ハドルを始める」で終わる
+- 管理操作（メンバー追加・削除、初期設定）はたまにしか行わない
+
+#### このアプリ固有の原則
+
+- **今週がすぐわかる** — 最初に目に入るのは「今週の組み合わせ」。過去や遠い未来の情報は控えめにする
+
+## 3. デザイン原則（社内アプリ共通）
+
+1. **静かな UI** — 基調は neutral。色は状態を伝えるときだけ使う（例: CT スケジュールの祝日・お休み・参加中、危険な操作）
+2. **部品の組み合わせで作る** — 画面ごとの独自スタイルを作らない。足りなければ部品やトークンを増やしてから使う
+
+### システムの振る舞いの原則
+
+見た目（部品）を決める前に、**システムがユーザーにどう振る舞うか**を決める。社内アプリ共通で次を守る（例は CT スケジュールのもの）。
+
+1. **システムの状態を常に見せる** — 今どうなっているか（読み込み中・0件・保存できた・失敗した）を、適切なタイミングで画面に出す。黙って待たせない・黙って失敗しない
+   - 例: 送信中は `Button` を disabled にして `Spinner`、結果は `toast` で知らせる
+2. **すべての状態をデザインする** — 理想の状態だけでなく、空・エラー・部分的・読み込み中も画面として用意する（UI Stack。Story で用意する状態は Skill `implement-ui` を参照）
+3. **主導権はユーザーに** — システムが勝手に進めない。取り消せない操作の前には必ず確認を挟み、ダイアログはいつでもキャンセルで抜けられるようにする
+   - 例: メンバー削除は確認 `Dialog` を経由する。カルーセルはボタン・スワイプ・キーボードのどれでも自分のペースで送れる
+4. **覚えさせない** — 画面をまたいで情報を覚えておかなくても使えるようにする。必要な情報はその場に出す
+   - 例: カードを見れば今週の相手とハドルの入口がわかる。パンくずで今いる場所がわかる
+5. **間違いを起こさせない・起きても戻れる** — 入力は選択肢や必須指定で間違いにくくし、エラーは何が起きたか・どうすればいいかを伝える
+
+### 参考にしている原則・文献
+
+| 原則・文献 | 本書での主な反映先 |
+| --- | --- |
+| [ニールセンのユーザビリティ10原則](https://www.nngroup.com/articles/ten-usability-heuristics/)（特に「システム状態の可視化」） | 振る舞いの原則 1 |
+| スコット・ハーフの UI Stack（[How To Fix a Bad User Interface](https://smart-interface-design-patterns.com/articles/how-to-fix-a-bad-user-interface/) / [日本語訳](https://postd.cc/how-to-fix-a-bad-user-interface-part1/)） | 振る舞いの原則 2、Story で用意する状態 |
+| シュナイダーマンの「インターフェイスデザインの8つの黄金律」 | 振る舞いの原則 3〜5、デザイン原則 2（部品の組み合わせで作る＝一貫性） |
+
+シュナイダーマンの8つの黄金律と、本書での当てはめ:
+
+| 黄金律 | CT スケジュールでの当てはめ |
+| --- | --- |
+| 1. 一貫性を保つ | 色・部品は本書のトークンとコンポーネントだけを使う |
+| 2. 幅広いユーザーが使えるようにする・慣れた人向けの近道を用意する | ボタンでもキーボードでも操作できる。読み上げ用ラベルを付ける |
+| 3. 有益なフィードバックを返す | 操作の結果は `toast` で知らせる |
+| 4. 操作の区切り・完了がわかる対話にする | 「○○ を削除しました」のように完了を伝える |
+| 5. エラーを防ぐ | 必須項目・選択肢で間違った入力をさせない |
+| 6. 操作を簡単に取り消せるようにする | ダイアログはキャンセル・× で抜けられる |
+| 7. 内部制御の感覚をサポートする（ユーザーが主導権を握る） | 取り消せない操作は確認を挟み、ユーザーが決める |
+| 8. 短期記憶の負担を減らす | 今週の相手がひと目でわかる。再入力をさせない |
+
+---
+
+## 4. 制約
+
+### 色
+
+**Semantic トークンだけを使う。** 一覧と用途は `src/design-system/tokens.ts`（Storybook: Foundations/Colors）にある。
+
+| 用途 | 使うトークン |
+| --- | --- |
+| 本文 / 補足テキスト | `text-foreground` / `text-muted-foreground` |
+| 控えめな面（リスト行など） | `bg-muted` |
+| 枠線 | `border`（既定で `border-border`）、入力欄は `border-input` |
+| 主要アクション / 副次アクション | `Button` の `variant="default"` / `"outline"` |
+| 削除・エラー | `destructive` 系、`Button variant="destructive"` |
+| 成功・参加中 | `bg-success` |
+| メッセージの色（Alert・toast・Badge の状態色） | `feedback-{info,success,warning,destructive}-{subtle,foreground,border,icon}`。部品の variant 経由で使い、直接クラスを書かない |
+| 祝日の週のカード背景 | `bg-status-holiday` |
+| 「お休み」「祝日名」ラベル | `bg-status-rest text-status-rest-foreground` |
+| 今週の強調枠 | `border-highlight-current` |
+| ページ最上部の帯（SiteHeader） | `bg-site-header text-site-header-foreground`（黒地に白。ライト・ダーク共通） |
+| アバターの背景（画像が無いとき） | `AvatarFallback` に `colorSeed`（ユーザー ID）を渡す。`avatar-1`〜`7` から自動で1色選ばれる。`UserAvatar` は対応済み。クラスを直接書かない |
+
+トークンを追加するときは `globals.css`（ライト・ダーク両方）、`tailwind.config.ts`、`tokens.ts` の3箇所を揃える。
+
+**ブランドカラー（Gaji-Labo）**: `--gaji-main-*`（Main・5色）と `--gaji-accent-*`（Accent・3色）を Primitive として定義している。出典は Figma「Gaji-Labo Styles」の Gaji-Labo Colors（Main は Web Site、Accent は Blog）。一覧と Web サイト・ブログでの用途は Storybook の Foundations/Colors「Brand (Gaji-Labo)」にある。Primitive なのでコンポーネントから直接使わず、使うときは用途に合う Semantic トークンを追加し、その参照先にする（例: `avatar-*`）。
+
+### 余白・サイズ
+
+- Tailwind の既定スケール（4px グリッド）を使う。よく使う値は `src/design-system/tokens.ts` の `spacing` を参照
+- 角丸は `rounded-md`（ボタン・入力欄・リスト行）、`rounded-lg`（カード・ダイアログ）、`rounded-full`（アバター・ラベル）
+
+### タイポグラフィ
+
+| 用途 | クラス |
+| --- | --- |
+| ページタイトル (h1) | `text-2xl font-bold` |
+| セクション・カード見出し (h2) | `text-lg font-semibold` |
+| 本文・ラベル | `text-sm font-medium` |
+| 補足説明 | `text-sm text-muted-foreground` |
+| 番号・バッジ・注釈 | `text-xs` |
+
+### コンポーネント
+
+使えるコンポーネントは `src/app/components/ui/`（shadcn/ui ベース）にある。Storybook に Story があるものは、docs の「使い分け」に従う。
+
+組み合わせ方・並べ方の OK / NG は、Storybook の各コンポーネントの「ガイドライン」ページにまとめる（例: UI/Button › ガイドライン）。部品と Good / Don't の見本は `src/design-system/guidelines/GuidelineBlocks.tsx` を使う。
+
+| やりたいこと | 使うもの |
+| --- | --- |
+| ボタン・リンク風の操作 | `Button`（リンクは `asChild` で `<a>` / `Link` を包む） |
+| 確認・入力のモーダル | `Dialog` |
+| メニュー | `DropdownMenu` |
+| 今いるページの位置（2階層目以降） | `Breadcrumb`（ページタイトルのすぐ上。今いるページは `BreadcrumbPage`） |
+| フォーム | `Label` + `Input` / `Select` / `Checkbox` |
+| 状態ラベル | `Badge` |
+| ユーザー表示 | `UserAvatar` |
+| メンバー一覧の1行 | `MemberListItem`（アバター・名前・参加状態。右端の操作は `action` で渡す） |
+| 補足説明のポップアップ | `Tooltip` |
+| 区切り線 | `Separator` |
+| 読み込み中 | `Spinner` |
+| 操作結果の通知 | `toast`（sonner） |
+| ページ内に残すお知らせ・注意・エラー | `Alert`（`info` / `success` / `warning` / `destructive`。色の意味を持たせないときは `default`） |
+| 横に送って見せる（カード列など） | `Carousel`。CT の週カードは `CTScheduleCarousel`（初期表示は「次の週」だけ、進めると「前の週」が出る） |
+| ページ最上部の帯（左上にロゴ） | `SiteHeader`（中に `GajiLaboLogo`）。ページタイトルとログインは、その下の `Header` |
+| Gaji-Labo のロゴ | `GajiLaboLogo`（色は親の文字色。高さを `h-*` で指定） |
+
+### 禁止事項
+
+| 禁止 | 代わりに | lint での検出 |
+| --- | --- | --- |
+| パレット色の直書き（`bg-gray-100`, `text-black`, `bg-white` など） | Semantic トークン | `design-system/no-palette-color` |
+| 色の任意値（`bg-[#e5e5e5]`）、`style` での色指定 | Semantic トークン | `design-system/no-palette-color`（`style` は対象外） |
+| 任意値（`p-[13px]`, `max-w-[425px]`） | 既定スケール。繰り返すなら variant / トークンを追加する | `design-system/no-arbitrary-value` |
+| `<button>` や `<input>` の自作スタイリング | `Button` / `Input` | — |
+| `className` で variant の見た目を上書き（`<Button className="bg-red-500">`） | 適切な `variant` を選ぶ。無ければ variant を追加する | 色の部分は検出される |
+| 画面ごとの独自カードや独自ラベル | 既存部品の組み合わせ。足りなければ部品を追加する | — |
+
+---
+
+## 5. 実装の進め方と検証
+
+画面・部品・Story を作るときの手順、用意する状態、検証の方法は Skill [`.claude/skills/implement-ui/SKILL.md`](./.claude/skills/implement-ui/SKILL.md) にまとめている。Claude Code では `/implement-ui <やりたいこと>` で呼び出せる。本書は「何を守るか」、Skill は「どう進めて、どう確かめるか」を扱う。
+
+## 6. フィードバックの戻し先
+
+レビューの指摘や AI の生成ミスは、その場の修正で終わらせず、次に同じことが起きないよう仕組みへ戻す。
+
+| 起きたこと | 戻し先 |
+| --- | --- |
+| 同じ見た目の指摘が繰り返される | 本書の「禁止事項」に追記。機械的に検出できるなら `eslint/design-system-plugin.mjs` にルールを追加 |
+| 同じ任意値・独自 UI が複数箇所に出る | コンポーネントの variant か、新しいコンポーネント（＋Story）にする |
+| 意味のある色が足りない | Semantic トークンを追加（3箇所を揃える） |
+| 判断の前提が AI に伝わっていない | 本書の「デザインシステムの文脈」「アプリごとの文脈」「デザイン原則」に追記 |
+| 部品の使い分けを間違える | その部品の Story の docs（`parameters.docs.description`）に使い分けを追記 |
+| 手順の抜け・用意する状態や検証の漏れ | Skill `implement-ui`（`.claude/skills/implement-ui/SKILL.md`）に追記 |
+| 部品の組み合わせ方・並べ方を間違える | その部品の「ガイドライン」ページ（`src/design-system/guidelines/`）に OK / NG を追記 |
+
+## 参照
+
+| 内容 | 場所 |
+| --- | --- |
+| トークン定義 | `src/app/globals.css`, `tailwind.config.ts` |
+| トークンの用途一覧 | `src/design-system/tokens.ts` |
+| コンポーネントと Story | `src/app/components/**`、`bun run storybook` |
+| lint ルール | `eslint/design-system-plugin.mjs` |
+| Gaji-Labo の文化 | [Culture Deck](https://speakerdeck.com/gaji/gaji-labo-culture-deck)、[Gaji-Labo スタイル](https://speakerdeck.com/gaji/gaji-labo-style) |

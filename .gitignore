@@ -42,3 +42,9 @@ next-env.d.ts
 
 # mcp
 .mcp.json
+
+# storybook
+/storybook-static
+*storybook.log
+# implement-ui の作業レポート
+/.implement-ui

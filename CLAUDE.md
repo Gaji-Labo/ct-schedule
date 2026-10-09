@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 CTスケジュール管理アプリケーション - チーム内で2人1組のコミュニケーションタイム（CT）を定期的に作成・管理するWebアプリ。
 
+## UI Implementation
+
+**UI（画面・コンポーネント・スタイル）を実装・変更する前に、必ず [DESIGN.md](./DESIGN.md) を読むこと。** 色・余白・使う部品・禁止事項がまとまっている。実装の手順と検証は Skill `implement-ui`（`/implement-ui`）にある。
+
 ## Development Commands
 
 ```bash
@@ -24,6 +28,9 @@ bun test
 
 # 特定ファイルのテストのみ実行
 bun test src/utils/member.test.ts
+
+# Storybook（デザインシステムのカタログ）
+bun run storybook
 ```
 
 ## Architecture
@@ -215,6 +222,7 @@ const data = await getSomething();
 ```
 
 ### Adding a New UI Component
+0. Skill `implement-ui`（[.claude/skills/implement-ui/SKILL.md](./.claude/skills/implement-ui/SKILL.md)）の手順に従う
 1. `src/app/components/`にファイル作成
 2. Server Actionsを使う場合は`"use client"`ディレクティブ必須
 3. shadcn/uiコンポーネントは`@/components/ui/`から import

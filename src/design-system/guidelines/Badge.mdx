@@ -1,0 +1,68 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { X } from "lucide-react";
+import { Badge } from "../../app/components/ui/badge";
+import { Button } from "../../app/components/ui/button";
+import * as BadgeStories from "../../app/components/ui/badge.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={BadgeStories} name="ガイドライン" />
+
+# Badge ガイドライン
+
+状態や分類を示すラベルの OK / NG。variant の意味は「Docs」タブを参照。
+
+<UsageRules
+  ok={[
+    <>状態・分類を 1〜2 語で示す（「参加中」「未設定」「管理者」など）。</>,
+    <>variant は意味で選ぶ（参加中・完了 = <code>success</code>、注意 = <code>warning</code>、お知らせ = <code>info</code>、エラー = <code>destructive</code>、控えめな補足 = <code>secondary</code> / <code>outline</code>）。</>,
+    <>状態の違いは<strong>文言</strong>で伝える。色は補助にとどめる。</>,
+  ]}
+  ng={[
+    <>押せる要素（操作・絞り込み・リンク）に使わない → <code>Button</code> / リンク。Badge は見るだけの表示。</>,
+    <>文言を同じにして、違いを色だけで示さない → 色を区別できない人に伝わらない。</>,
+    <>長い文を入れない → 1〜2 語に収める。説明が要るなら本文に書く。</>,
+    <>× を付けて「外せる」ように見せない → 状態は外せないもの。外せる値を並べる部品は別に用意する。</>,
+    <><code>className</code> で色を上書きしない（<code>bg-gray-400</code> など） → 足りない色は variant を追加する（例: CT の「お休み」「祝日」用）。</>,
+  ]}
+/>
+
+<DoDont
+  title="状態は文言で示す（色だけに頼らない）"
+  note="色の使い方"
+  good={{
+    example: (
+      <div className="flex gap-2">
+        <Badge variant="success">参加中</Badge>
+        <Badge variant="warning">未設定</Badge>
+      </div>
+    ),
+    caption: "文言そのものが状態を表す。色を区別できなくても意味が分かる。",
+  }}
+  dont={{
+    example: (
+      <div className="flex gap-2">
+        <Badge variant="success">状態</Badge>
+        <Badge variant="warning">状態</Badge>
+      </div>
+    ),
+    caption: "文言が同じで、違いを色だけに任せない。",
+  }}
+/>
+
+<DoDont
+  title="押せる見た目にしない"
+  note="要素の役割"
+  good={{
+    example: <Badge variant="outline">管理者</Badge>,
+    caption: "Badge は見るだけの表示。押す・外す操作は持たせない。",
+  }}
+  dont={{
+    example: (
+      <Badge variant="outline" className="gap-1">
+        管理者
+        <X aria-hidden className="size-3" />
+      </Badge>
+    ),
+    caption: "× を付けると外せる値に見え、押しても何も起きないので混乱する。",
+  }}
+/>
