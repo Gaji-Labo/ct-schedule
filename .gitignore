@@ -46,3 +46,5 @@ next-env.d.ts
 # storybook
 /storybook-static
 *storybook.log
+# implement-ui の作業レポート
+/.implement-ui

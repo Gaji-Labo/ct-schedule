@@ -8,7 +8,7 @@ CTスケジュール管理アプリケーション - チーム内で2人1組の�
 
 ## UI Implementation
 
-**UI（画面・コンポーネント・スタイル）を実装・変更する前に、必ず [DESIGN.md](./DESIGN.md) を読むこと。** 色・余白・使う部品・禁止事項・実装手順・検証方法がまとまっている。
+**UI（画面・コンポーネント・スタイル）を実装・変更する前に、必ず [DESIGN.md](./DESIGN.md) を読むこと。** 色・余白・使う部品・禁止事項がまとまっている。実装の手順と検証は Skill `implement-ui`（`/implement-ui`）にある。
 
 ## Development Commands
 
@@ -222,7 +222,7 @@ const data = await getSomething();
 ```
 
 ### Adding a New UI Component
-0. [DESIGN.md](./DESIGN.md) の「新しい画面を実装する手順」に従う
+0. Skill `implement-ui`（[.claude/skills/implement-ui/SKILL.md](./.claude/skills/implement-ui/SKILL.md)）の手順に従う
 1. `src/app/components/`にファイル作成
 2. Server Actionsを使う場合は`"use client"`ディレクティブ必須
 3. shadcn/uiコンポーネントは`@/components/ui/`から import

@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "verify:ui": "bun run lint && bun test && storybook build --test --quiet",
+    "report:ui": "bun .claude/skills/implement-ui/report.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
