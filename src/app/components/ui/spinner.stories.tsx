@@ -4,7 +4,7 @@ import { Button } from "./button";
 import { Spinner } from "./spinner";
 
 /**
- * 元: shadcn-storybook-registry (radix/spinner-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/spinner-story) を docs/design/rules.md に合わせて調整
  * (元の Story が使う Item / Empty / InputGroup はこのリポジトリに無いため、既存部品の例に置き換えた)
  */
 const meta = {

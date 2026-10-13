@@ -3,7 +3,7 @@ import { CircleAlert, CircleCheck, Info, TriangleAlert } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "./alert";
 
 /**
- * 元: shadcn-storybook-registry (radix/alert-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/alert-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Alert",

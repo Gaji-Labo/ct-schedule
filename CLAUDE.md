@@ -8,7 +8,14 @@ CTスケジュール管理アプリケーション - チーム内で2人1組の�
 
 ## UI Implementation
 
-**UI（画面・コンポーネント・スタイル）を実装・変更する前に、必ず [DESIGN.md](./DESIGN.md) を読むこと。** 色・余白・使う部品・禁止事項・実装手順・検証方法がまとまっている。
+**UI（画面・コンポーネント・スタイル）を実装・変更する前に、`docs/design/` の該当ファイルを読むこと。**
+
+| 知りたいこと | ファイル |
+| --- | --- |
+| 色・余白・文字・使う部品・禁止事項 | [docs/design/rules.md](./docs/design/rules.md) |
+| 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [docs/design/principles.md](./docs/design/principles.md) |
+| CT スケジュール固有の目的・画面・利用シーン | [docs/design/apps/ct-schedule.md](./docs/design/apps/ct-schedule.md) |
+| 実装の手順・検証・フィードバックの戻し先 | [docs/design/workflow.md](./docs/design/workflow.md) |
 
 ## Development Commands
 
@@ -222,7 +229,7 @@ const data = await getSomething();
 ```
 
 ### Adding a New UI Component
-0. [DESIGN.md](./DESIGN.md) の「新しい画面を実装する手順」に従う
+0. [docs/design/workflow.md](./docs/design/workflow.md) の「新しい画面を実装する手順」に従う
 1. `src/app/components/`にファイル作成
 2. Server Actionsを使う場合は`"use client"`ディレクティブ必須
 3. shadcn/uiコンポーネントは`@/components/ui/`から import

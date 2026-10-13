@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 /**
- * 元: shadcn-storybook-registry (radix/tooltip-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/tooltip-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Tooltip",

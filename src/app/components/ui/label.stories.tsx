@@ -3,7 +3,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 /**
- * 元: shadcn-storybook-registry (radix/label-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/label-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Label",
@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component: [
-          "フォーム部品の名前を示すラベル。文字は `text-sm font-medium`（DESIGN.md「本文・ラベル」）。",
+          "フォーム部品の名前を示すラベル。文字は `text-sm font-medium`（docs/design/rules.md「タイポグラフィ」）。",
           "",
           "**使い方**: `htmlFor` に入力欄の `id` を指定して結びつける。",
           "入力欄と縦に並べるときは `grid gap-2` で包む。",
