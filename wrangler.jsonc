@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Storybook の静的ビルド（bun run build-storybook）を配信する
+  "name": "ct-schedule-storybook",
+  "compatibility_date": "2026-10-13",
+  "assets": {
+    "directory": "./storybook-static"
+  }
+}
