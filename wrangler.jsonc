@@ -8,5 +8,7 @@
   "preview_urls": true,
   "assets": {
     "directory": "./storybook-static"
-  }
+  },
+  // wrangler preview（非本番ブランチのビルド）の実行に必要。assets などはトップレベルの設定を引き継ぐ
+  "previews": {}
 }
