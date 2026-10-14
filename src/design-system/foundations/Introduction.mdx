@@ -18,7 +18,7 @@ CTスケジュールの UI を組み立てるための部品とルールをま�
 
 ## 基本ルール
 
-ルールの正本はリポジトリ直下の `DESIGN.md` です（文脈・原則・禁止事項・フィードバックの戻し先）。実装の手順と検証方法は Skill `.claude/skills/implement-ui/SKILL.md` にあります。ここでは要点だけを載せます。
+ルールの正本はリポジトリの `docs/design/` です（`rules.md`: 色・部品・禁止事項、`principles.md`: 文脈と原則、`workflow.md`: 仕組みの全体像・フィードバックの戻し先）。実装の手順と検証方法は Skill `.claude/skills/implement-ui/SKILL.md` にあります。ここでは要点だけを載せます。
 違反の一部は `bun run lint` の `design-system/*` ルールで検出されます。
 
 1. **色は Semantic トークンだけを使う。** `bg-gray-100` や `#e5e5e5` を直接書かない。

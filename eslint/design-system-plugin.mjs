@@ -3,7 +3,7 @@
  *
  * className 属性と cn() / clsx() / cva() / twMerge() の引数に書かれた Tailwind クラスを検査する。
  * エラーメッセージは AI・人間が「代わりに何を使うか」をその場で判断できるよう、
- * 参照ドキュメント (DESIGN.md) の該当箇所を必ず含める。
+ * 参照ドキュメント (docs/design/rules.md) の該当箇所を必ず含める。
  * トークン名は変わる前提のため、メッセージに具体的なトークン名は書かない。
  */
 
@@ -106,7 +106,7 @@ const noPaletteColor = {
     schema: [],
     messages: {
       paletteColor:
-        "`{{className}}` はパレット色の直書きです。DESIGN.md「色」の表から用途に合う Semantic トークンを選んで置き換えてください。該当するトークンが無ければ先にトークンを追加します。",
+        "`{{className}}` はパレット色の直書きです。docs/design/rules.md「色」の表から用途に合う Semantic トークンを選んで置き換えてください。該当するトークンが無ければ先にトークンを追加します。",
     },
   },
   create: createClassRule(findPaletteColors, "paletteColor"),
@@ -123,7 +123,7 @@ const noArbitraryValue = {
     schema: [],
     messages: {
       arbitraryValue:
-        "`{{className}}` は任意値です。Tailwind の既定スケール (p-4, max-w-md など) を使ってください。同じ任意値が繰り返し必要なら、コンポーネントの variant かトークンとして追加します。参照: DESIGN.md「余白・サイズ」",
+        "`{{className}}` は任意値です。Tailwind の既定スケール (p-4, max-w-md など) を使ってください。同じ任意値が繰り返し必要なら、コンポーネントの variant かトークンとして追加します。参照: docs/design/rules.md「余白・サイズ」",
     },
   },
   create: createClassRule(findArbitraryValues, "arbitraryValue"),

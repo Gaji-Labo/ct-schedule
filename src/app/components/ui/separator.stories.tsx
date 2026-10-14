@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Separator } from "./separator";
 
 /**
- * 元: shadcn-storybook-registry (radix/separator-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/separator-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Separator",

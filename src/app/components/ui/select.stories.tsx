@@ -13,7 +13,7 @@ import {
 } from "./select";
 
 /**
- * 元: shadcn-storybook-registry (radix/select-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/select-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Select",

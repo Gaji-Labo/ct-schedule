@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { AVATAR_COLORS, Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 /**
- * 元: shadcn-storybook-registry (radix/avatar-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/avatar-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Avatar",

@@ -11,7 +11,7 @@ import {
 } from "./breadcrumb";
 
 /**
- * 元: shadcn-storybook-registry (radix/breadcrumb-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/breadcrumb-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Breadcrumb",

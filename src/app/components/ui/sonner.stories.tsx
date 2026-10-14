@@ -5,7 +5,7 @@ import { Button } from "./button";
 import { Toaster } from "./sonner";
 
 /**
- * 元: shadcn-storybook-registry (radix/sonner-story) を DESIGN.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/sonner-story) を docs/design/rules.md に合わせて調整
  */
 const meta = {
   title: "UI/Sonner",
