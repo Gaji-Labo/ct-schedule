@@ -1,6 +1,6 @@
 # 生成検証
 
-`docs/design/`・Skill `implement-ui`・Storybook がそろった状態で、AI がどれだけデザインルールに沿った画面を作れるかを確かめる。
+`docs/design/`・Skill `implement-ui`・Storybook がそろった状態で、AI がどれだけデザインルールに沿った画面を作れるかを確かめる。題材には、デザインシステムの最初の利用例である CT スケジュールの画面を使っている。
 
 | 種類 | 確かめること | 隠すもの | 比べる相手 |
 | --- | --- | --- | --- |
@@ -28,6 +28,7 @@ experiments/setup.sh reproduce 01
 
 ## 注意
 
+- 2026-10-14 に、共通のルール・部品の例から CT 固有の内容を外し、`docs/design/apps/ct-schedule.md` に分けた。AI に渡す情報が変わったので、それより前の回（reproduce-01）とは条件が違う。比べるときは整理後の回を基準にする
 - Skill `implement-ui` の「画面の Story」の書き方（置き場所・`title`・リンクの形）は既存の2画面から書き起こしている。`reproduce` ではその分だけ正解に近づきやすい
 - サンドボックスには `.claude/settings.local.json` で読み取り禁止の設定を入れている（このリポジトリ・セッション記録の Read、WebFetch、`gh` / `curl` など）。Read・Glob・Grep と、Bash の `cat` のような単純な読み取りは止まるが、Bash から python などで間接的に読むのは止められない。最後は `report.html` の行動ログで確かめる
 - `~/ct-schedule-experiments/` のほかの回のサンドボックスは禁止していない。前の回の生成物を読んでいないかも行動ログで見る

@@ -2,9 +2,10 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 <Meta title="Foundations/Introduction" />
 
-# CTスケジュール デザインシステム
+# Gaji-Labo 社内アプリ デザインシステム
 
-CTスケジュールの UI を組み立てるための部品とルールをまとめたカタログです。
+Gaji-Labo の社内アプリの UI を組み立てるための部品とルールをまとめたカタログです。
+最初の利用例は CT スケジュールで、Domain・Pages にはその部品と画面を載せています。
 人と AI のどちらが新しい画面を実装する場合も、ここにあるトークンとコンポーネントだけで組み立てることを目指します。
 
 ## 構成
@@ -13,7 +14,7 @@ CTスケジュールの UI を組み立てるための部品とルールをま�
 | --- | --- | --- |
 | Foundations | `src/design-system/foundations/`（値は `src/app/globals.css` / `tailwind.config.ts`、用途は `src/design-system/tokens.ts`） | 色・タイポグラフィ・余白・角丸・影・ロゴ |
 | UI | `src/app/components/ui/*.stories.tsx` | shadcn/ui ベースの汎用コンポーネント。各部品の「ガイドライン」ページ（`src/design-system/guidelines/`）もここに出る |
-| Domain | `src/app/components/*.stories.tsx` | CTスケジュール固有のコンポーネント（週カード、メンバー一覧の行、ヘッダーなど） |
+| Domain | `src/app/components/*.stories.tsx` | アプリ固有のコンポーネント。今は CT スケジュールのもの（週カード、メンバー一覧の行）と、社内アプリ共通のヘッダー |
 | Pages | `src/design-system/pages/` | 画面全体をモックデータで再現したもの。部品の組み合わせ方の見本（人が確定させた正式な画面） |
 | Drafts | `src/design-system/drafts/` | 確認待ちの画面。AI や人が作った画面はまずここに置き、確認して確定したら Pages に移す。`main` には残さない |
 
@@ -25,7 +26,7 @@ CTスケジュールの UI を組み立てるための部品とルールをま�
 | --- | --- |
 | 色・余白・文字・使う部品・禁止事項 | [rules.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/rules.md) |
 | 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [principles.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/principles.md) |
-| CT スケジュール固有の目的・画面・利用シーン | [apps/ct-schedule.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/apps/ct-schedule.md) |
+| アプリ固有の目的・画面・利用シーン（CT スケジュール） | [apps/ct-schedule.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/apps/ct-schedule.md) |
 | 実装の手順・検証 | Skill [implement-ui](https://github.com/Gaji-Labo/ct-schedule/blob/main/.claude/skills/implement-ui/SKILL.md)（Claude Code では `/implement-ui`） |
 | 仕組みの全体像・フィードバックの戻し先 | [workflow.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/workflow.md) |
 
@@ -40,6 +41,6 @@ CTスケジュールの UI を組み立てるための部品とルールをま�
 ## トークンの2層構造
 
 - **Primitive**: `--neutral-100` などの生の色値。Semantic トークンを定義するときにだけ使う
-- **Semantic**: `--primary` や `--status-rest` など、用途に名前を付けたトークン。コンポーネントからはこちらだけを使う
+- **Semantic**: `--primary` や `--feedback-info-subtle` など、用途に名前を付けたトークン。コンポーネントからはこちらだけを使う
 
 ブランドカラーを決めるときは、Primitive を追加して Semantic の参照先を差し替えれば、コンポーネント側は変更せずに済みます。

@@ -65,7 +65,7 @@ export const Sizes: Story = {
   ),
 };
 
-/** CT の組み合わせ表示のように、名前と並べて使う例 */
+/** 一覧の行のように、名前と並べて使う例 */
 export const WithName: Story = {
   render: (args) => (
     <div className="flex items-center gap-2 rounded-md bg-muted p-3">

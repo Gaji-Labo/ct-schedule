@@ -27,7 +27,7 @@ const meta = {
           "",
           "**使い方**",
           "- `Label` と組み合わせる（`grid gap-2`）",
-          "- 何を選ぶかがわかる placeholder を `SelectValue` に入れる（例: 「uチャンネルを選択」）",
+          "- 何を選ぶかがわかる placeholder を `SelectValue` に入れる（例: 「通知先を選択」）",
           "- 選択肢が多いときは `SelectGroup` + `SelectLabel` で分類し、`SelectSeparator` で区切る",
           "",
           "**使い分け**: 選択肢が2つでオン・オフの意味なら `Checkbox`、メニュー操作なら `DropdownMenu`。",
@@ -40,17 +40,17 @@ const meta = {
   },
   render: (args) => (
     <div className="grid w-80 gap-2">
-      <Label htmlFor="slackUChannelId">uチャンネル</Label>
+      <Label htmlFor="notifyChannel">通知先</Label>
       <Select {...args}>
-        <SelectTrigger id="slackUChannelId">
-          <SelectValue placeholder="uチャンネルを選択" />
+        <SelectTrigger id="notifyChannel">
+          <SelectValue placeholder="通知先を選択" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="u-yamada">u-yamada</SelectItem>
-            <SelectItem value="u-sato">u-sato</SelectItem>
-            <SelectItem value="u-suzuki">u-suzuki</SelectItem>
-            <SelectItem value="u-tanaka">u-tanaka</SelectItem>
+            <SelectItem value="general">#general</SelectItem>
+            <SelectItem value="random">#random</SelectItem>
+            <SelectItem value="design">#design</SelectItem>
+            <SelectItem value="dev">#dev</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
@@ -77,21 +77,21 @@ export const Disabled: Story = {
 export const WithGroups: Story = {
   render: (args) => (
     <div className="grid w-80 gap-2">
-      <Label htmlFor="member">メンバー</Label>
+      <Label htmlFor="assignee">担当者</Label>
       <Select {...args}>
-        <SelectTrigger id="member">
-          <SelectValue placeholder="メンバーを選択" />
+        <SelectTrigger id="assignee">
+          <SelectValue placeholder="担当者を選択" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>参加中</SelectLabel>
+            <SelectLabel>在席</SelectLabel>
             <SelectItem value="yamada">山田</SelectItem>
             <SelectItem value="sato">佐藤</SelectItem>
             <SelectItem value="suzuki">鈴木</SelectItem>
           </SelectGroup>
           <SelectSeparator />
           <SelectGroup>
-            <SelectLabel>不参加</SelectLabel>
+            <SelectLabel>休暇中</SelectLabel>
             <SelectItem value="tanaka" disabled>
               田中
             </SelectItem>

@@ -15,11 +15,10 @@
 | 削除・エラー | `destructive` 系、`Button variant="destructive"` |
 | 成功・参加中 | `bg-success` |
 | メッセージの色（Alert・toast・Badge の状態色） | `feedback-{info,success,warning,destructive}-{subtle,foreground,border,icon}`。部品の variant 経由で使い、直接クラスを書かない |
-| 祝日の週のカード背景 | `bg-status-holiday` |
-| 「お休み」「祝日名」ラベル | `bg-status-rest text-status-rest-foreground` |
-| 今週の強調枠 | `border-highlight-current` |
 | ページ最上部の帯（SiteHeader） | `bg-site-header text-site-header-foreground`（黒地に白。ライト・ダーク共通） |
 | アバターの背景（画像が無いとき） | `AvatarFallback` に `colorSeed`（ユーザー ID）を渡す。`avatar-1`〜`7` から自動で1色選ばれる。`UserAvatar` は対応済み。クラスを直接書かない |
+
+アプリ固有の色（例: CT スケジュールの祝日・お休み）は `docs/design/apps/<アプリ名>.md` に書く。
 
 トークンを追加するときは `globals.css`（ライト・ダーク両方）、`tailwind.config.ts`、`tokens.ts` の3箇所を揃える。
 
@@ -55,15 +54,16 @@
 | フォーム | `Label` + `Input` / `Select` / `Checkbox` |
 | 状態ラベル | `Badge` |
 | ユーザー表示 | `UserAvatar` |
-| メンバー一覧の1行 | `MemberListItem`（アバター・名前・参加状態。右端の操作は `action` で渡す） |
 | 補足説明のポップアップ | `Tooltip` |
 | 区切り線 | `Separator` |
 | 読み込み中 | `Spinner` |
 | 操作結果の通知 | `toast`（sonner） |
 | ページ内に残すお知らせ・注意・エラー | `Alert`（`info` / `success` / `warning` / `destructive`。色の意味を持たせないときは `default`） |
-| 横に送って見せる（カード列など） | `Carousel`。CT の週カードは `CTScheduleCarousel`（初期表示は「次の週」だけ、進めると「前の週」が出る） |
+| 横に送って見せる（カード列など） | `Carousel` |
 | ページ最上部の帯（左上にロゴ） | `SiteHeader`（中に `GajiLaboLogo`）。ページタイトルとログインは、その下の `Header` |
 | Gaji-Labo のロゴ | `GajiLaboLogo`（色は親の文字色。高さを `h-*` で指定） |
+
+アプリ固有の部品（例: CT スケジュールの週カード）は `docs/design/apps/<アプリ名>.md` に書く。
 
 ## 禁止事項
 

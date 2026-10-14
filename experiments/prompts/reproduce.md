@@ -1,4 +1,4 @@
-/implement-ui 次の2画面の Story を作ってください。アプリ本体 (src/app の page.tsx) は作らなくてよいです。
+/implement-ui 社内アプリ「CT スケジュール」の次の2画面の Story を作ってください。アプリ本体 (src/app の page.tsx) は作らなくてよいです。
 
 - `src/design-system/drafts/CTSchedulePage.stories.tsx` — CT組み合わせ表 (`/`)
   - ページタイトル、Slack ログインボタン

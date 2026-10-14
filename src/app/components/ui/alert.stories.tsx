@@ -17,10 +17,10 @@ const meta = {
           "ページの中に置いておく、お知らせ・注意・エラーのメッセージ。ユーザーが読み終えるまで消えない。",
           "",
           "**variant の選び方**（内容の意味で選ぶ）",
-          "- `info`: 情報・お知らせ（例: 次回の CT は祝日のためお休み）",
+          "- `info`: 情報・お知らせ（例: メンテナンスの予定）",
           "- `success`: 完了・有効になったこと（例: 初期設定が完了した）",
-          "- `warning`: 注意・このままだと困ること（例: uチャンネルが未設定）",
-          "- `destructive`: エラー・失敗（例: 組み合わせを読み込めなかった）",
+          "- `warning`: 注意・このままだと困ること（例: 通知先が未設定）",
+          "- `destructive`: エラー・失敗（例: データを読み込めなかった）",
           "- `default`: 色の意味を持たせない中立のメッセージ",
           "",
           "色は Semantic トークン `feedback-*`（Foundations/Colors の Feedback message）。背景・文字・枠線・アイコンをセットで使い、文字は背景に対して 4.5:1 以上。",
@@ -54,9 +54,9 @@ const meta = {
   render: (args) => (
     <Alert {...args}>
       <Info aria-hidden />
-      <AlertTitle>次回の CT はお休みです</AlertTitle>
+      <AlertTitle>メンテナンスのお知らせ</AlertTitle>
       <AlertDescription>
-        10月12日（月）はスポーツの日のため、組み合わせはありません。
+        10月12日（月）9:00〜10:00 は、メンテナンスのため使えません。
       </AlertDescription>
     </Alert>
   ),
@@ -74,9 +74,9 @@ export const Destructive: Story = {
   render: (args) => (
     <Alert {...args}>
       <CircleAlert aria-hidden />
-      <AlertTitle>組み合わせを読み込めませんでした</AlertTitle>
+      <AlertTitle>データを読み込めませんでした</AlertTitle>
       <AlertDescription>
-        時間をおいてページを再読み込みしてください。解決しない場合は #ct-schedule で知らせてください。
+        時間をおいてページを再読み込みしてください。解決しない場合は担当者に知らせてください。
       </AlertDescription>
     </Alert>
   ),
@@ -88,9 +88,9 @@ export const Warning: Story = {
   render: (args) => (
     <Alert {...args}>
       <TriangleAlert aria-hidden />
-      <AlertTitle>uチャンネルが未設定です</AlertTitle>
+      <AlertTitle>通知先が未設定です</AlertTitle>
       <AlertDescription>
-        ハドルを始めるには、プロフィールで uチャンネルを設定してください。
+        通知を受け取るには、設定で通知先のチャンネルを選んでください。
       </AlertDescription>
     </Alert>
   ),
@@ -103,7 +103,7 @@ export const Success: Story = {
     <Alert {...args}>
       <CircleCheck aria-hidden />
       <AlertTitle>初期設定が完了しました</AlertTitle>
-      <AlertDescription>来週の組み合わせから参加します。</AlertDescription>
+      <AlertDescription>次回から通知を受け取れます。</AlertDescription>
     </Alert>
   ),
 };
@@ -113,7 +113,7 @@ export const TitleOnly: Story = {
   render: (args) => (
     <Alert {...args}>
       <Info aria-hidden />
-      <AlertTitle>今週の組み合わせは 10 組です</AlertTitle>
+      <AlertTitle>未読のお知らせが 3 件あります</AlertTitle>
     </Alert>
   ),
 };
@@ -130,7 +130,7 @@ export const Variants: Story = {
       <Alert variant="info">
         <Info aria-hidden />
         <AlertTitle>お知らせ（info）</AlertTitle>
-        <AlertDescription>次回の CT は祝日のためお休みです。</AlertDescription>
+        <AlertDescription>10月12日（月）はメンテナンスのため使えません。</AlertDescription>
       </Alert>
       <Alert variant="success">
         <CircleCheck aria-hidden />
@@ -140,12 +140,12 @@ export const Variants: Story = {
       <Alert variant="warning">
         <TriangleAlert aria-hidden />
         <AlertTitle>注意（warning）</AlertTitle>
-        <AlertDescription>uチャンネルが未設定です。</AlertDescription>
+        <AlertDescription>通知先が未設定です。</AlertDescription>
       </Alert>
       <Alert variant="destructive">
         <CircleAlert aria-hidden />
         <AlertTitle>エラー（destructive）</AlertTitle>
-        <AlertDescription>組み合わせを読み込めませんでした。</AlertDescription>
+        <AlertDescription>データを読み込めませんでした。</AlertDescription>
       </Alert>
       <Alert>
         <Info aria-hidden />

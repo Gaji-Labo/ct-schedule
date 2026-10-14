@@ -31,7 +31,7 @@ const meta = {
           "",
           "**使い分け**",
           "- 削除など取り消せない操作の確認 → 実行ボタンは `Button variant=\"destructive\"`",
-          "- 短いフォーム（メンバー追加・プロフィール編集など）→ 実行ボタンは `Button variant=\"default\"`",
+          "- 短いフォーム（項目の追加・プロフィール編集など）→ 実行ボタンは `Button variant=\"default\"`",
           "- 結果を知らせるだけなら Dialog ではなく `toast` を使う",
           "",
           "**構成のルール**",
@@ -48,14 +48,14 @@ const meta = {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Trash2 />
-          メンバーを削除
+          ファイルを削除
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>メンバーを削除</DialogTitle>
+          <DialogTitle>ファイルを削除</DialogTitle>
           <DialogDescription>
-            山田 を削除しますか？この操作は取り消せません。
+            報告書.pdf を削除しますか？この操作は取り消せません。
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -88,7 +88,7 @@ export const WithForm: Story = {
         <form className="grid gap-6" onSubmit={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>プロフィール編集</DialogTitle>
-            <DialogDescription>CT の組み合わせ表に表示される情報です。</DialogDescription>
+            <DialogDescription>社内アプリのプロフィールに表示される情報です。</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-2">
@@ -100,8 +100,8 @@ export const WithForm: Story = {
               <Input id="employeeNumber" type="number" defaultValue="1234" />
             </div>
             <div className="flex items-center gap-2">
-              <Checkbox id="participate" defaultChecked />
-              <Label htmlFor="participate">CTに参加する</Label>
+              <Checkbox id="notify" defaultChecked />
+              <Label htmlFor="notify">Slack で通知を受け取る</Label>
             </div>
           </div>
           <DialogFooter>
@@ -128,7 +128,7 @@ export const ShouldCloseWithCancel: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "メンバーを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
       await expect(await body.findByRole("dialog")).toHaveAttribute("data-state", "open");
     });
 
@@ -146,7 +146,7 @@ export const ShouldCloseWithCross: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "メンバーを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
       await expect(await body.findByRole("dialog")).toBeInTheDocument();
     });
 

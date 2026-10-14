@@ -77,7 +77,7 @@ export const WithHelperText: Story = {
       <Label htmlFor="employeeNumber">社員番号</Label>
       <Input {...args} id="employeeNumber" type="number" placeholder="例: 1234" />
       <p className="text-sm text-muted-foreground">
-        組み合わせの並び順に使います。
+        社内の名簿と照合するために使います。
       </p>
     </div>
   ),
