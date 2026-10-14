@@ -1,11 +1,11 @@
 # 生成検証
 
-DESIGN.md・Skill `implement-ui`・Storybook がそろった状態で、AI がどれだけデザインルールに沿った画面を作れるかを確かめる。
+`docs/design/`・Skill `implement-ui`・Storybook がそろった状態で、AI がどれだけデザインルールに沿った画面を作れるかを確かめる。
 
 | 種類 | 確かめること | 隠すもの | 比べる相手 |
 | --- | --- | --- | --- |
 | `reproduce` | 既存の2画面を、どれだけ本物に近く作り直せるか | `src/design-system/pages/` の2画面の Story と、`src/app/page.tsx`・`src/app/member/page.tsx`（同じ組み立てなので） | 隠した2つの Story |
-| `add-page` | 新しい画面を足したとき、どれだけルールに沿うか | なし（既存画面を参考にできる状態が実際の使い方に近い） | DESIGN.md と `results/_template.md` の観点 |
+| `add-page` | 新しい画面を足したとき、どれだけルールに沿うか | なし（既存画面を参考にできる状態が実際の使い方に近い） | `docs/design/` と `results/_template.md` の観点 |
 
 ## 進め方
 
@@ -21,7 +21,7 @@ experiments/setup.sh reproduce 01
    - `files/`、`generated.patch` — 生成物
    - `answer.diff` — 正解との差分（reproduce のみ）
    - `notes.md` — 評価シート。正解との比較・目視など、生成した AI 以外が確かめたことを書く。書き直したら `collect.sh` をもう一度実行すると `report.html` に反映される
-5. `notes.md` を埋め、見つかった問題を DESIGN.md「フィードバックの戻し先」に沿って直す。直したら連番を上げてもう一度回す
+5. `notes.md` を埋め、見つかった問題を `docs/design/workflow.md`「フィードバックの戻し先」に沿って直す。直したら連番を上げてもう一度回す
 
 同じ条件で2〜3回回すと、たまたまの出来と、毎回起きる問題を分けられる。
 

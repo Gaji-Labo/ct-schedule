@@ -38,6 +38,6 @@
 | --- | --- | --- |
 | grid の中にカルーセルを置いて横にはみ出した | Carousel のガイドライン（`src/design-system/guidelines/`）に NG 例を追加。ページの骨組みを部品（例: `PageLayout`）にする案も検討 | 未 |
 | 目で見る確認をしないまま「通過」とした | Skill `implement-ui` の検証で、ブラウザで見られないときは横スクロールの有無を JS や Story のテストで確かめる手順を足す | 未 |
-| `main` の余白・間隔が画面ごとに推測になる | DESIGN.md「余白・サイズ」にページの骨組みの値を書く | 未 |
-| 空・エラー状態の書き方がない | DESIGN.md か Alert のガイドラインに、ページ単位の空・エラー状態の型を書く | 未 |
+| `main` の余白・間隔が画面ごとに推測になる | docs/design/rules.md「余白・サイズ」にページの骨組みの値を書く | 未 |
+| 空・エラー状態の書き方がない | docs/design/rules.md か Alert のガイドラインに、ページ単位の空・エラー状態の型を書く | 未 |
 | Default の状態が決まっていない | Skill `implement-ui` の「画面の Story」に書く | 未 |

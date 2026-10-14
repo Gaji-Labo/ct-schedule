@@ -383,7 +383,7 @@ ${verdict}
   <button role="tab" aria-selected="false" data-tab="summary">作業のまとめ</button>
 </nav>
 ${notesHtml ? `<section class="tab on" id="eval"><p class="meta">評価シート（<code>${esc(basename(notesPath!))}</code>）。正解との比較や目視など、生成した AI 以外が確かめた結果。</p><div class="notes">${notesHtml}</div></section>` : ""}
-<section class="tab${notesHtml ? "" : " on"}" id="guess"><h2>推測で決めたことと戻し先</h2><p class="meta">DESIGN.md・Story・ガイドラインに書かれておらず、AI が推測で決めたこと。それぞれに「どこに・何が書いてあれば迷わなかったか」（DESIGN.md「フィードバックの戻し先」に沿った直す候補）を付けている。</p>${guessRows}</section>
+<section class="tab${notesHtml ? "" : " on"}" id="guess"><h2>推測で決めたことと戻し先</h2><p class="meta">docs/design/・Story・ガイドラインに書かれておらず、AI が推測で決めたこと。それぞれに「どこに・何が書いてあれば迷わなかったか」（docs/design/workflow.md「フィードバックの戻し先」に沿った直す候補）を付けている。</p>${guessRows}</section>
 <section class="tab" id="log"><h2>行動ログ</h2><p class="meta">Claude Code のセッション記録から作成（AI の自己申告ではない）。行を開くと入力と結果が見られる。</p>
 <div class="filters" role="group">
   <button aria-pressed="true" data-f="all">すべて</button><button aria-pressed="false" data-f="flagged">要確認だけ (${flagged.length})</button>

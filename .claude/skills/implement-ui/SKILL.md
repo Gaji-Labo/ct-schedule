@@ -5,13 +5,13 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 # UI を実装する
 
-画面・部品・Story を作るときの進め方。**何を守るか**（文脈・原則・色・余白・部品・禁止事項）は `DESIGN.md` にあり、このスキルは**どう進めて、どう確かめるか**だけを扱う。
+画面・部品・Story を作るときの進め方。**何を守るか**（文脈・原則・色・余白・部品・禁止事項）は `docs/design/` にあり、このスキルは**どう進めて、どう確かめるか**だけを扱う。
 
 依頼内容: $ARGUMENTS
 
 ## 0. 最初に読む
 
-1. `DESIGN.md` を全部読む。特に「アプリごとの文脈」「デザイン原則」「制約」
+1. `docs/design/` を読む。`principles.md`（文脈と原則）、`apps/<アプリ名>.md`（アプリ固有の文脈）、`rules.md`（色・余白・文字・部品・禁止事項）は全部
 2. 使えそうな部品の Story と docs（`parameters.docs.description`）、ガイドライン（`src/design-system/guidelines/*.mdx`）を読む
 3. 似た画面がすでにあれば、その画面の Story（`src/design-system/pages/`）と実装を読み、組み立て方をそろえる
 
@@ -25,12 +25,12 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 ## 2. 部品を選ぶ
 
-- DESIGN.md「コンポーネント」の表から選ぶ。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
+- `docs/design/rules.md`「コンポーネント」の表から選ぶ。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
 - 足りない部品があれば、**画面より先に**部品と Story を作る（`src/app/components/`）。画面の中だけで使う独自カード・独自ラベルは作らない
 
 ## 3. 組み立てる
 
-- 色・余白・角丸・文字は DESIGN.md「制約」の表から選ぶ。任意値・パレット色は使わない
+- 色・余白・角丸・文字は `docs/design/rules.md` の表から選ぶ。任意値・パレット色は使わない
 - ページの骨組みは既存ページにそろえる（`SiteHeader` → `main` の中にパンくず・見出し・本文）
 
 ## 4. Story を書く
@@ -74,7 +74,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
 ### 推測したことを記録する
 
-作業中、DESIGN.md・Story・ガイドラインに**書かれていなかったので推測で決めたこと**は、その場で控えておく。小さなことも含める（余白の値、部品の選択、文言、並び順、状態の切り分けなど）。
+作業中、`docs/design/`・Story・ガイドラインに**書かれていなかったので推測で決めたこと**は、その場で控えておく。小さなことも含める（余白の値、部品の選択、文言、並び順、状態の切り分けなど）。
 
 ### report.json を書いて HTML にする
 
@@ -95,7 +95,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
       "reason": "なぜそうしたか",
       "basis": "既存コードから類推 | 一般的な慣習 | 依頼文から解釈 | 根拠なし",
       "fix": {
-        "where": "どこに書いてあれば迷わなかったか (例: DESIGN.md「余白・サイズ」、src/design-system/guidelines/Carousel.mdx、Skill implement-ui「画面の Story」)",
+        "where": "どこに書いてあれば迷わなかったか (例: docs/design/rules.md「余白・サイズ」、src/design-system/guidelines/Carousel.mdx、Skill implement-ui「画面の Story」)",
         "what": "何が書いてあれば迷わなかったか (足すルール・値・OK/NG 例をそのまま書ける形で)"
       }
     }
@@ -103,7 +103,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 }
 ```
 
-`fix` は DESIGN.md「フィードバックの戻し先」の表に沿って書く。`where` はファイル名と見出しまで具体的に、`what` はそのまま追記できる文にする。推測ではなく作業中につまずいたこと（エラー、やり直し）も、ルールを直せば防げたなら `guesses` に入れる。
+`fix` は `docs/design/workflow.md`「フィードバックの戻し先」の表に沿って書く。`where` はファイル名と見出しまで具体的に、`what` はそのまま追記できる文にする。推測ではなく作業中につまずいたこと（エラー、やり直し）も、ルールを直せば防げたなら `guesses` に入れる。
 
 `guesses` が空になることはほぼない。迷わなかったと思っても、書かれていないことを自分で決めた箇所がないか見直す。
 
