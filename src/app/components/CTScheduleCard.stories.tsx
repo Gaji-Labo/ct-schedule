@@ -7,7 +7,7 @@ const regularWeek = createSchedules(createMembers(6), 12).find((s) => !s.isHolid
 const oddWeek = createSchedules(createMembers(5), 12).find((s) => !s.isHoliday) as CT;
 
 const meta = {
-  title: "Domain/CTScheduleCard",
+  title: "Apps/CTスケジュール/Components/CTScheduleCard",
   component: CTScheduleCard,
   tags: ["autodocs"],
   parameters: {

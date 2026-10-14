@@ -20,7 +20,7 @@ experiments/setup.sh reproduce 01
    - `report.html` — 結果を見る場所はここに一本化している。タブは「評価」（`notes.md` の内容）、「推測リスト」「戻し先の候補」（生成した AI の自己申告）、「行動ログ」「触ったファイル」（セッション記録から機械的に作る。外へのアクセス・git 履歴・ネットワークの利用は赤・黄で示す）
    - `files/`、`generated.patch` — 生成物
    - `answer.diff` — 正解との差分（reproduce のみ）
-   - あわせて、生成された画面をこのリポジトリの `src/design-system/drafts/experiments/<種類>-<連番>/` にコピーする。`bun run storybook` の「Drafts/<種類>-<連番>」で、正解（Pages/）と並べて見られる。ここは git 管理外の見るためのコピーで、記録は `files/` に残る
+   - あわせて、生成された画面をこのリポジトリの `src/design-system/drafts/experiments/<種類>-<連番>/` にコピーする。`bun run storybook` の「Drafts/<種類>-<連番>」で、正解（Apps/CTスケジュール/Pages/）と並べて見られる。ここは git 管理外の見るためのコピーで、記録は `files/` に残る
    - `notes.md` — 評価シート。正解との比較・目視など、生成した AI 以外が確かめたことを書く。書き直したら `collect.sh` をもう一度実行すると `report.html` に反映される
 5. `notes.md` を埋め、見つかった問題を `docs/design/workflow.md`「フィードバックの戻し先」に沿って直す。直したら連番を上げてもう一度回す
 

@@ -60,14 +60,14 @@ src/
 │   ├── globals.css             # デザイントークン (CSS 変数、ライト/ダーク)
 │   └── components/
 │       ├── ui/                 # shadcn/ui ベースの汎用部品。*.stories.tsx は Storybook の「UI/」
-│       ├── SiteHeader.tsx / Header.tsx / GajiLaboLogo.tsx  # 社内アプリ共通のヘッダー・ロゴ
+│       ├── SiteHeader.tsx / Header.tsx / GajiLaboLogo.tsx  # 社内アプリ共通のヘッダー・ロゴ (Storybook の「UI/」)
 │       └── UserAvatar.tsx / UserDropdown.tsx               # Slack ユーザーの表示
 ├── design-system/              # Storybook にだけ載るもの (アプリ本体からは使わない)
 │   ├── tokens.ts               # トークンの用途カタログ (Foundations と AI の参照元)
 │   ├── foundations/            # Storybook の「Foundations/」: Introduction・Colors・Typography・Layout・Logo
 │   ├── guidelines/             # 各部品の「ガイドライン」ページ (組み合わせ方の OK / NG)。UI/<部品> の下に出る
-│   ├── pages/                  # Storybook の「Pages/」: 画面全体をモックデータで再現した Story (人が確定させた正式な画面)
-│   ├── drafts/                 # Storybook の「Drafts/」: 確認待ちの画面。確定したら pages/ へ移す。main には残さない
+│   ├── pages/                  # Storybook の「Apps/<アプリ名>/Pages/」: 画面全体をモックデータで再現した Story (人が確定させた正式な画面)
+│   ├── drafts/                 # Storybook の「Drafts/<アプリ名>/」: 確認待ちの画面。確定したら pages/ へ移す。main には残さない
 │   │   └── experiments/        # 生成検証の結果を正解と並べて見るためのコピー (git 管理外)
 │   └── mocks/                  # Story 用のモックデータ・代用品
 ├── lib/
@@ -91,8 +91,8 @@ experiments/                    # AI の生成検証。今は CT スケジュー
 
 ディレクトリ構成・アーキテクチャ・DB・環境変数は [docs/apps/ct-schedule.md](./docs/apps/ct-schedule.md) にある。デザインシステム側にある CT 固有のものは次のとおり。
 
-- `src/app/components/` のアプリ固有部品（`CTScheduleCard` / `CTScheduleCarousel` / `MemberListItem` など）。Storybook の「Domain/」
-- `src/design-system/pages/` の2画面（Storybook の「Pages/」）と `src/design-system/mocks/ct.ts`
+- `src/app/components/` のアプリ固有部品（`CTScheduleCard` / `CTScheduleCarousel` / `MemberListItem` など）。Storybook の「Apps/CTスケジュール/Components/」
+- `src/design-system/pages/` の2画面（Storybook の「Apps/CTスケジュール/Pages/」）と `src/design-system/mocks/ct.ts`
 - トークン `status-holiday` / `status-rest` / `highlight-current`（`globals.css` などに共通トークンと並べて定義している）
 - [docs/design/apps/ct-schedule.md](./docs/design/apps/ct-schedule.md)
 

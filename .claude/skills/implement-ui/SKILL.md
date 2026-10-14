@@ -29,6 +29,7 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 
 - `docs/design/rules.md`「コンポーネント」の表から選ぶ。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
 - 足りない部品があれば、**画面より先に**部品と Story を作る（`src/app/components/`）。画面の中だけで使う独自カード・独自ラベルは作らない
+  - 部品の Story の `title` は、どのアプリでも使える部品なら `UI/<部品名>`、そのアプリ専用なら `Apps/<アプリ名>/Components/<部品名>`（`<アプリ名>` は `docs/design/apps/<アプリ名>.md`「Storybook での名前」）。迷ったら「別の社内アプリでもそのまま使えるか」で決める
 
 ## 3. 組み立てる
 
@@ -42,13 +43,13 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 - 置き場所: `src/design-system/drafts/<画面名>Page.stories.tsx`。**`src/design-system/pages/` には書かない**（`pages/` は人が確定させた正式な画面。下の「Drafts から Pages に移す」を参照）
   - 既存の画面を作り直すときも、`drafts/` に同じ名前のファイルを新しく作る。`pages/` の元のファイルは変えない
   - 部品の props が変わって `pages/` の Story が型エラーになる、のような追従の修正だけは `pages/` を直接直してよい
-- `title: "Drafts/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
+- `title: "Drafts/<アプリ名>/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
 - `parameters.docs.description.component` に、何の画面か・本番のどのパスか・どこから来るかを書く
 - モックデータは `src/design-system/mocks/` のアプリ用ファイル（`docs/design/apps/<アプリ名>.md` に書いてある）を使う。足りなければそこに足す
 - DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を作り、コメントで「本物は ○○」と書く
   - 置き場所は、その画面の Story ファイルの中。2画面以上で同じ代用品が必要になったときだけ `src/design-system/mocks/` に切り出し、使う側の Story からはそこを import する
   - 代用品は本物と同じ部品・variant で組む（パレット色の直書きなど、本物に残っている既知の違反は写さない）
-- 画面間のリンクは `href="/?path=/story/<drafts か pages>-<画面名>--default"` と `target="_top"` で Storybook 内を移動させる。リンク先も今回 `drafts/` に作るなら `drafts-`、すでに `pages/` にあるなら `pages-`
+- 画面間のリンクは `href="/?path=/story/<Story の ID>"` と `target="_top"` で Storybook 内を移動させる。ID は `title` を小文字にして `/` と空白を `-` に変え、`--default` を付けたもの。リンク先も今回 `drafts/` に作るなら `drafts-<アプリ名>-<画面名>--default`、すでに `pages/` にあるなら `apps-<アプリ名>-pages-<画面名>--default`（例: `apps-ctスケジュール-pages-メンバー一覧--default`）
 
 ### Drafts から Pages に移す
 
@@ -57,7 +58,7 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 指示されたら次のように移す。
 
 1. `git mv src/design-system/drafts/<画面名>Page.stories.tsx src/design-system/pages/`（作り直しなら `pages/` の元のファイルを置き換える）
-2. `title` を `Drafts/…` から `Pages/…` に、画面間リンクの `drafts-` を `pages-` に変える
+2. `title` を `Drafts/<アプリ名>/…` から `Apps/<アプリ名>/Pages/…` に、画面間リンクの `drafts-<アプリ名>-` を `apps-<アプリ名>-pages-` に変える
 3. `drafts/` に Story 以外のファイル（代用品など）を置いていたら、Story の中か `src/design-system/mocks/` に移し、その画面の分は `drafts/` に残さない
 4. `bun run verify:ui` を通す
 

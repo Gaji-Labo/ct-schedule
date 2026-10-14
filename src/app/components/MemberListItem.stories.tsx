@@ -5,7 +5,7 @@ import { createMember } from "@/src/design-system/mocks/ct";
 import { MemberListItem } from "./MemberListItem";
 
 const meta = {
-  title: "Domain/MemberListItem",
+  title: "Apps/CTスケジュール/Components/MemberListItem",
   component: MemberListItem,
   tags: ["autodocs"],
   parameters: {

@@ -2,6 +2,8 @@
 
 CT スケジュール固有の目的・画面・利用シーン・原則。社内アプリ共通の文脈と原則は [../principles.md](../principles.md) にある。アプリの実装（データ・認証・ペアリング）は [../../apps/ct-schedule.md](../../apps/ct-schedule.md) にある。
 
+- Storybook での名前: `CTスケジュール`（部品は `Apps/CTスケジュール/Components/`、画面は `Apps/CTスケジュール/Pages/`、確認待ちの画面は `Drafts/CTスケジュール/`）
+
 ## 何のアプリか
 
 チーム内で2人1組の CT（コミュニケーションタイム）を毎週組み合わせ、一覧で見せるアプリ。
@@ -42,7 +44,7 @@ CT スケジュール固有の目的・画面・利用シーン・原則。社�
 
 ## このアプリ固有の部品
 
-共通の部品は [../rules.md](../rules.md)「コンポーネント」にある。Storybook では「Domain/」に出る。
+共通の部品は [../rules.md](../rules.md)「コンポーネント」にある。Storybook では「Apps/CTスケジュール/Components/」に出る。
 
 | やりたいこと | 使うもの |
 | --- | --- |

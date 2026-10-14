@@ -86,9 +86,9 @@ const MemberPage = ({ participants, signedIn }: PageProps) => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                {/* Storybook 内では「Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
+                {/* Storybook 内では「Apps/CTスケジュール/Pages/CT組み合わせ表」へ移動する (本物は next/link で / へ) */}
                 <BreadcrumbLink
-                  href="/?path=/story/pages-ct組み合わせ表--default"
+                  href="/?path=/story/apps-ctスケジュール-pages-ct組み合わせ表--default"
                   target="_top"
                 >
                   CT組み合わせ表
@@ -128,7 +128,7 @@ const MemberPage = ({ participants, signedIn }: PageProps) => {
 };
 
 const meta = {
-  title: "Pages/メンバー一覧",
+  title: "Apps/CTスケジュール/Pages/メンバー一覧",
   component: MemberPage,
   parameters: {
     layout: "fullscreen",
