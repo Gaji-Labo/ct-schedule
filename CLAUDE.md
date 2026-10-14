@@ -90,6 +90,14 @@ src/
 docs/design/                    # UI 実装のルール・文脈・手順 (上の「UI Implementation」参照)
 eslint/design-system-plugin.mjs # design-system/* lint ルール (+ テスト)
 .storybook/                     # Storybook 設定。上の Story と MDX をまとめて1つの Storybook にする (Cloudflare に配信)
+.claude/skills/
+├── implement-ui/               # Skill implement-ui (/implement-ui): UI 実装の手順・検証・報告
+│   └── report.ts               # bun run report:ui。作業レポートを .implement-ui/report.html に出す (git 管理外)
+└── worktree/                   # git worktree の操作
+experiments/                    # AI の生成検証。Storybook は別にせず、リポジトリを丸ごとコピーした作業場所で起動する
+├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
+├── prompts/                    # AI に渡す依頼文 (reproduce: 既存画面の再現 / add-page: 新しい画面)
+└── results/                    # 回ごとの生成物・正解との差分・評価シート (notes.md)
 auth.ts                         # Auth.js設定（ルート直下）
 ```
 
