@@ -34,6 +34,8 @@ type Guess = {
   decision: string;
   reason?: string;
   basis?: string;
+  /** app = プロダクト固有の検討材料 / system = デザインシステムに貯めるもの */
+  scope?: "app" | "system";
   /** どこに・何が書いてあれば迷わなかったか (= 戻し先) */
   fix?: { where?: string; what?: string };
   /** 旧形式。fix.what として表示する */
@@ -236,10 +238,16 @@ const inline = (t: string) =>
 
 const guesses = self?.guesses ?? [];
 const fixOf = (g: Guess) => ({ where: g.fix?.where, what: g.fix?.what ?? g.missing_rule });
-const guessRows = guesses.length
-  ? guesses
-      .map(
-        (g, i) => `<article class="card">
+const SCOPES = [
+  { key: "app", title: "プロダクト固有の検討材料", note: "このアプリの仕様・文言・データの扱いで答えが変わるもの。プロダクトの持ち主に確かめ、docs/design/apps/ やその部品・Story に戻す。" },
+  { key: "system", title: "デザインシステムに貯めるもの", note: "どのアプリでも同じ判断になるもの。docs/design/rules.md・ガイドライン・共通部品・Skill に戻す。" },
+  { key: "none", title: "未分類", note: "戻し先はあるが scope が書かれていない（旧形式の report.json か、分け忘れ）。" },
+  { key: "nofix", title: "戻し先なし", note: "既存の実装や慣習に合わせただけで、ルールを足さなくてよい推測。" },
+] as const;
+const scopeOf = (g: Guess) =>
+  g.scope === "app" || g.scope === "system" ? g.scope : fixOf(g).where || fixOf(g).what ? "none" : "nofix";
+const scopeCount = (key: string) => guesses.filter((g) => scopeOf(g) === key).length;
+const guessCard = (g: Guess, i: number) => `<article class="card">
   <header><span class="num">${i + 1}</span><h3>${esc(g.topic)}</h3>${g.basis ? `<span class="chip">${esc(g.basis)}</span>` : ""}</header>
   <dl>
     <dt>決めたこと</dt><dd>${esc(g.decision)}</dd>
@@ -249,7 +257,16 @@ const guessRows = guesses.length
     <dt>どこに</dt><dd>${fixOf(g).where ? inline(fixOf(g).where!) : '<span class="empty">未記入</span>'}</dd>
     <dt>何を</dt><dd>${fixOf(g).what ? inline(fixOf(g).what!) : '<span class="empty">未記入</span>'}</dd>
   </dl></div>` : '<p class="meta">戻し先なし（ルールを足さなくてよい推測）</p>'}
-</article>`,
+</article>`;
+const guessRows = guesses.length
+  ? SCOPES.filter((s) => scopeCount(s.key) > 0)
+      .map(
+        (s) => `<h3 class="scope">${s.title} (${scopeCount(s.key)})</h3><p class="meta">${s.note}</p>
+${guesses
+  .map((g, i) => [g, i] as const)
+  .filter(([g]) => scopeOf(g) === s.key)
+  .map(([g, i]) => guessCard(g, i))
+  .join("\n")}`,
       )
       .join("\n")
   : `<p class="empty">${self ? "推測したことは報告されていません。" : "AI が <code>.implement-ui/report.json</code> を書いていません（Skill の手順 6 が実行されていない）。"}</p>`;
@@ -360,7 +377,7 @@ details summary{cursor:pointer;overflow-wrap:anywhere;font-family:ui-monospace,m
 pre{background:var(--code);padding:8px;border-radius:6px;overflow:auto;max-height:320px;font-size:12px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .flag{display:inline-block;font-size:11px;font-weight:600;border-radius:4px;padding:0 6px;margin:0 4px 4px 0}.flag-danger{background:var(--danger);color:var(--bg)}.flag-warn{background:var(--warn);color:var(--bg)}
 .empty{color:var(--muted)}
-.fix{margin-top:12px;padding:10px 12px;border-radius:6px;background:var(--code)}.fix h4{margin:0 0 6px;font-size:12px;color:var(--accent)}
+.scope{font-size:15px;margin:24px 0 4px}.fix{margin-top:12px;padding:10px 12px;border-radius:6px;background:var(--code)}.fix h4{margin:0 0 6px;font-size:12px;color:var(--accent)}
 .notes h2{font-size:17px;margin:28px 0 10px}.notes h3{font-size:15px;margin:20px 0 8px}.notes table{background:var(--panel);border:1px solid var(--border);border-radius:8px;margin:8px 0 16px}.notes ul{padding-left:20px}.notes a{color:var(--accent)}
 @media (max-width:640px){.ev{grid-template-columns:1fr}dl{grid-template-columns:1fr}}
 </style></head><body><main>
@@ -369,7 +386,7 @@ pre{background:var(--code);padding:8px;border-radius:6px;overflow:auto;max-heigh
 ${self?.request ? `<p><b>依頼:</b> ${esc(self.request)}</p>` : ""}
 ${verdict}
 <div class="stats">
-  <div class="stat"><b>${guesses.length}</b>推測したこと</div>
+  <div class="stat"><b>${guesses.length}</b>推測したこと（固有 ${scopeCount("app")} / DS ${scopeCount("system")}${scopeCount("none") ? ` / 未分類 ${scopeCount("none")}` : ""}）</div>
   <div class="stat"><b>${tools.length}</b>ツール呼び出し</div>
   <div class="stat"><b>${dangerCount}</b>外へのアクセス</div>
   <div class="stat"><b>${flagged.length - dangerCount}</b>履歴・ネットワーク</div>
