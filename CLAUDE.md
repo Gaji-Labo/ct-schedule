@@ -57,24 +57,37 @@ src/
 ├── app/
 │   ├── actions.ts              # Server Actions (DB操作の集約)
 │   ├── components/
-│   │   ├── ui/                 # shadcn/uiコンポーネント
-│   │   ├── AddMemberFormDialog.tsx
-│   │   ├── EditMemberForm.tsx
-│   │   ├── DeleteMemberDialog.tsx
-│   │   ├── CTScheduleCard.tsx
-│   │   ├── SetupDataDialog.tsx
+│   │   ├── ui/                 # shadcn/uiコンポーネント (+ *.stories.tsx)
+│   │   ├── CTScheduleCard.tsx / CTScheduleCarousel.tsx  # CT組み合わせの週カード
+│   │   ├── MemberListItem.tsx  # メンバー一覧の1行
+│   │   ├── SiteHeader.tsx / Header.tsx / GajiLaboLogo.tsx
+│   │   ├── UserAvatar.tsx / UserDropdown.tsx
+│   │   ├── DeleteMemberDialog.tsx / SetupDataDialog.tsx
 │   │   └── SigninWithSlackButton.tsx
 │   ├── member/                 # メンバー管理ページ
 │   ├── page.tsx                # トップページ（CTスケジュール表示）
 │   ├── layout.tsx
-│   └── api/auth/[...nextauth]/ # Auth.js API route
+│   ├── globals.css             # デザイントークン (CSS 変数、ライト/ダーク)
+│   └── api/
+│       ├── auth/[...nextauth]/ # Auth.js API route
+│       └── cron/               # notify-ct-pairs (Slack 通知) / sync-holidays (祝日同期)
+├── design-system/              # Storybook 用のデザインシステム
+│   ├── tokens.ts               # トークンの用途カタログ (Foundations と AI の参照元)
+│   ├── foundations/            # Colors / Typography / Layout などの MDX
+│   ├── guidelines/             # 部品ごとの組み合わせ方 OK / NG
+│   ├── pages/                  # 画面単位の Story
+│   └── mocks/                  # Story 用のモックデータ
 ├── utils/
 │   ├── member.ts               # ラウンドロビンアルゴリズム
-│   ├── member.test.ts
 │   ├── date.ts                 # 日付ユーティリティ
-│   └── date.test.ts
+│   ├── holiday.ts / google-calendar.ts  # 祝日の取得
+│   └── *.test.ts
 ├── lib/
-│   └── utils.ts                # shadcn/ui utilities (cn関数など)
+│   ├── utils.ts                # shadcn/ui utilities (cn関数など)
+│   └── slack.ts                # Slack API
+docs/design/                    # UI 実装のルール・文脈・手順 (上の「UI Implementation」参照)
+eslint/design-system-plugin.mjs # design-system/* lint ルール (+ テスト)
+.storybook/                     # Storybook 設定
 auth.ts                         # Auth.js設定（ルート直下）
 ```
 
