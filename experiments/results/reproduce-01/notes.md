@@ -34,10 +34,33 @@
 
 ## 戻し先
 
+`docs/design/workflow.md`「フィードバックの戻し先」の分け方で整理した。この回の report.json には `scope` がまだ無いため、評価時に人が分けている。番号は report.html の推測の番号。
+
+### プロダクト固有の検討材料（`app`）
+
+プロダクトの持ち主に確かめ、`docs/design/apps/ct-schedule.md` やその部品・Story に戻す。
+
+| 起きたこと | 直す場所 | 直したか |
+| --- | --- | --- |
+| 参加人数の文言・位置・数える対象が決まっていない（#4、CT組み合わせ表） | `docs/design/apps/ct-schedule.md` に、文言と「参加しているメンバーだけ数えるか」を書く | 未 |
+| 組み合わせを作れないとき（参加2人未満）の文言がない（#6、CT組み合わせ表） | `docs/design/apps/ct-schedule.md` に空状態の文言を書く | 未 |
+| メンバー0人のときの文言がない（#7、メンバー一覧） | `docs/design/apps/ct-schedule.md` に空状態の文言を書く | 未 |
+| メンバーの並び順が決まっていない（#15、メンバー一覧） | `docs/design/apps/ct-schedule.md` に並び順（参加している人が先か、ID 順か）を書く | 未 |
+| ログイン中に右上へ何を出すかが書かれていない（#3、共通ヘッダー） | `docs/design/apps/ct-schedule.md` か `Header` の Story の docs に書く | 未 |
+| Slack ログインボタンの Semantic トークン版の見た目がない（#1） | `SigninWithSlackButton` を Semantic トークンで直し、既知の違反から外す | 未 |
+| ユーザーメニューのボタンに読み上げ用ラベルがない（#13） | `UserDropdown` のトリガーに `aria-label` を付ける | 未 |
+
+### デザインシステムに貯めるもの（`system`）
+
+`docs/design/rules.md`・ガイドライン・共通部品・Skill `implement-ui` に戻す。
+
 | 起きたこと | 直す場所 | 直したか |
 | --- | --- | --- |
 | grid の中にカルーセルを置いて横にはみ出した | Carousel のガイドライン（`src/design-system/guidelines/`）に NG 例を追加。ページの骨組みを部品（例: `PageLayout`）にする案も検討 | 未 |
+| `main` の余白・間隔が画面ごとに推測になる（#5） | `docs/design/rules.md`「余白・サイズ」にページの骨組みの値を書く（ブレイクポイント、余白、用途別の最大幅、縦の間隔） | 未 |
+| 空・エラー状態の**型**がない（#6〜#8。文言は上の `app` に分けた） | `docs/design/rules.md` か Alert のガイドラインに、ページ単位の空・エラー状態の型を書く | 未 |
+| 確認ダイアログの標準の幅が決まっていない（#12） | Dialog のガイドラインに標準の幅を書く | 未 |
+| 外部ブランドのロゴの色を禁止事項の例外とするか決まっていない（#2） | `docs/design/rules.md`「禁止事項」に例外として書くか決める | 未 |
 | 目で見る確認をしないまま「通過」とした | Skill `implement-ui` の検証で、ブラウザで見られないときは横スクロールの有無を JS や Story のテストで確かめる手順を足す | 未 |
-| `main` の余白・間隔が画面ごとに推測になる | docs/design/rules.md「余白・サイズ」にページの骨組みの値を書く | 未 |
-| 空・エラー状態の書き方がない | docs/design/rules.md か Alert のガイドラインに、ページ単位の空・エラー状態の型を書く | 未 |
-| Default の状態が決まっていない | Skill `implement-ui` の「画面の Story」に書く | 未 |
+| Default の状態が決まっていない（#10） | Skill `implement-ui` の「画面の Story」に書く | 未 |
+| 複数の画面 Story で共有する代用品の置き場所が決まっていない（#14） | Skill `implement-ui` の「画面の Story」に書く | 未 |
