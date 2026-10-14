@@ -86,7 +86,7 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 ## 5. 検証する
 
 ```bash
-bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド
+bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド（MDX のドキュメントも含む）
 ```
 
 - 新規・変更したコードは **lint のエラー0件・警告0件**

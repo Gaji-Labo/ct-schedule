@@ -1,4 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
+import { repoUrl } from "../repo";
 
 <Meta title="Foundations/Introduction" />
 
@@ -20,15 +21,15 @@ Gaji-Labo の社内アプリの UI を組み立てるための部品とルール
 
 ## 基本ルール
 
-ルールの正本はリポジトリの [`docs/design/`](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design) です。ここでは要点だけを載せます。
+ルールの正本はリポジトリの <a href={repoUrl("docs/design")}><code>docs/design/</code></a> です。ここでは要点だけを載せます。
 
 | 知りたいこと | ファイル |
 | --- | --- |
-| 色・余白・文字・使う部品・禁止事項 | [rules.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/rules.md) |
-| 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [principles.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/principles.md) |
-| アプリ固有の目的・画面・利用シーン（CT スケジュール） | [apps/ct-schedule.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/apps/ct-schedule.md) |
-| 実装の手順・検証 | Skill [implement-ui](https://github.com/Gaji-Labo/ct-schedule/blob/main/.claude/skills/implement-ui/SKILL.md)（Claude Code では `/implement-ui`） |
-| 仕組みの全体像・フィードバックの戻し先 | [workflow.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/workflow.md) |
+| 色・余白・文字・使う部品・禁止事項 | <a href={repoUrl("docs/design/rules.md")}>rules.md</a> |
+| 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | <a href={repoUrl("docs/design/principles.md")}>principles.md</a> |
+| アプリ固有の目的・画面・利用シーン（CT スケジュール） | <a href={repoUrl("docs/design/apps/ct-schedule.md")}>apps/ct-schedule.md</a> |
+| 実装の手順・検証 | Skill <a href={repoUrl(".claude/skills/implement-ui/SKILL.md")}>implement-ui</a>（Claude Code では `/implement-ui`） |
+| 仕組みの全体像・フィードバックの戻し先 | <a href={repoUrl("docs/design/workflow.md")}>workflow.md</a> |
 
 違反の一部は `bun run lint` の `design-system/*` ルールで検出されます。
 
