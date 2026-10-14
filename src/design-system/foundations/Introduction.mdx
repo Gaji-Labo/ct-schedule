@@ -18,7 +18,15 @@ CTスケジュールの UI を組み立てるための部品とルールをま�
 
 ## 基本ルール
 
-ルールの正本はリポジトリの `docs/design/` です（`rules.md`: 色・部品・禁止事項、`principles.md`: 文脈と原則、`workflow.md`: 実装手順・検証方法・フィードバックの戻し先）。ここでは要点だけを載せます。
+ルールの正本はリポジトリの [`docs/design/`](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design) です。ここでは要点だけを載せます。
+
+| 知りたいこと | ファイル |
+| --- | --- |
+| 色・余白・文字・使う部品・禁止事項 | [rules.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/rules.md) |
+| 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [principles.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/principles.md) |
+| CT スケジュール固有の目的・画面・利用シーン | [apps/ct-schedule.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/apps/ct-schedule.md) |
+| 実装の手順・検証・フィードバックの戻し先 | [workflow.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/workflow.md) |
+
 違反の一部は `bun run lint` の `design-system/*` ルールで検出されます。
 
 1. **色は Semantic トークンだけを使う。** `bg-gray-100` や `#e5e5e5` を直接書かない。

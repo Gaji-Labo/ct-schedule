@@ -22,7 +22,7 @@ const meta = {
           "- `info` / `success` / `warning`: 状態の色付きパターン（Alert・toast と同じ `feedback-*` トークン）。例: 参加中 = `success`、未設定 = `warning`",
           "",
           "**CT 固有のラベル（お休み・祝日名）について**",
-          "docs/design/rules.md では `bg-status-rest text-status-rest-foreground` + `rounded-full` を使うことになっているが、",
+          "[docs/design/rules.md](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/rules.md#色) では `bg-status-rest text-status-rest-foreground` + `rounded-full` を使うことになっているが、",
           "現状は対応する variant が無く、`CTScheduleCard` で className 上書きしている（既知の違反）。",
           "className での上書きは禁止事項のため、`status` 系の variant を Badge に追加してから使う。",
         ].join("\n"),

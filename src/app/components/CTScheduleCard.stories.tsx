@@ -21,7 +21,7 @@ const meta = {
           "- 祝日の週: 組み合わせは無く、祝日名のラベルだけを出す",
           "- 参加人数が奇数: 1人が「お休み」になる",
           "",
-          "※ 現状はパレット色（gray-*）の直書きが残っている（docs/design/workflow.md「既知の違反」）。",
+          "※ 現状はパレット色（gray-*）の直書きが残っている（[docs/design/workflow.md「既知の違反」](https://github.com/Gaji-Labo/ct-schedule/blob/main/docs/design/workflow.md#既知の違反)）。",
           "Semantic トークン（`border-highlight-current` / `bg-status-holiday` / `bg-status-rest` など）への置き換え前後を、この Story で確認する。",
         ].join("\n"),
       },
