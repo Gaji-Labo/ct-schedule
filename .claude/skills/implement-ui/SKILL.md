@@ -41,7 +41,9 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 - `title: "Pages/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
 - `parameters.docs.description.component` に、何の画面か・本番のどのパスか・どこから来るかを書く
 - モックデータは `src/design-system/mocks/ct.ts` を使う。足りなければそこに足す
-- DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を Story 内に置き、コメントで「本物は ○○」と書く
+- DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を作り、コメントで「本物は ○○」と書く
+  - 置き場所は、その画面の Story ファイルの中。2画面以上で同じ代用品が必要になったときだけ `src/design-system/mocks/` に切り出し、使う側の Story からはそこを import する
+  - 代用品は本物と同じ部品・variant で組む（パレット色の直書きなど、本物に残っている既知の違反は写さない）
 - 画面間のリンクは `href="/?path=/story/pages-<画面名>--default"` と `target="_top"` で Storybook 内を移動させる
 
 ### 用意する状態
@@ -54,6 +56,15 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 各 Story には、どんな状態かを1行の JSDoc コメントで書く。
 
+### Default にする状態
+
+`Default` は、**本番で主な利用者がいちばんよく目にする状態**にする。
+
+- データは本番に近い件数にする（例: CT組み合わせ表は本番と同じ20人）
+- ログインで表示が変わる画面は、主な利用者がログインして使うならログイン中を `Default` にし、未ログインは別の Story（`SignedOut`）にする
+- 誰が・どの状態で使うかは `docs/design/apps/<アプリ名>.md`「ユーザーと利用シーン」から決める。書かれておらず判断できなければ推測として記録する（`scope: "app"`）
+- `Default` の JSDoc には、どの状態か（例: 「ログイン中。各行の右端に削除ボタンがある」）を書く
+
 ## 5. 検証する
 
 ```bash
@@ -63,12 +74,21 @@ bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook 
 - 新規・変更したコードは **lint のエラー0件・警告0件**
 - `eslint.config.mjs` の「既知の違反」リストに入っているファイルは警告扱いになっている。置き換えたらリストから外してエラー扱いに戻す
 
-Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる。ブラウザを操作できるなら自分で確かめ、できなければ確かめていない項目として報告する。
+Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる。`verify:ui` が通っても、見た目の崩れ（横へのはみ出しなど）は検出されない。
 
+- [ ] **横にはみ出していない**。作った・変えた画面の Story をそれぞれ `iframe.html?id=<story-id>&viewMode=story` で開き、幅 375px と 1280px の両方で次の JS が `false` を返すことを確かめる
+
+  ```js
+  document.documentElement.scrollWidth > window.innerWidth
+  ```
+
+  `true` なら、どの要素がはみ出しているかを探して直す（例: カルーセルなど横に送る部品を grid の子に直接置くと、中身の幅でページごと広がる）
 - [ ] ライト・ダーク両方で崩れない（ツールバーのテーマ切替）
 - [ ] Accessibility パネルに違反がない
 - [ ] 長いテキストであふれない・レイアウトが崩れない
 - [ ] 必要な状態（0件・エラー・お休み・祝日など）が抜けていない
+
+**ブラウザを操作できず、上の項目を自分で確かめられなかったときは「通過」と書かない。** report.json の `verification` では `result: "unchecked"` にし、最終報告で「人が確かめる必要がある項目」として挙げる。lint・test・ビルドが通ったことは、見た目を確かめたことの代わりにならない。
 
 ## 6. 報告する
 
