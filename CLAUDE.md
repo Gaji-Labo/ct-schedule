@@ -57,7 +57,8 @@ src/
 ├── app/
 │   ├── actions.ts              # Server Actions (DB操作の集約)
 │   ├── components/
-│   │   ├── ui/                 # shadcn/uiコンポーネント (+ *.stories.tsx)
+│   │   ├── ui/                 # shadcn/uiコンポーネント。*.stories.tsx は Storybook の「UI/」
+│   │   ├── *.stories.tsx       # アプリ固有部品の Story。Storybook の「Domain/」
 │   │   ├── CTScheduleCard.tsx / CTScheduleCarousel.tsx  # CT組み合わせの週カード
 │   │   ├── MemberListItem.tsx  # メンバー一覧の1行
 │   │   ├── SiteHeader.tsx / Header.tsx / GajiLaboLogo.tsx
@@ -71,12 +72,12 @@ src/
 │   └── api/
 │       ├── auth/[...nextauth]/ # Auth.js API route
 │       └── cron/               # notify-ct-pairs (Slack 通知) / sync-holidays (祝日同期)
-├── design-system/              # Storybook 用のデザインシステム
+├── design-system/              # Storybook にだけ載るもの (アプリ本体からは使わない)
 │   ├── tokens.ts               # トークンの用途カタログ (Foundations と AI の参照元)
-│   ├── foundations/            # Colors / Typography / Layout などの MDX
-│   ├── guidelines/             # 部品ごとの組み合わせ方 OK / NG
-│   ├── pages/                  # 画面単位の Story
-│   └── mocks/                  # Story 用のモックデータ
+│   ├── foundations/            # Storybook の「Foundations/」: Introduction・Colors・Typography・Layout・Logo
+│   ├── guidelines/             # 各部品の「ガイドライン」ページ (組み合わせ方の OK / NG)。UI/<部品> の下に出る
+│   ├── pages/                  # Storybook の「Pages/」: 画面全体をモックデータで再現した Story
+│   └── mocks/                  # Story 用のモックデータ・代用品
 ├── utils/
 │   ├── member.ts               # ラウンドロビンアルゴリズム
 │   ├── date.ts                 # 日付ユーティリティ
@@ -87,7 +88,7 @@ src/
 │   └── slack.ts                # Slack API
 docs/design/                    # UI 実装のルール・文脈・手順 (上の「UI Implementation」参照)
 eslint/design-system-plugin.mjs # design-system/* lint ルール (+ テスト)
-.storybook/                     # Storybook 設定
+.storybook/                     # Storybook 設定。上の Story と MDX をまとめて1つの Storybook にする (Cloudflare に配信)
 auth.ts                         # Auth.js設定（ルート直下）
 ```
 
