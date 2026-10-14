@@ -37,14 +37,29 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 ### 画面の Story
 
-- 置き場所: `src/design-system/pages/<画面名>Page.stories.tsx`
-- `title: "Pages/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
+- 置き場所: `src/design-system/drafts/<画面名>Page.stories.tsx`。**`src/design-system/pages/` には書かない**（`pages/` は人が確定させた正式な画面。下の「Drafts から Pages に移す」を参照）
+  - 既存の画面を作り直すときも、`drafts/` に同じ名前のファイルを新しく作る。`pages/` の元のファイルは変えない
+  - 部品の props が変わって `pages/` の Story が型エラーになる、のような追従の修正だけは `pages/` を直接直してよい
+- `title: "Drafts/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
 - `parameters.docs.description.component` に、何の画面か・本番のどのパスか・どこから来るかを書く
 - モックデータは `src/design-system/mocks/ct.ts` を使う。足りなければそこに足す
 - DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を作り、コメントで「本物は ○○」と書く
   - 置き場所は、その画面の Story ファイルの中。2画面以上で同じ代用品が必要になったときだけ `src/design-system/mocks/` に切り出し、使う側の Story からはそこを import する
   - 代用品は本物と同じ部品・variant で組む（パレット色の直書きなど、本物に残っている既知の違反は写さない）
-- 画面間のリンクは `href="/?path=/story/pages-<画面名>--default"` と `target="_top"` で Storybook 内を移動させる
+- 画面間のリンクは `href="/?path=/story/<drafts か pages>-<画面名>--default"` と `target="_top"` で Storybook 内を移動させる。リンク先も今回 `drafts/` に作るなら `drafts-`、すでに `pages/` にあるなら `pages-`
+
+### Drafts から Pages に移す
+
+`drafts/` の画面は「確認待ち」。人が Storybook（手元か、PR の Cloudflare プレビュー）で見て、問題ないと確定させてから `pages/` に移す。**移すのは人に指示されたときだけ**で、作業の流れの中で勝手に移さない。
+
+指示されたら次のように移す。
+
+1. `git mv src/design-system/drafts/<画面名>Page.stories.tsx src/design-system/pages/`（作り直しなら `pages/` の元のファイルを置き換える）
+2. `title` を `Drafts/…` から `Pages/…` に、画面間リンクの `drafts-` を `pages-` に変える
+3. `drafts/` に Story 以外のファイル（代用品など）を置いていたら、Story の中か `src/design-system/mocks/` に移し、その画面の分は `drafts/` に残さない
+4. `bun run verify:ui` を通す
+
+`drafts/` に Story を残したまま `main` にマージしない（CI で止まる）。
 
 ### 用意する状態
 
@@ -115,7 +130,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
   "context": { "who": "誰が・いつ開くか", "purpose": "何のためか", "first_seen": "最初に目に入るべき情報", "irreversible": "取り消せない操作 (なければ「なし」)" },
   "components_used": ["SiteHeader", "Button"],
   "new_components": [{ "name": "新しく作った部品・トークン", "reason": "作った理由" }],
-  "stories": [{ "file": "src/design-system/pages/XxxPage.stories.tsx", "name": "Default", "state": "どんな状態か" }],
+  "stories": [{ "file": "src/design-system/drafts/XxxPage.stories.tsx", "name": "Default", "state": "どんな状態か" }],
   "verification": [{ "item": "bun run verify:ui", "result": "pass | fail | unchecked", "note": "" }],
   "guesses": [
     {
@@ -146,3 +161,4 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 - 検証の結果（通ったもの・確かめられなかったもの）
 - 推測したことの件数（`app` / `system` 別）と、特に人に確かめてほしいもの。`app` はプロダクトの持ち主、`system` はデザインシステムの担当に確かめる
 - `.implement-ui/report.html` の場所
+- 作った画面は `drafts/` にあり、確認して確定したら `pages/` に移す必要があること

@@ -20,15 +20,32 @@ git diff --cached --name-only --diff-filter=AM HEAD | while read -r f; do
   cp "$f" "$out/files/$f"
 done
 
-# 再現の場合は正解との差分も残す
+# 再現の場合は正解との差分も残す (正解は pages/、生成物は Skill の手順どおり drafts/ にある)
 if [ "$kind" = reproduce ]; then
-  for f in src/design-system/pages/CTSchedulePage.stories.tsx src/design-system/pages/MemberPage.stories.tsx; do
+  for name in CTSchedulePage MemberPage; do
+    f="src/design-system/drafts/$name.stories.tsx"
     if [ -f "$f" ]; then
-      diff -u "$repo/$f" "$f" >> "$out/answer.diff" || true
+      diff -u "$repo/src/design-system/pages/$name.stories.tsx" "$f" >> "$out/answer.diff" || true
     else
       echo "### 生成されていない: $f" >> "$out/answer.diff"
     fi
   done
+fi
+
+# 生成された画面を、このリポジトリの Storybook で正解 (Pages/) と並べて見られるようにする。
+# src/design-system/drafts/experiments/ は git 管理外 (記録は上の files/ と generated.patch に残る)
+if [ -d src/design-system/drafts ]; then
+  view="$repo/src/design-system/drafts/experiments/$kind-$run"
+  rm -rf "$view" && mkdir -p "$view"
+  find src/design-system/drafts -type f ! -name README.md -exec cp {} "$view/" \;
+  # title と画面間リンクに回の名前を足して、正解や他の回と Story の ID がぶつからないようにする
+  for f in "$view"/*.tsx; do
+    [ -f "$f" ] || continue
+    sed -i.bak -e "s|title: \"Drafts/|title: \"Drafts/$kind-$run/|" -e "s|/story/drafts-|/story/drafts-$kind-$run-|g" "$f" && rm "$f.bak"
+  done
+  echo "Storybook の「Drafts/$kind-$run」で見られます: $view"
+  others=$(git diff --cached --name-only --diff-filter=A HEAD | grep -v '^src/design-system/drafts/' | grep -E '\.(tsx?|css)$' || true)
+  [ -n "$others" ] && printf '注意: drafts/ の外にも新しいファイルがあります。Storybook で読み込めない Story があれば、これらを手で持ってきてください:\n%s\n' "$others"
 fi
 
 [ -f "$out/notes.md" ] || cp "$repo/experiments/results/_template.md" "$out/notes.md"

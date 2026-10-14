@@ -48,3 +48,6 @@ next-env.d.ts
 *storybook.log
 # implement-ui の作業レポート
 /.implement-ui
+
+# 生成検証の結果を Storybook で見るためのコピー (experiments/collect.sh が作る。記録は experiments/results/ にある)
+/src/design-system/drafts/experiments/

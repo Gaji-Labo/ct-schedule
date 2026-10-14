@@ -18,10 +18,11 @@ dest="$base/$kind-$run"
 [ -e "$dest" ] && { echo "すでにあります: $dest" >&2; exit 1; }
 mkdir -p "$dest"
 
-# 検証の材料 (experiments/) とビルド成果物・秘密情報は持ち込まない
+# 検証の材料 (experiments/、過去の回の生成物 drafts/experiments/) とビルド成果物・秘密情報は持ち込まない
 rsync -a \
   --exclude .git --exclude node_modules --exclude storybook-static --exclude .next \
   --exclude '.env*' --exclude .vercel --exclude experiments --exclude .implement-ui --exclude .claude/launch.json \
+  --exclude /src/design-system/drafts/experiments \
   "$repo/" "$dest/"
 
 if [ "$kind" = reproduce ]; then

@@ -77,7 +77,9 @@ src/
 │   ├── tokens.ts               # トークンの用途カタログ (Foundations と AI の参照元)
 │   ├── foundations/            # Storybook の「Foundations/」: Introduction・Colors・Typography・Layout・Logo
 │   ├── guidelines/             # 各部品の「ガイドライン」ページ (組み合わせ方の OK / NG)。UI/<部品> の下に出る
-│   ├── pages/                  # Storybook の「Pages/」: 画面全体をモックデータで再現した Story
+│   ├── pages/                  # Storybook の「Pages/」: 画面全体をモックデータで再現した Story (人が確定させた正式な画面)
+│   ├── drafts/                 # Storybook の「Drafts/」: 確認待ちの画面。確定したら pages/ へ移す。main には残さない
+│   │   └── experiments/        # 生成検証の結果を正解と並べて見るためのコピー (git 管理外)
 │   └── mocks/                  # Story 用のモックデータ・代用品
 ├── utils/
 │   ├── member.ts               # ラウンドロビンアルゴリズム
