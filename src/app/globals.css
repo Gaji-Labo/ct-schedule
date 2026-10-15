@@ -22,7 +22,10 @@
     --neutral-200: 0 0% 89.8%;
     --neutral-300: 0 0% 83.1%;
     --neutral-400: 0 0% 63.9%;
+    /* 450 / 550 は Tailwind に無い中間色。部品の境界 (--input) を 3:1 ぎりぎり上の濃さにするために追加 */
+    --neutral-450: 0 0% 54.5%;
     --neutral-500: 0 0% 45.1%;
+    --neutral-550: 0 0% 38.6%;
     --neutral-600: 0 0% 32.2%;
     --neutral-700: 0 0% 25.1%;
     --neutral-800: 0 0% 14.9%;
@@ -86,8 +89,9 @@
     --accent-foreground: var(--neutral-900);
     --destructive: var(--red-500);
     --destructive-foreground: var(--neutral-50);
-    --border: var(--neutral-200);
-    --input: var(--neutral-200);
+    /* 枠線。--border は飾りの区切り (1.48:1)、--input は部品の境界なので 3:1 以上 (白地 3.41:1 / muted 地 3.13:1)。DESIGN.md「コントラスト」 */
+    --border: var(--neutral-300);
+    --input: var(--neutral-450);
     --ring: var(--neutral-950);
 
     /* ---------- Semantic: feedback ---------- */
@@ -121,7 +125,7 @@
     --status-rest: var(--neutral-400);
     --status-rest-foreground: var(--neutral-0);
     /* 今週 (直近) のスケジュールの強調枠 */
-    --highlight-current: var(--neutral-400);
+    --highlight-current: var(--neutral-500); /* 枠だけで「今週」を伝えるので 3:1 以上 (4.74:1) */
 
     /* ページ最上部の帯 (SiteHeader)。ライト・ダークとも黒地に白 */
     --site-header: var(--neutral-950);
@@ -173,8 +177,8 @@
     --accent-foreground: var(--neutral-50);
     --destructive: var(--red-800);
     --destructive-foreground: var(--neutral-50);
-    --border: var(--neutral-800);
-    --input: var(--neutral-800);
+    --border: var(--neutral-700); /* 1.91:1 */
+    --input: var(--neutral-550); /* 黒地 3.27:1 */
     --ring: var(--neutral-300);
 
     --success: var(--green-700);

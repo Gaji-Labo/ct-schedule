@@ -59,18 +59,31 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 - 祝日の週は、カードに祝日名を表示する
 - Slack でログインし、相手との Slack ハドルをワンクリックで始められる
 
+#### 用語
+
+画面の文言・コード・Story で、次の2つを使い分ける。同じものを別の名前で呼ばない。
+
+| 用語 | 意味 | 例 |
+| --- | --- | --- |
+| **メンバー** | Slack 連携で登録された社員全員（CT に参加していない人も含む） | 「メンバー一覧」 |
+| **参加者** | メンバーのうち、CT に参加している人（`participate` が true） | 「CTの参加者：20人」、メンバー一覧の「参加（20人）」 |
+
+- 人数を出すときは、何の人数かを文言で書く（「現在のメンバー：20人」のように、メンバーと書いて参加者の数を出さない）
+- 人数の数字をそのままリンクにしない。リンク先の一覧と数が一致しないと誤解を招くため、遷移は「メンバー一覧を見る」のように行き先を書いたリンクにする
+
 #### 主な画面
 
 | 画面 | パス | 目的 |
 | --- | --- | --- |
-| CT組み合わせ表 | `/` | 今週以降の組み合わせを週ごとのカードで横に並べて見せる |
-| メンバー一覧 | `/member` | 参加メンバーと参加・不参加の状態を見せる、削除する |
+| CT組み合わせ表 | `/` | 今週以降の組み合わせを週ごとのカードで横に並べて見せる。参加者の人数と、メンバー一覧へのリンクを置く |
+| メンバー一覧 | `/member` | メンバー（社員全員）を「参加」「不参加」に分けて見せる、削除する。見出しの「参加（○人）」はトップの参加者数と一致する |
 
 #### ユーザーと利用シーン
 
 - チームメンバーが「今週の相手は誰か」を確かめるために、週の初めに開く
 - 滞在時間は短い。目的は「相手を知る → ハドルを始める」で終わる
-- 管理操作（メンバー追加・削除、初期設定）はたまにしか行わない
+- メンバーは Slack 連携で追加される。アプリ内にメンバーを追加する操作（ダイアログ・フォーム）は無い
+- 管理操作（メンバーの削除、初回ログイン時の設定）はたまにしか行わない
 
 #### このアプリ固有の原則
 
@@ -127,7 +140,8 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 | --- | --- |
 | 本文 / 補足テキスト | `text-foreground` / `text-muted-foreground` |
 | 控えめな面（リスト行など） | `bg-muted` |
-| 枠線 | `border`（既定で `border-border`）、入力欄は `border-input` |
+| 枠線（カード・リスト・区切り線） | `border`（既定で `border-border`） |
+| 部品の境界（入力欄・セレクト・outline ボタン） | `border-input` |
 | 主要アクション / 副次アクション | `Button` の `variant="default"` / `"outline"` |
 | 削除・エラー | `destructive` 系、`Button variant="destructive"` |
 | 成功・参加中 | `bg-success` |
@@ -140,22 +154,71 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 
 トークンを追加するときは `globals.css`（ライト・ダーク両方）、`tailwind.config.ts`、`tokens.ts` の3箇所を揃える。
 
+### コントラスト
+
+WCAG 2.2 AA を守る。トークンを追加・変更するときは、ライト・ダーク両方の背景（`background` と、その上に置く `muted` など）に対して比率を計算して確かめる。
+
+| 対象 | 基準 | 該当するトークン |
+| --- | --- | --- |
+| 本文・ラベルなどの文字 | 4.5:1 以上（18px 以上の太字・24px 以上は 3:1 以上） | `foreground`、`muted-foreground`、各 `*-foreground` |
+| **部品の境界**（枠が無いと入力できる場所・部品の範囲がわからないもの） | **3:1 以上**（WCAG 1.4.11） | `input`（白地 3.41:1・muted 地 3.13:1 / 黒地 3.27:1。濃くなりすぎないよう、3:1 を少し上回る中間色 `neutral-450` / `neutral-550` を使う） |
+| 色や枠だけで意味を伝えるもの | 3:1 以上（WCAG 1.4.11） | `highlight-current`（白地 4.74:1 / 黒地 4.18:1）、フォーカスリング `ring` |
+| 飾りの区切り（無くても情報が失われないもの） | 基準なし。ただし面の区切りが見える濃さにする | `border`（白地 1.48:1 / 黒地 1.91:1） |
+
+- 枠線の色を選ぶときは「枠が無いと何かがわからなくなるか」で判断する。わからなくなるなら `border-input` か 3:1 以上の色、ならないなら `border`
+- 状態の色（Alert・toast・Badge の `feedback-*-border`）は、背景色・アイコン・文言でも意味を伝えているので枠線は飾り扱い。色だけで状態を伝えない
+
 **ブランドカラー（Gaji-Labo）**: `--gaji-main-*`（Main・5色）と `--gaji-accent-*`（Accent・3色）を Primitive として定義している。出典は Figma「Gaji-Labo Styles」の Gaji-Labo Colors（Main は Web Site、Accent は Blog）。一覧と Web サイト・ブログでの用途は Storybook の Foundations/Colors「Brand (Gaji-Labo)」にある。Primitive なのでコンポーネントから直接使わず、使うときは用途に合う Semantic トークンを追加し、その参照先にする（例: `avatar-*`）。
+
+### レイアウト
+
+**ページの骨組みは `PageLayout`・`PageHeader`・`PageSection`（`src/app/components/PageLayout.tsx`）で組み立てる。** `<main>` の余白・最大幅・セクションの間隔を画面ごとに書かない（Storybook: Foundations/Layout、Patterns/PageLayout）。
+
+| 項目 | 値 | 実装 |
+| --- | --- | --- |
+| 最大幅 | 1280px（`max-w-7xl`）、中央寄せ | `PageLayout` の `<main>`。SiteHeader の中身も同じ幅 |
+| ページ余白 | スマホ: 左右 16px・上下 32px（`px-4 py-8`）／ `md` 以上: 40px（`md:p-10`） | `PageLayout` の `<main>`。SiteHeader の左右余白も揃える |
+| セクション同士の間隔 | 40px（`gap-10`） | `PageLayout`（PageHeader と PageSection、PageSection 同士） |
+| セクション内の間隔 | 16px（`gap-4`） | `PageSection` |
+| パンくずとページタイトルの間 | 8px（`gap-2`） | `PageHeader` |
+
+- ページは「`PageHeader`（パンくず → h1 と右端の操作）→ `PageSection` を並べる」の形にする
+- **ブレイクポイント**は Tailwind の既定（`sm` 640 / `md` 768 / `lg` 1024 / `xl` 1280px）。社内アプリなので PC を基準に作り、`md` 未満は崩れずに使えることだけを確かめる。主な切り替え点は `md`。独自のブレイクポイントは作らない
 
 ### 余白・サイズ
 
 - Tailwind の既定スケール（4px グリッド）を使う。よく使う値は `src/design-system/tokens.ts` の `spacing` を参照
 - 角丸は `rounded-md`（ボタン・入力欄・リスト行）、`rounded-lg`（カード・ダイアログ）、`rounded-full`（アバター・ラベル）
 
+### 階層表現（Elevation & Depth）
+
+**階層は枠線で表し、影は「画面から浮いて、ほかの要素に重なるもの」にだけ付ける。** 「静かな UI」に合わせ、面の区切りを影で立体的に見せない。ダークモードでは影がほとんど見えないため、どの階層でも枠線を付け、影は補助として使う（Storybook: Foundations/Elevation）。
+
+| 階層 | 対象 | 表し方 |
+| --- | --- | --- |
+| 0 | ページの面 | `bg-background` |
+| 1 | カード・リスト・入力欄・ボタン・バッジ | `border` のみ（影なし） |
+| 2 | ドロップダウン・セレクトの選択肢・toast・カードに重なるカルーセルの前後ボタン | `border` ＋ `shadow-md` |
+| 3 | ダイアログ | `border` ＋ `shadow-lg` ＋ 背景を暗くするオーバーレイ |
+
+- 影は `shadow-md` と `shadow-lg` の2段階だけ。どちらも部品に組み込み済みなので、画面側で `shadow-*` を書かない
+- 1つだけ目立たせたいとき（今週のカードなど）は、影ではなく枠線の色や太さで表す
+
 ### タイポグラフィ
 
-| 用途 | クラス |
-| --- | --- |
-| ページタイトル (h1) | `text-2xl font-bold` |
-| セクション・カード見出し (h2) | `text-lg font-semibold` |
-| 本文・ラベル | `text-sm font-medium` |
-| 補足説明 | `text-sm text-muted-foreground` |
-| 番号・バッジ・注釈 | `text-xs` |
+**フォント**: 欧文・数字は Geist、和文は Noto Sans JP（`src/lib/fonts.ts` で読み込み、`font-sans` にまとめている）。和文を Web フォントにするのは OS による見た目の差をなくすため。読み込めないときはヒラギノ角ゴ → Yu Gothic UI → メイリオに落ちる。`font-sans` は既定なので、コンポーネントで `font-*` を指定しない（等幅が要るときだけ `font-mono`）。
+
+| 用途 | クラス | 行間 |
+| --- | --- | --- |
+| ページタイトル (h1) | `text-2xl font-bold leading-snug` | 1.375 |
+| セクション・カード・ダイアログの見出し (h2) | `text-lg font-semibold leading-snug` | 1.375 |
+| 本文（2行以上になりうる文章） | `text-sm leading-relaxed` | 1.625 |
+| 補足説明 | `text-sm text-muted-foreground leading-relaxed` | 1.625 |
+| ラベル・ユーザー名など1行で終わるもの | `text-sm font-medium` | 既定（20px） |
+| 番号・バッジ・注釈 | `text-xs` | 既定（16px） |
+
+- 行間は和文が詰まって見えないよう、見出しは `leading-snug`、文章は `leading-relaxed` にする。見出しに `leading-none` を使わない（2行になると行が重なる）
+- 字間は詰めない（`tracking-tight` などを使わない）
 
 ### コンポーネント
 
@@ -166,13 +229,15 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 | やりたいこと | 使うもの |
 | --- | --- |
 | ボタン・リンク風の操作 | `Button`（リンクは `asChild` で `<a>` / `Link` を包む） |
-| 確認・入力のモーダル | `Dialog` |
+| ページの骨組み（余白・最大幅・セクション） | `PageLayout` > `PageHeader` + `PageSection`。ログイン状態つきの見出しは `Header`（中で `PageHeader` を使う） |
+| 確認・入力のモーダル | `Dialog`。幅は `DialogContent` の `size` で選ぶ: 確認ダイアログ（本文とボタン2つ）は `size="confirm"`（448px）、入力フォームは既定（512px） |
 | メニュー | `DropdownMenu` |
 | 今いるページの位置（2階層目以降） | `Breadcrumb`（ページタイトルのすぐ上。今いるページは `BreadcrumbPage`） |
 | フォーム | `Label` + `Input` / `Select` / `Checkbox` |
 | 状態ラベル | `Badge` |
 | ユーザー表示 | `UserAvatar` |
 | メンバー一覧の1行 | `MemberListItem`（アバター・名前・参加状態。右端の操作は `action` で渡す） |
+| メンバー一覧の「参加」「不参加」のまとまり | `MemberGroup`（見出しに人数、0人のときの文言、`MemberListItem` を区切り線つきで並べる） |
 | 補足説明のポップアップ | `Tooltip` |
 | 区切り線 | `Separator` |
 | 読み込み中 | `Spinner` |
@@ -188,7 +253,11 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 | --- | --- | --- |
 | パレット色の直書き（`bg-gray-100`, `text-black`, `bg-white` など） | Semantic トークン | `design-system/no-palette-color` |
 | 色の任意値（`bg-[#e5e5e5]`）、`style` での色指定 | Semantic トークン | `design-system/no-palette-color`（`style` は対象外） |
-| 任意値（`p-[13px]`, `max-w-[425px]`） | 既定スケール。繰り返すなら variant / トークンを追加する | `design-system/no-arbitrary-value` |
+| 任意値（`p-[13px]`, `max-w-[425px]`, `leading-[1.8]`） | 既定スケール。繰り返すなら variant / トークンを追加する | `design-system/no-arbitrary-value` |
+| 画面ごとに `<main>` の余白・最大幅・間隔を書く | `PageLayout` / `PageHeader` / `PageSection` | — |
+| `DialogContent` の幅を `className` で決める（`sm:max-w-md` など） | `size="confirm"` / 既定 | — |
+| カード・ボタン・入力欄などの面に影を付ける（`shadow-sm`, `shadow`） | `border`。影は浮く要素だけで、部品に組み込み済み | — |
+| 見出しの `leading-none`、字間を詰める `tracking-tight` | 「タイポグラフィ」の表のクラス | — |
 | `<button>` や `<input>` の自作スタイリング | `Button` / `Input` | — |
 | `className` で variant の見た目を上書き（`<Button className="bg-red-500">`） | 適切な `variant` を選ぶ。無ければ variant を追加する | 色の部分は検出される |
 | 画面ごとの独自カードや独自ラベル | 既存部品の組み合わせ。足りなければ部品を追加する | — |
@@ -199,7 +268,7 @@ Gaji-Labo のミッションは「Web技術を通じて、新しい選択肢を�
 
 1. **文脈を確認する** — 本書の「デザインシステムの文脈」「アプリごとの文脈」「デザイン原則」を読み、画面の目的と、最初に目に入るべき情報を決める
 2. **部品を選ぶ** — 「コンポーネント」の表と Storybook から使う部品を決める。足りない部品があれば、画面の実装より先に部品（と Story）を作る
-3. **組み立てる** — 色・余白・文字は「制約」の表から選ぶ
+3. **組み立てる** — 骨組みは `PageLayout` / `PageHeader` / `PageSection` で作り、色・余白・文字・階層は「制約」の表から選ぶ
 4. **Story を書く** — 画面またはその主要部品の Story を書き、次の状態を用意する
    - 通常 / データ0件 / 長い名前・多い件数 / 読み込み中・エラー（あれば）
    - CT 固有: 祝日の週、参加人数が奇数（お休みあり）、今週のカード
@@ -244,6 +313,8 @@ Storybook で次を確認する。
 | --- | --- |
 | トークン定義 | `src/app/globals.css`, `tailwind.config.ts` |
 | トークンの用途一覧 | `src/design-system/tokens.ts` |
+| フォントの読み込み | `src/lib/fonts.ts` |
+| ページの骨組み | `src/app/components/PageLayout.tsx` |
 | コンポーネントと Story | `src/app/components/**`、`bun run storybook` |
 | lint ルール | `eslint/design-system-plugin.mjs` |
 | Gaji-Labo の文化 | [Culture Deck](https://speakerdeck.com/gaji/gaji-labo-culture-deck)、[Gaji-Labo スタイル](https://speakerdeck.com/gaji/gaji-labo-style) |

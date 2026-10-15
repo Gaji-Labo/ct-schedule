@@ -38,7 +38,7 @@ export const Horizontal: Story = {
   render: (args) => (
     <div className="w-80">
       <div className="grid gap-1">
-        <h2 className="text-lg font-semibold">メンバー一覧</h2>
+        <h2 className="text-lg font-semibold leading-snug">メンバー一覧</h2>
         <p className="text-sm text-muted-foreground">
           CTに参加するメンバーを管理します
         </p>

@@ -71,8 +71,12 @@ type Story = StoryObj<typeof meta>;
 /** ヘッダーのユーザーメニュー（アプリでの使い方） */
 export const UserMenu: Story = {};
 
-/** 開いた状態（表示確認用） */
+/**
+ * 開いた状態（表示確認用）。サイドバーから単体で開いて使う。
+ * Docs ページに載せると、ページを開くたびに開いた状態で表示されてしまうため、autodocs からは外している
+ */
 export const Opened: Story = {
+  tags: ["!autodocs"],
   args: { defaultOpen: true },
 };
 

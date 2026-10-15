@@ -31,14 +31,19 @@ const meta = {
           "",
           "**使い分け**",
           "- 削除など取り消せない操作の確認 → 実行ボタンは `Button variant=\"destructive\"`",
-          "- 短いフォーム（メンバー追加・プロフィール編集など）→ 実行ボタンは `Button variant=\"default\"`",
+          "- 数項目だけ入力してもらう短いフォーム（初回ログイン時の「設定」、ユーザーメニューの「プロフィール編集」など）→ 実行ボタンは `Button variant=\"default\"`",
           "- 結果を知らせるだけなら Dialog ではなく `toast` を使う",
           "",
           "**構成のルール**",
           "- `DialogHeader` に `DialogTitle`（必須）と、必要なら `DialogDescription`",
           "- `DialogFooter` は右寄せで「キャンセル（`outline`）→ 実行」の順。キャンセルは `DialogClose asChild` で `Button` を包む",
           "- トリガーも `DialogTrigger asChild` で `Button` を包む（素の `<button>` にしない）",
-          "- 幅は既定（`max-w-lg`）を使う。`sm:max-w-[425px]` のような任意値は使わない",
+          "",
+          "**幅（`DialogContent` の `size`）**",
+          "- 確認ダイアログ（本文とボタン2つだけ）→ `size=\"confirm\"`（448px / `max-w-md`）",
+          "- 入力フォームを載せる → `size=\"default\"`（512px / `max-w-lg`。省略時）",
+          "- `className` で `max-w-*` を上書きしない。`sm:max-w-[425px]` のような任意値も使わない",
+          "- 画面幅が足りないときは画面いっぱいの幅になる",
         ].join("\n"),
       },
     },
@@ -51,7 +56,7 @@ const meta = {
           メンバーを削除
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent size="confirm">
         <DialogHeader>
           <DialogTitle>メンバーを削除</DialogTitle>
           <DialogDescription>
@@ -74,10 +79,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** 削除の確認。取り消せない操作は必ず確認を挟む */
+/** 削除の確認。取り消せない操作は必ず確認を挟む。幅は `size="confirm"`（448px） */
 export const Confirm: Story = {};
 
-/** 短いフォームを載せる例（プロフィール編集） */
+/** 短いフォームを載せる例（プロフィール編集）。幅は既定（512px） */
 export const WithForm: Story = {
   render: (args) => (
     <Dialog {...args}>
@@ -116,8 +121,12 @@ export const WithForm: Story = {
   ),
 };
 
-/** 開いた状態（表示確認用） */
+/**
+ * 開いた状態（表示確認用）。サイドバーから単体で開いて使う。
+ * Docs ページに載せると、ページを開くたびに開いた状態で表示されてしまうため、autodocs からは外している
+ */
 export const Opened: Story = {
+  tags: ["!autodocs"],
   args: { defaultOpen: true },
 };
 

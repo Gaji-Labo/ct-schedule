@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageHeader, PageLayout, PageSection } from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 
@@ -21,35 +21,29 @@ const CTSchedulePage = ({ participants, weeks }: PageProps) => {
   const schedules = createSchedules(members, weeks);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="mx-auto max-w-7xl p-10">
-        <div className="grid gap-5">
-          <div className="flex items-center justify-between gap-10">
-            <h1 className="text-2xl font-bold">CT組み合わせ表</h1>
-            {/* 本物は SigninWithSlackButton (サーバーアクション) */}
-            <Button variant="outline">Sign in with Slack</Button>
-          </div>
-          <section>
-            <p>
-              現在のメンバー：
-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
-              <a
-                href="/?path=/story/pages-メンバー一覧--default"
-                target="_top"
-                className="underline"
-              >
-                {participants}人
-              </a>
-            </p>
-          </section>
+    <PageLayout>
+      <PageHeader
+        title="CT組み合わせ表"
+        // 本物は SigninWithSlackButton (サーバーアクション)
+        actions={<Button variant="outline">Sign in with Slack</Button>}
+      />
+      <PageSection>
+        {/* 人数は「参加者」の数。リンク先は社員全員なので、数字とリンクを分ける */}
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-sm">
+          <p>CTの参加者：{participants}人</p>
+          {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
+          <a
+            href="/?path=/story/pages-メンバー一覧--default"
+            target="_top"
+            className="text-foreground underline underline-offset-4"
+          >
+            メンバー一覧を見る
+          </a>
         </div>
-        <div className="mt-10">
-          <CTScheduleCarousel schedules={schedules} />
-        </div>
-      </main>
-    </>
+        <CTScheduleCarousel schedules={schedules} />
+      </PageSection>
+    </PageLayout>
   );
 };
 
