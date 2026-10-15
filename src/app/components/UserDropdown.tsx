@@ -102,7 +102,7 @@ export const UserDropdown = ({ user, image, channels }: Props) => {
       </DropdownMenu>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent>
           <form action={handleSubmit} className="grid gap-5">
             <DialogHeader>
               <DialogTitle>プロフィール編集</DialogTitle>

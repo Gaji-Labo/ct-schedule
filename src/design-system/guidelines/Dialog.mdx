@@ -16,13 +16,14 @@ import { MockDialog } from "./GuidelineMocks";
     <>取り消せない操作の確認では、実行ボタンを <code>destructive</code> にし、取り消せないことを本文に書く。</>,
     <><code>DialogTitle</code> を必ず付ける（何のダイアログかが読み上げで伝わる）。</>,
     <>キャンセル（<code>outline</code>）→ 実行の順で右寄せに並べる。× と Esc でも閉じられる状態を保つ。</>,
+    <>幅は <code>size</code> で選ぶ。確認ダイアログは <code>size="confirm"</code>（448px）、入力フォームは既定（512px）。</>,
   ]}
   ng={[
     <>情報を見せるだけに使わない → ページ内に表示する。結果の通知は toast。</>,
     <>閉じる手段（キャンセル・×・Esc）を消さない → ユーザーが抜け出せなくなる。</>,
     <>削除の実行ボタンを <code>default</code>（肯定の色）にしない → 危険な操作だと伝わらない。</>,
     <>ダイアログの中からさらにダイアログを開かない → 今どこにいるか分からなくなる。</>,
-    <>幅を任意値で決めない（<code>sm:max-w-[425px]</code> など） → 既定の幅か <code>sm:max-w-md</code> を使う。</>,
+    <>幅を <code>className</code> で決めない（<code>sm:max-w-[425px]</code>・<code>sm:max-w-md</code> など） → <code>size</code> で選ぶ。</>,
   ]}
 />
 
@@ -50,3 +51,14 @@ import { MockDialog } from "./GuidelineMocks";
     caption: "「はい / いいえ」と肯定の色では、何が起きるのか・危険なのかが伝わらない。ボタンには動詞（「削除」）を書く。",
   }}
 />
+
+## 幅
+
+| 種類 | 中身 | 指定 | 幅 |
+| --- | --- | --- | --- |
+| 確認ダイアログ | タイトル・本文・ボタン2つ（キャンセル／実行） | `<DialogContent size="confirm">` | 448px（`max-w-md`） |
+| 入力フォーム | ラベル付きの入力欄など | `<DialogContent>`（`size="default"`） | 512px（`max-w-lg`） |
+
+- どちらも画面幅が足りないときは画面いっぱいになる（スマホ）
+- これより広い中身（表・長い説明）は、ダイアログではなくページに置く
+- 本文に入力欄が1つだけある確認（例: 「削除」と入力して確定）も、確認ダイアログとして `confirm` を使う
