@@ -36,7 +36,7 @@ const meta = {
   render: (args) => (
     <div className="flex items-center gap-2">
       <Checkbox {...args} />
-      <Label htmlFor={args.id}>Slack で通知を受け取る</Label>
+      <Label htmlFor={args.id}>メールでお知らせを受け取る</Label>
     </div>
   ),
 } satisfies Meta<typeof Checkbox>;
@@ -47,12 +47,12 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const Checked: Story = {
-  args: { id: "participate-checked", defaultChecked: true },
+  args: { id: "notify-checked", defaultChecked: true },
 };
 
 /** 操作できない状態。ラベルも薄くなる（Label 側の `peer-disabled`） */
 export const Disabled: Story = {
-  args: { id: "participate-disabled", disabled: true },
+  args: { id: "notify-disabled", disabled: true },
 };
 
 export const ShouldToggleCheck: Story = {

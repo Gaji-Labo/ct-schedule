@@ -8,7 +8,7 @@ const nonParticipants = Array.from({ length: 2 }, (_, i) =>
 );
 
 const meta = {
-  title: "Domain/MemberGroup",
+  title: "Apps/CTスケジュール/Components/MemberGroup",
   component: MemberGroup,
   tags: ["autodocs"],
   parameters: {
@@ -20,7 +20,7 @@ const meta = {
           "",
           "- 見出しに人数を出す（`参加（20人）`）。CT組み合わせ表の「CTの参加者：○人」と同じ数になる",
           "- 0人のときは `emptyText` を出す（見出しは残す）",
-          "- 用語: **メンバー** = Slack 連携で登録された社員全員、**参加者** = そのうち CT に参加している人（DESIGN.md）",
+          "- 用語: **メンバー** = Slack 連携で登録された社員全員、**参加者** = そのうち CT に参加している人（docs/design/apps/ct-schedule.md）",
         ].join("\n"),
       },
     },

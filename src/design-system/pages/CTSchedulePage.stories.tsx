@@ -31,10 +31,10 @@ const CTSchedulePage = ({ participants, weeks }: PageProps) => {
         {/* 人数は「参加者」の数。リンク先は社員全員なので、数字とリンクを分ける */}
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-sm">
           <p>CTの参加者：{participants}人</p>
-          {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+          {/* Storybook 内では「Apps/CTスケジュール/Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
           <a
-            href="/?path=/story/pages-メンバー一覧--default"
+            href="/?path=/story/apps-ctスケジュール-pages-メンバー一覧--default"
             target="_top"
             className="text-foreground underline underline-offset-4"
           >

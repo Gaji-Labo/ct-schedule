@@ -31,7 +31,7 @@ const DialogOverlay = React.forwardRef<
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 /**
- * 幅は size で選ぶ。className で max-w-* を上書きしない (DESIGN.md「ダイアログの幅」)
+ * 幅は size で選ぶ。className で max-w-* を上書きしない (docs/design/rules.md「コンポーネント」)
  * - default: 512px (max-w-lg)。入力フォームを載せるとき
  * - confirm: 448px (max-w-md)。本文とボタン2つだけの確認ダイアログ
  */

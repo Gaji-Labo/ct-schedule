@@ -6,7 +6,6 @@ import { repoUrl } from "../repo";
 # Gaji-Labo 社内アプリ デザインシステム
 
 Gaji-Labo の社内アプリの UI を組み立てるための部品とルールをまとめたカタログです。
-最初の利用例は CT スケジュールで、Apps にはその部品と画面を載せています。
 人と AI のどちらが新しい画面を実装する場合も、ここにあるトークンとコンポーネントだけで組み立てることを目指します。
 
 ## 構成
@@ -15,7 +14,7 @@ Gaji-Labo の社内アプリの UI を組み立てるための部品とルール
 | --- | --- | --- |
 | Foundations | `src/app/globals.css` / `tailwind.config.ts` / `src/design-system/tokens.ts` / `src/lib/fonts.ts` | 色・タイポグラフィ（フォント・行間）・レイアウト（骨組み・ブレイクポイント・余白・角丸）・階層表現 |
 | UI | `src/app/components/ui/` | shadcn/ui ベースの汎用コンポーネント |
-| Domain | `src/app/components/` | CTスケジュール固有のコンポーネント (予定) |
+| Domain | `src/app/components/` | アプリ固有のコンポーネント（Storybook の Domain・Pages） |
 | Patterns | `src/app/components/PageLayout.tsx` | ページの骨組み (`PageLayout` / `PageHeader` / `PageSection`) |
 
 ## 基本ルール

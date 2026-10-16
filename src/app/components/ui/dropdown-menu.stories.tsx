@@ -90,8 +90,8 @@ export const WithCheckboxes: Story = {
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>表示する情報</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked>完了した項目</DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem>アーカイブ済みの項目</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem checked>更新日</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem>無効のユーザー</DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),
@@ -107,8 +107,8 @@ export const WithRadioItems: Story = {
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>並び順</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value="employeeNumber">
-          <DropdownMenuRadioItem value="employeeNumber">社員番号順</DropdownMenuRadioItem>
+        <DropdownMenuRadioGroup value="updatedAt">
+          <DropdownMenuRadioItem value="updatedAt">更新日順</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="name">名前順</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

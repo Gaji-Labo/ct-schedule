@@ -31,7 +31,7 @@ const meta = {
           "",
           "**使い分け**",
           "- 削除など取り消せない操作の確認 → 実行ボタンは `Button variant=\"destructive\"`",
-          "- 数項目だけ入力してもらう短いフォーム（初回ログイン時の「設定」、ユーザーメニューの「プロフィール編集」など）→ 実行ボタンは `Button variant=\"default\"`",
+          "- 数項目だけ入力してもらう短いフォーム（プロフィール編集・設定の変更など）→ 実行ボタンは `Button variant=\"default\"`",
           "- 結果を知らせるだけなら Dialog ではなく `toast` を使う",
           "",
           "**構成のルール**",
@@ -53,14 +53,14 @@ const meta = {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Trash2 />
-          ファイルを削除
+          ユーザーを削除
         </Button>
       </DialogTrigger>
       <DialogContent size="confirm">
         <DialogHeader>
-          <DialogTitle>ファイルを削除</DialogTitle>
+          <DialogTitle>ユーザーを削除</DialogTitle>
           <DialogDescription>
-            報告書.pdf を削除しますか？この操作は取り消せません。
+            山田 を削除しますか？この操作は取り消せません。
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -93,7 +93,7 @@ export const WithForm: Story = {
         <form className="grid gap-6" onSubmit={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>プロフィール編集</DialogTitle>
-            <DialogDescription>社内アプリのプロフィールに表示される情報です。</DialogDescription>
+            <DialogDescription>ほかのユーザーに表示される情報です。</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-2">
@@ -101,12 +101,12 @@ export const WithForm: Story = {
               <Input id="displayName" defaultValue="山田" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="employeeNumber">社員番号</Label>
-              <Input id="employeeNumber" type="number" defaultValue="1234" />
+              <Label htmlFor="email">メールアドレス</Label>
+              <Input id="email" type="email" defaultValue="yamada@example.com" />
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="notify" defaultChecked />
-              <Label htmlFor="notify">Slack で通知を受け取る</Label>
+              <Label htmlFor="notify">メールでお知らせを受け取る</Label>
             </div>
           </div>
           <DialogFooter>
@@ -137,7 +137,7 @@ export const ShouldCloseWithCancel: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ユーザーを削除" }));
       await expect(await body.findByRole("dialog")).toHaveAttribute("data-state", "open");
     });
 
@@ -155,7 +155,7 @@ export const ShouldCloseWithCross: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ユーザーを削除" }));
       await expect(await body.findByRole("dialog")).toBeInTheDocument();
     });
 

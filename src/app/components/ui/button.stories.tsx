@@ -119,6 +119,6 @@ export const AsLink: Story = {
   args: {
     asChild: true,
     variant: "outline",
-    children: <a href="#">設定へ</a>,
+    children: <a href="#">ユーザー管理へ</a>,
   },
 };

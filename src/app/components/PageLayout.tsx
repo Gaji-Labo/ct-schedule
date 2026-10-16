@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { cn } from "@/src/lib/utils";
 
 /**
- * ページの骨組み。DESIGN.md「レイアウト」のルールをそのまま部品にしたもの。
+ * ページの骨組み。docs/design/rules.md「レイアウト」のルールをそのまま部品にしたもの。
  * 画面ごとに <main> の余白・最大幅・間隔を書かず、必ずこれを使う。
  *
  * - 最上部に SiteHeader（黒い帯）

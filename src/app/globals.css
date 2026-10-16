@@ -89,7 +89,7 @@
     --accent-foreground: var(--neutral-900);
     --destructive: var(--red-500);
     --destructive-foreground: var(--neutral-50);
-    /* 枠線。--border は飾りの区切り (1.48:1)、--input は部品の境界なので 3:1 以上 (白地 3.41:1 / muted 地 3.13:1)。DESIGN.md「コントラスト」 */
+    /* 枠線。--border は飾りの区切り (1.48:1)、--input は部品の境界なので 3:1 以上 (白地 3.41:1 / muted 地 3.13:1)。docs/design/rules.md「コントラスト」 */
     --border: var(--neutral-300);
     --input: var(--neutral-450);
     --ring: var(--neutral-950);

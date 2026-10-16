@@ -15,7 +15,7 @@ export default {
   theme: {
   	extend: {
   		// 欧文は Geist、和文は Noto Sans JP。読み込めないときは OS の和文ゴシックに落とす
-  		// (変数は src/lib/fonts.ts で定義。DESIGN.md「タイポグラフィ」)
+  		// (変数は src/lib/fonts.ts で定義。docs/design/rules.md「タイポグラフィ」)
   		fontFamily: {
   			sans: [
   				'var(--font-geist-sans, ui-sans-serif)',

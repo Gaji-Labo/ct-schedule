@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono, Noto_Sans_JP } from "next/font/google";
 
 /**
- * アプリで使うフォント。DESIGN.md「タイポグラフィ」を参照。
+ * アプリで使うフォント。docs/design/rules.md「タイポグラフィ」を参照。
  * - 欧文・数字: Geist
  * - 和文: Noto Sans JP（OS による見た目の差をなくすため Web フォントで読み込む）
  * - 等幅: Geist Mono
