@@ -86,8 +86,8 @@ export const WithCheckboxes: Story = {
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>表示する情報</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked>祝日名</DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem>不参加のメンバー</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem checked>完了した項目</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem>アーカイブ済みの項目</DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),

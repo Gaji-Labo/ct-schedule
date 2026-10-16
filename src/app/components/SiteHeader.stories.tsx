@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { SiteHeader } from "./SiteHeader";
 
 const meta = {
-  title: "Domain/SiteHeader",
+  title: "UI/SiteHeader",
   component: SiteHeader,
   tags: ["autodocs"],
   parameters: {

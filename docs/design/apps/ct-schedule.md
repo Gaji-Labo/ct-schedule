@@ -1,6 +1,8 @@
 # アプリの文脈: CT スケジュール
 
-CT スケジュール固有の目的・画面・利用シーン・原則。社内アプリ共通の文脈と原則は [../principles.md](../principles.md) にある。
+CT スケジュール固有の目的・画面・利用シーン・原則。社内アプリ共通の文脈と原則は [../principles.md](../principles.md) にある。アプリの実装（データ・認証・ペアリング）は [../../apps/ct-schedule.md](../../apps/ct-schedule.md) にある。
+
+- Storybook での名前: `CTスケジュール`（部品は `Apps/CTスケジュール/Components/`、画面は `Apps/CTスケジュール/Pages/`、確認待ちの画面は `Drafts/CTスケジュール/`）
 
 ## 何のアプリか
 
@@ -27,3 +29,34 @@ CT スケジュール固有の目的・画面・利用シーン・原則。社�
 ## このアプリ固有の原則
 
 - **今週がすぐわかる** — 最初に目に入るのは「今週の組み合わせ」。過去や遠い未来の情報は控えめにする
+
+## このアプリ固有の色
+
+共通の色は [../rules.md](../rules.md)「色」にある。次のトークンは CT スケジュールの用語で名前を付けているが、定義は共通トークンと同じ場所（`globals.css`・`tailwind.config.ts`・`tokens.ts`）にある。
+
+| 用途 | 使うトークン |
+| --- | --- |
+| 祝日の週のカード背景 | `bg-status-holiday` |
+| 「お休み」「祝日名」ラベル | `bg-status-rest text-status-rest-foreground` |
+| 今週の強調枠 | `border-highlight-current` |
+
+「お休み」「祝日名」ラベルは `rounded-full` で使う。現状は Badge に対応する variant が無く、`CTScheduleCard` で className を上書きしている（既知の違反）。直すときは Badge に variant を追加してから使う。
+
+## このアプリ固有の部品
+
+共通の部品は [../rules.md](../rules.md)「コンポーネント」にある。Storybook では「Apps/CTスケジュール/Components/」に出る。
+
+| やりたいこと | 使うもの |
+| --- | --- |
+| CT の週カードを横に送って見せる | `CTScheduleCarousel`（初期表示は「次の週」だけ、進めると「前の週」が出る）。1枚は `CTScheduleCard` |
+| メンバー一覧の1行 | `MemberListItem`（アバター・名前・参加状態。右端の操作は `action` で渡す） |
+
+## Story で用意する状態
+
+Skill `implement-ui` の「用意する状態」に加えて、次を用意する。
+
+- 祝日の週
+- 参加人数が奇数（お休みあり）
+- 今週のカード
+
+`Default` のデータは本番と同じ件数にする（CT組み合わせ表は20人）。モックデータは `src/design-system/mocks/ct.ts` にある。

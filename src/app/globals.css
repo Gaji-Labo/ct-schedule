@@ -113,7 +113,7 @@
     --feedback-destructive-border: var(--red-200);
     --feedback-destructive-icon: var(--red-700);
 
-    /* ---------- Semantic: domain (CTスケジュール) ---------- */
+    /* ---------- Semantic: アプリ固有 (CT スケジュール)。ほかのアプリでは使わない ---------- */
     /* 祝日の週のカード背景 */
     --status-holiday: var(--neutral-100);
     --status-holiday-foreground: var(--neutral-500);
@@ -123,6 +123,7 @@
     /* 今週 (直近) のスケジュールの強調枠 */
     --highlight-current: var(--neutral-400);
 
+    /* ---------- Semantic: 社内アプリ共通のヘッダー ---------- */
     /* ページ最上部の帯 (SiteHeader)。ライト・ダークとも黒地に白 */
     --site-header: var(--neutral-950);
     --site-header-foreground: var(--neutral-0);
@@ -197,11 +198,13 @@
     --feedback-destructive-border: var(--red-800);
     --feedback-destructive-icon: var(--red-400);
 
+    /* アプリ固有 (CT スケジュール) */
     --status-holiday: var(--neutral-800);
     --status-holiday-foreground: var(--neutral-400);
     --status-rest: var(--neutral-600);
     --status-rest-foreground: var(--neutral-50);
     --highlight-current: var(--neutral-500);
+
     --site-header: var(--neutral-950);
     --site-header-foreground: var(--neutral-0);
 

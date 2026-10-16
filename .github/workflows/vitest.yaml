@@ -27,3 +27,7 @@ jobs:
 
       - name: Run linter
         run: bun run lint
+
+      # MDX のドキュメントも含めてビルドする (--test は MDX を対象にしないので付けない)
+      - name: Build Storybook
+        run: bun run build-storybook --quiet
