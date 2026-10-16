@@ -49,7 +49,7 @@ const meta = {
     children: { control: "text" },
   },
   args: {
-    children: "メンバーを追加",
+    children: "項目を追加",
     onClick: fn(),
   },
 } satisfies Meta<typeof Button>;
@@ -92,7 +92,7 @@ export const WithIcon: Story = {
     children: (
       <>
         <Plus />
-        メンバーを追加
+        項目を追加
       </>
     ),
   },
@@ -119,6 +119,6 @@ export const AsLink: Story = {
   args: {
     asChild: true,
     variant: "outline",
-    children: <a href="#">メンバー管理へ</a>,
+    children: <a href="#">設定へ</a>,
   },
 };

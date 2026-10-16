@@ -12,9 +12,16 @@ const badgeVariants = cva(
           "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        // エラー・要対応。ほかの状態色と同じ淡い背景のパターン (塗りの赤は文字のコントラストが足りないため)
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
+          "border-feedback-destructive-border bg-feedback-destructive-subtle text-feedback-destructive-foreground",
         outline: "text-foreground",
+        // 状態を示す色付きパターン (Alert / toast と同じ feedback-* トークン)
+        info: "border-feedback-info-border bg-feedback-info-subtle text-feedback-info-foreground",
+        success:
+          "border-feedback-success-border bg-feedback-success-subtle text-feedback-success-foreground",
+        warning:
+          "border-feedback-warning-border bg-feedback-warning-subtle text-feedback-warning-foreground",
       },
     },
     defaultVariants: {

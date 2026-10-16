@@ -38,7 +38,7 @@ export default [
   },
   ...storybook.configs["flat/recommended"],
 
-  // デザインシステム準拠チェック (ルールの意図は DESIGN.md を参照)
+  // デザインシステム準拠チェック (ルールの意図は docs/design/rules.md を参照)
   {
     files: ["src/**/*.{ts,tsx}"],
     plugins: { "design-system": designSystem },
@@ -55,7 +55,6 @@ export default [
   {
     // 既知の違反 (デザインシステム導入前のコード)。置き換えたらこのリストから外す
     files: [
-      "src/app/member/page.tsx",
       "src/app/components/CTScheduleCard.tsx",
       "src/app/components/SigninWithSlackButton.tsx",
       "src/app/components/ui/dialog.tsx",

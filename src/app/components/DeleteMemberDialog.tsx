@@ -35,7 +35,11 @@ export const DeleteMemberDialog = ({ member }: { member: User }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label={`${member.slack_display_name} を削除`}
+        >
           <Trash2 />
         </Button>
       </DialogTrigger>

@@ -3,6 +3,7 @@
  * アプリ本体からは使わない。
  */
 import {
+  brandColors,
   primitiveColors,
   radii,
   semanticColors,
@@ -71,11 +72,38 @@ export const PrimitivePalette = () => (
   </div>
 );
 
+export const BrandPalette = () => (
+  <div className="flex flex-col gap-8">
+    {brandColors.map((group) => (
+      <section key={group.title} className="flex flex-col gap-3">
+        <div>
+          <h3 className="text-lg font-semibold">{group.title}</h3>
+          <p className="text-sm text-muted-foreground">{group.description}</p>
+        </div>
+        <div className="flex flex-col divide-y rounded-lg border">
+          {group.colors.map((color) => (
+            <div key={color.name} className="flex items-center gap-4 p-3">
+              <Swatch name={color.name} />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-medium">{color.name}</span>
+                  <Code>{color.hex}</Code>
+                </div>
+                <span className="text-sm text-muted-foreground">{color.usage}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+);
+
 export const TypographyList = () => (
   <div className="flex flex-col divide-y rounded-lg border">
     {typography.map((item) => (
       <div key={item.tailwind} className="flex flex-col gap-1 p-4">
-        <span className={item.tailwind}>CTスケジュール 2026/10/05</span>
+        <span className={item.tailwind}>社内アプリ 2026/10/05</span>
         <div className="flex flex-wrap items-center gap-2">
           <Code>{item.tailwind}</Code>
           <span className="text-xs text-muted-foreground">{item.usage}</span>
