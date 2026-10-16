@@ -1,0 +1,54 @@
+{
+  "request": "CT組み合わせ表 (/) とメンバー一覧 (/member) の画面 Story を作る（アプリ本体の page.tsx は作らない）",
+  "context": {
+    "who": "チームメンバーが週の初めに開く。メンバー一覧はたまに、管理目的で開く",
+    "purpose": "今週の CT の相手を確かめてハドルを始める／参加メンバーと参加状態を確かめ、不要なメンバーを削除する",
+    "first_seen": "今週の組み合わせカード（CT組み合わせ表）／メンバーと参加・不参加（メンバー一覧）",
+    "irreversible": "メンバー削除（確認 Dialog を挟む）"
+  },
+  "components_used": ["SiteHeader", "CTScheduleCarousel", "CTScheduleCard", "MemberListItem", "UserAvatar", "Breadcrumb", "Separator", "Button", "Dialog", "DropdownMenu", "Alert", "Spinner", "Toaster"],
+  "new_components": [
+    { "name": "src/design-system/pages/PageStandIns.tsx（Story 用の代用品と PageFrame）", "reason": "SigninWithSlackButton / UserDropdown / Header / DeleteMemberDialog は Slack・サーバーアクションにつながり Storybook で動かないため。2画面で共有するので1ファイルにまとめた。アプリ用の新部品ではない" }
+  ],
+  "stories": [
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "Default", "state": "未ログイン・参加20人" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "LoggedIn", "state": "ログイン中（右上はユーザーメニュー）" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "OddMembers", "state": "参加7人でお休みあり" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "FewMembers", "state": "参加2人" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "LongNames", "state": "長い表示名" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "NoParticipants", "state": "参加1人以下で組み合わせなし（Alert info）" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "Loading", "state": "読み込み中" },
+    { "file": "src/design-system/pages/CTSchedulePage.stories.tsx", "name": "LoadError", "state": "取得失敗" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "Default", "state": "未ログイン・削除ボタンなし" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "LoggedIn", "state": "ログイン中・各行に削除ボタン＋確認ダイアログ" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "ManyMembersWithLongNames", "state": "23人・長い表示名混在" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "AllNotParticipating", "state": "全員不参加" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "Empty", "state": "0人" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "Loading", "state": "読み込み中" },
+    { "file": "src/design-system/pages/MemberPage.stories.tsx", "name": "LoadError", "state": "取得失敗" }
+  ],
+  "verification": [
+    { "item": "bun run verify:ui", "result": "pass", "note": "lint エラー0。警告19件はすべて既存ファイル（新規ファイルは0件）。test 43 pass。Storybook ビルド成功" },
+    { "item": "画面間リンクの Story ID", "result": "pass", "note": "storybook-static/index.json で pages-ct組み合わせ表--default / pages-メンバー一覧--default を確認" },
+    { "item": "ライト・ダーク表示", "result": "unchecked", "note": "ブラウザ操作の許可がなく未確認" },
+    { "item": "Accessibility パネル", "result": "unchecked", "note": "同上" },
+    { "item": "長いテキストのあふれ", "result": "unchecked", "note": "Story は用意したが目視は未確認" }
+  ],
+  "guesses": [
+    { "topic": "Slack ログインボタンの代用品の見た目", "decision": "Button variant=outline + Slack ロゴで作った", "reason": "本物はパレット色直書き（既知の違反）で、そのまま写すと lint エラーになるため", "basis": "既存コードから類推", "missing_rule": "SigninWithSlackButton の Semantic 版の見た目（どの variant か）" },
+    { "topic": "Slack ロゴの fill 色", "decision": "Slack のブランド色の hex を svg の fill 属性に残した", "reason": "ブランドロゴは置き換え対象外と判断。lint も fill 属性は検出しない", "basis": "一般的な慣習", "missing_rule": "外部ブランドロゴの色を禁止事項の例外とするか" },
+    { "topic": "メンバー一覧でログイン中の右上", "decision": "ログインボタンの代わりにユーザーメニュー（アバター）を出した", "reason": "Header の実装がそうなっているため。依頼は『ログイン中は出さない』のみ", "basis": "既存コードから類推", "missing_rule": "メンバー一覧でのログイン中の右上表示" },
+    { "topic": "参加メンバー人数の表示", "decision": "Users アイコン＋『参加メンバー N人』の下線付きテキストリンクをタイトル行の下に置いた。不参加は数えない", "reason": "Button ガイドラインで遷移はリンク。今週のカードより目立たせないため小さく", "basis": "依頼文から解釈", "missing_rule": "人数の文言・位置・数える対象（参加のみか全員か）" },
+    { "topic": "ページの余白", "decision": "main を mx-auto max-w-7xl px-10 py-10、要素間 gap-8、パンくずと見出しは gap-2", "reason": "SiteHeader の中身の幅・左右余白と揃えた。gap-2 は Breadcrumb の docs より", "basis": "既存コードから類推", "missing_rule": "ページ本体（main）の標準余白・セクション間隔" },
+    { "topic": "組み合わせを作れないとき", "decision": "Alert info『組み合わせを作れません』を出す", "reason": "ラウンドロビンは参加2人未満で空配列を返すため", "basis": "根拠なし", "missing_rule": "CT組み合わせ表の空状態の文言と部品" },
+    { "topic": "メンバー0人のとき", "decision": "補足テキスト『メンバーがいません。Slack でログインすると、メンバーとして追加されます。』", "reason": "users はログインで作られるため", "basis": "既存コードから類推", "missing_rule": "メンバー一覧の空状態の文言" },
+    { "topic": "エラー状態", "decision": "ページ枠の中に Alert destructive＋『再読み込み』outline ボタン", "reason": "本物の error.tsx は素の p とボタンだけで DESIGN.md に沿った形が無い", "basis": "根拠なし", "missing_rule": "エラー画面の標準レイアウト" },
+    { "topic": "読み込み中", "decision": "app/loading.tsx と同じ全画面中央の Spinner", "reason": "本物に合わせた", "basis": "既存コードから類推", "missing_rule": "" },
+    { "topic": "Default Story の状態", "decision": "どちらの画面も未ログインを Default にした", "reason": "初めて来た人の見え方を基準にした", "basis": "根拠なし", "missing_rule": "画面 Story の Default をどの状態にするか" },
+    { "topic": "削除の代用品の挙動", "decision": "確認ダイアログで削除を押すと閉じて success toast を出す（一覧からは消えない）", "reason": "結果のフィードバックまで見られるように", "basis": "既存コードから類推", "missing_rule": "" },
+    { "topic": "削除ダイアログの幅", "decision": "本物の sm:max-w-[425px] を sm:max-w-md に置き換えた", "reason": "任意値禁止", "basis": "既存コードから類推", "missing_rule": "確認ダイアログの標準幅" },
+    { "topic": "ユーザーメニュー代用品の aria-label", "decision": "トリガーに『○○ のメニュー』を付けた（本物には無い）", "reason": "アイコンだけの操作には名前が必要", "basis": "一般的な慣習", "missing_rule": "UserDropdown のトリガーのラベル" },
+    { "topic": "代用品の置き場所", "decision": "Story 内ではなく src/design-system/pages/PageStandIns.tsx に2画面共通でまとめた", "reason": "2画面で同じものを重複させないため", "basis": "根拠なし", "missing_rule": "複数の画面 Story で共有する代用品の置き場所" },
+    { "topic": "メンバーの並び順", "decision": "モックの順（ID順）のまま", "reason": "本番の並び順が分からないため", "basis": "根拠なし", "missing_rule": "メンバー一覧の並び順（参加優先か ID 順か）" }
+  ]
+}

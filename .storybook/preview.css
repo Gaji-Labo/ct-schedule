@@ -1,0 +1,7 @@
+/*
+ * Tailwind の preflight が ol/ul の list-style を消すため、Docs ページの番号付きリストを復元する
+ * (ul は Storybook 側で disc が再指定されている)
+ */
+.sbdocs ol {
+  list-style: decimal;
+}
