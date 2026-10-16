@@ -32,6 +32,8 @@ if [ "$kind" = reproduce ]; then
      "$dest/src/app/page.tsx" \
      "$dest/src/app/member/page.tsx"
   rmdir "$dest/src/app/member"
+  # 手元の drafts/ に作りかけの同じ画面があると正解に近いものを見られるので、README 以外は持ち込まない
+  find "$dest/src/design-system/drafts" -type f ! -name README.md -delete
 fi
 
 # 外を読ませないための設定。Read / Glob / Grep と、Bash の単純なファイル読み取り (cat など) を止める。
