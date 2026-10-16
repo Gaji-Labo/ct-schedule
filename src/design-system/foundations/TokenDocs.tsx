@@ -107,7 +107,7 @@ export const FontFamilyList = () => (
     {fontFamilies.map((item) => (
       <div key={item.tailwind} className="flex flex-col gap-2 p-4">
         <span className={`text-2xl ${item.tailwind}`}>
-          CT組み合わせ表 Aa 0123456789
+          デザインシステム Aa 0123456789
         </span>
         <div className="flex flex-wrap items-center gap-2">
           <Code>{item.tailwind}</Code>
@@ -124,8 +124,8 @@ export const FontFamilyList = () => (
 /** 行間の違いが見えるよう、文章の役割には2行以上になる見本を使う */
 const sampleText = (tailwind: string) =>
   tailwind.includes("leading-relaxed")
-    ? "毎週月曜に、チームの2人1組で CT（コミュニケーションタイム）を行います。組み合わせはラウンドロビンで自動的に作られ、毎週相手が変わります。参加人数が奇数の週は、1人がお休みになります。"
-    : "CT組み合わせ表 2026/10/05";
+    ? "このデザインシステムは、Gaji-Labo の社内アプリで使う部品とルールをまとめたものです。誰が・いつ触っても同じ品質で画面を作れるよう、色・文字・余白の決まりと、部品の使い方を載せています。"
+    : "お知らせ一覧 2026/10/05";
 
 export const TypographyList = () => (
   <div className="flex flex-col divide-y rounded-lg border">
@@ -199,7 +199,7 @@ export const PageSkeletonDiagram = () => (
         </span>
         <div className="grid gap-1 rounded-md border p-3">
           <span className="text-xs text-muted-foreground">PageHeader（パンくず → gap-2 → h1 と右端の操作）</span>
-          <span className="text-xs">CT組み合わせ表 › メンバー一覧</span>
+          <span className="text-xs">ホーム › 一覧ページ</span>
           <span className="text-lg font-semibold leading-snug">ページタイトル</span>
         </div>
         <div className="grid gap-2 rounded-md border p-3">

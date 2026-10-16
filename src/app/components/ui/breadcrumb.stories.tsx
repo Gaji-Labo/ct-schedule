@@ -29,7 +29,7 @@ const meta = {
           "- アプリ内のリンクは `BreadcrumbLink asChild` で `next/link` の `Link` を包む",
           "- 区切りは `BreadcrumbSeparator`（既定は「>」のアイコン）",
           "",
-          "**使い分け**: トップページ（CT組み合わせ表）には付けない。2階層目以降のページに付ける。",
+          "**使い分け**: トップページには付けない。2階層目以降のページに付ける。",
         ].join("\n"),
       },
     },
@@ -38,11 +38,11 @@ const meta = {
     <Breadcrumb {...args}>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink>
+          <BreadcrumbLink href="#">ホーム</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+          <BreadcrumbPage>ユーザー一覧</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -61,11 +61,11 @@ export const Deep: Story = {
     <Breadcrumb {...args}>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink>
+          <BreadcrumbLink href="#">ホーム</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">メンバー一覧</BreadcrumbLink>
+          <BreadcrumbLink href="#">ユーザー一覧</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -82,7 +82,7 @@ export const WithEllipsis: Story = {
     <Breadcrumb {...args}>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink>
+          <BreadcrumbLink href="#">ホーム</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -103,13 +103,13 @@ export const CustomSeparator: Story = {
     <Breadcrumb {...args}>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink>
+          <BreadcrumbLink href="#">ホーム</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator>
           <Slash />
         </BreadcrumbSeparator>
         <BreadcrumbItem>
-          <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+          <BreadcrumbPage>ユーザー一覧</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

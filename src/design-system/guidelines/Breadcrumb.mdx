@@ -23,7 +23,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   ng={[
     <>今いるページをリンクにしない → 押しても同じページで、現在地も示せない。</>,
     <>階層の無いページ（トップページ）に置かない → 2 階層目以降だけに使う。</>,
-    <>パンくずとページタイトルで名前を変えない（「参加者一覧」と「メンバー一覧」など） → 同じページを 2 つの名前で呼ばない。</>,
+    <>パンくずとページタイトルで名前を変えない（「ユーザー一覧」と「メンバー一覧」など） → 同じページを 2 つの名前で呼ばない。</>,
   ]}
 />
 
@@ -34,9 +34,9 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
     example: (
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbItem><BreadcrumbLink href="#">ホーム</BreadcrumbLink></BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem><BreadcrumbPage>メンバー一覧</BreadcrumbPage></BreadcrumbItem>
+          <BreadcrumbItem><BreadcrumbPage>ユーザー一覧</BreadcrumbPage></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
     ),
@@ -46,9 +46,9 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
     example: (
       <Breadcrumb aria-label="パンくずリスト（悪い例）">
         <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbItem><BreadcrumbLink href="#">ホーム</BreadcrumbLink></BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem><BreadcrumbLink href="#">メンバー一覧</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbItem><BreadcrumbLink href="#">ユーザー一覧</BreadcrumbLink></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
     ),

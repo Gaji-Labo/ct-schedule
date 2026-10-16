@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Headphones } from "lucide-react";
+import { Copy } from "lucide-react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
@@ -18,7 +18,7 @@ const meta = {
           "ホバー・フォーカス時に短い補足を出すポップアップ。",
           "",
           "**使い方**",
-          "- アイコンだけのボタンに、何をするボタンかを示すために使う（例: ハドルを開始）",
+          "- アイコンだけのボタンに、何をするボタンかを示すために使う（例: リンクをコピー）",
           "- トリガーは `Button` などフォーカスできる要素にし、`TooltipTrigger asChild` で包む",
           "- 文言は短く1行で。操作に必須の情報は Tooltip に入れない（タッチ端末では見えない）",
           "",
@@ -37,13 +37,13 @@ const meta = {
   },
   args: {
     side: "top",
-    children: "ハドルを開始",
+    children: "リンクをコピー",
   },
   render: (args) => (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="ハドルを開始">
-          <Headphones />
+        <Button variant="outline" size="icon" aria-label="リンクをコピー">
+          <Copy />
         </Button>
       </TooltipTrigger>
       <TooltipContent {...args} />
@@ -74,7 +74,7 @@ export const ShouldShowOnHover: Story = {
   tags: ["!dev", "!autodocs"],
   play: async ({ canvasElement, step }) => {
     const body = within(canvasElement.ownerDocument.body);
-    const trigger = await body.findByRole("button", { name: "ハドルを開始" });
+    const trigger = await body.findByRole("button", { name: "リンクをコピー" });
 
     await step("ホバーする", async () => {
       await userEvent.hover(trigger);

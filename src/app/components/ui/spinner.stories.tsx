@@ -59,7 +59,7 @@ export const Loading: Story = {
   render: (args) => (
     <div className="flex w-80 flex-col items-center gap-2 rounded-lg border p-8">
       <Spinner {...args} />
-      <p className="text-sm text-muted-foreground">組み合わせを読み込んでいます</p>
+      <p className="text-sm text-muted-foreground">データを読み込んでいます</p>
     </div>
   ),
 };

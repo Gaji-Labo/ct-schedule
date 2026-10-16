@@ -67,16 +67,16 @@ export const WithBreadcrumb: Story = {
   render: () => (
     <PageLayout>
       <PageHeader
-        title="メンバー一覧"
+        title="一覧ページ"
         breadcrumb={
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#">CT組み合わせ表</BreadcrumbLink>
+                <BreadcrumbLink href="#">ホーム</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>メンバー一覧</BreadcrumbPage>
+                <BreadcrumbPage>一覧ページ</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

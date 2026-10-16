@@ -19,7 +19,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   ok={[
     <>決まった選択肢から 1 つだけ選ぶ入力に使う。</>,
     <>見えるラベル（<code>Label</code>）を付け、<code>SelectTrigger</code> の <code>id</code> と結ぶ。</>,
-    <>未選択のときは、何を選ぶ欄かが分かる placeholder を出す（「uチャンネルを選択」）。</>,
+    <>未選択のときは、何を選ぶ欄かが分かる placeholder を出す（「部署を選択」）。</>,
     <>選択肢が多いときは <code>SelectGroup</code> + <code>SelectLabel</code> で分類する。</>,
   ]}
   ng={[
@@ -38,10 +38,10 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
     example: (
       <div className="grid w-56 gap-2">
         <Label htmlFor="gl-sort">並び順</Label>
-        <Select defaultValue="number">
+        <Select defaultValue="updatedAt">
           <SelectTrigger id="gl-sort"><SelectValue /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="number">社員番号順</SelectItem>
+            <SelectItem value="updatedAt">更新日順</SelectItem>
             <SelectItem value="name">名前順</SelectItem>
           </SelectContent>
         </Select>
@@ -52,7 +52,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   dont={{
     example: (
       <div className="grid gap-2">
-        <div className="flex items-center gap-2"><Checkbox id="gl-s1" defaultChecked /><Label htmlFor="gl-s1">社員番号順</Label></div>
+        <div className="flex items-center gap-2"><Checkbox id="gl-s1" defaultChecked /><Label htmlFor="gl-s1">更新日順</Label></div>
         <div className="flex items-center gap-2"><Checkbox id="gl-s2" /><Label htmlFor="gl-s2">名前順</Label></div>
       </div>
     ),

@@ -29,8 +29,8 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   good={{
     example: (
       <div className="grid w-64 gap-2">
-        <Label htmlFor="gl-emp">社員番号</Label>
-        <Input id="gl-emp" type="number" placeholder="例: 1234" />
+        <Label htmlFor="gl-email">メールアドレス</Label>
+        <Input id="gl-email" type="email" placeholder="例: name@example.com" />
       </div>
     ),
     caption: "見えるラベルを結び付け、placeholder は入力例にとどめる。",
@@ -38,7 +38,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   dont={{
     example: (
       <div className="w-64">
-        <Input type="number" placeholder="社員番号" />
+        <Input type="email" placeholder="メールアドレス" />
       </div>
     ),
     caption: "placeholder をラベル代わりにすると、入力した瞬間に何の欄か分からなくなる。",

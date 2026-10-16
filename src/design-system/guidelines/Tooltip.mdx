@@ -1,5 +1,5 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { Headphones } from "lucide-react";
+import { Copy } from "lucide-react";
 import { Button } from "../../app/components/ui/button";
 import * as TooltipStories from "../../app/components/ui/tooltip.stories";
 import { DoDont, UsageRules } from "./GuidelineBlocks";
@@ -14,7 +14,7 @@ import { MockTooltip } from "./GuidelineMocks";
 <UsageRules
   ok={[
     <>フォーカスできる要素（<code>Button</code> / リンク）をトリガーにし、<code>TooltipTrigger asChild</code> で包む。</>,
-    <>1 行の短い補足にとどめる（「ハドルを開始」）。</>,
+    <>1 行の短い補足にとどめる（「リンクをコピー」）。</>,
     <>アイコンだけのボタンの名前を目に見える形で補う。ボタン自体にも <code>aria-label</code> を付ける。</>,
   ]}
   ng={[
@@ -30,8 +30,8 @@ import { MockTooltip } from "./GuidelineMocks";
   good={{
     example: (
       <MockTooltip
-        content="ハドルを開始"
-        trigger={<Button variant="outline" size="icon" aria-label="ハドルを開始"><Headphones /></Button>}
+        content="リンクをコピー"
+        trigger={<Button variant="outline" size="icon" aria-label="リンクをコピー"><Copy /></Button>}
       />
     ),
     caption: "何をするボタンかを短く補う。ボタン自体にも同じ名前（aria-label）を付ける。",
@@ -39,8 +39,8 @@ import { MockTooltip } from "./GuidelineMocks";
   dont={{
     example: (
       <MockTooltip
-        content="uチャンネルが未設定のため使えません。プロフィールから設定してください"
-        trigger={<Button variant="outline" size="icon" aria-label="ハドルを開始"><Headphones /></Button>}
+        content="閲覧権限のため使えません。編集権限を管理者に依頼してください"
+        trigger={<Button variant="outline" size="icon" aria-label="リンクをコピー"><Copy /></Button>}
       />
     ),
     caption: "使えない理由や設定方法は、ホバーしないと見えない場所に置かない。画面に文字で出す。",

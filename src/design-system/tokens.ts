@@ -76,7 +76,7 @@ export const semanticColors: ColorTokenGroup[] = [
         tailwind: "text-destructive-foreground",
         usage: "destructive 上のテキスト",
       },
-      { name: "success", tailwind: "bg-success", usage: "成功・有効状態 (参加中インジケーターなど)" },
+      { name: "success", tailwind: "bg-success", usage: "成功・有効状態 (有効を示すインジケーターなど)" },
       { name: "success-foreground", tailwind: "text-success-foreground", usage: "success 上のテキスト" },
     ],
   },
@@ -99,8 +99,8 @@ export const semanticColors: ColorTokenGroup[] = [
     ],
   },
   {
-    title: "Domain (CTスケジュール)",
-    description: "このアプリ固有の意味を持つ色。gray-* を直接書かずにこちらを使う",
+    title: "アプリ固有：CT スケジュール",
+    description: "CT スケジュールだけで使う色。汎用の部品（UI・Patterns）やほかのアプリからは使わない。ほかのアプリで同じような色が要るときは、そのアプリ用のトークンを追加する",
     tokens: [
       { name: "status-holiday", tailwind: "bg-status-holiday", usage: "祝日の週のカード背景" },
       {
@@ -211,7 +211,7 @@ export const fontFamilies = [
 ];
 
 /**
- * タイポグラフィ。Tailwind 既定スケールのうち、このアプリで使う組み合わせ。
+ * タイポグラフィ。Tailwind 既定スケールのうち、このデザインシステムで使う組み合わせ。
  * 行間は和文に合わせて役割ごとに決める（見出し 1.375 / 文章 1.625 / 1行の部品は各部品の既定）。
  */
 export const typography = [
@@ -223,7 +223,7 @@ export const typography = [
   { tailwind: "text-xs", usage: "番号・バッジ・注釈", lineHeight: "16px（text-xs の既定）" },
 ];
 
-/** 余白。Tailwind 既定の 4px グリッドのうち、このアプリで使うもの */
+/** 余白。Tailwind 既定の 4px グリッドのうち、このデザインシステムで使うもの */
 export const spacing = [
   { tailwind: "1", px: 4, usage: "アイコンとテキストの最小間隔" },
   { tailwind: "2", px: 8, usage: "要素内の間隔 (gap-2)・パンくずとページタイトルの間" },
@@ -247,7 +247,7 @@ export const pageLayout = [
 /** ブレイクポイント。Tailwind の既定値をそのまま使う */
 export const breakpoints = [
   { name: "sm", px: 640, usage: "ダイアログが角丸・ボタン横並びになる" },
-  { name: "md", px: 768, usage: "ページ余白がスマホ用から PC 用に変わる（このアプリの主な切り替え点）" },
+  { name: "md", px: 768, usage: "ページ余白がスマホ用から PC 用に変わる（主な切り替え点）" },
   { name: "lg", px: 1024, usage: "—" },
   { name: "xl", px: 1280, usage: "max-w-7xl と同じ幅。これより広い画面では中央寄せになる" },
 ];
