@@ -39,6 +39,8 @@
 | --- | --- |
 | トークン定義 | `src/app/globals.css`, `tailwind.config.ts` |
 | トークンの用途一覧 | `src/design-system/tokens.ts` |
+| フォントの読み込み | `src/lib/fonts.ts` |
+| ページの骨組み | `src/app/components/PageLayout.tsx` |
 | コンポーネントと Story | `src/app/components/**`、`bun run storybook` |
 | lint ルール | `eslint/design-system-plugin.mjs` |
 | Gaji-Labo の文化 | [Culture Deck](https://speakerdeck.com/gaji/gaji-labo-culture-deck)、[Gaji-Labo スタイル](https://speakerdeck.com/gaji/gaji-labo-style) |

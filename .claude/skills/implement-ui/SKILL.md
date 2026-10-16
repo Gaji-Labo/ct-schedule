@@ -33,8 +33,8 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 
 ## 3. 組み立てる
 
-- 色・余白・角丸・文字は `docs/design/rules.md` の表から選ぶ。任意値・パレット色は使わない
-- ページの骨組みは既存ページにそろえる（`SiteHeader` → `main` の中にパンくず・見出し・本文）
+- 骨組みは `PageLayout` / `PageHeader` / `PageSection` で作る（`docs/design/rules.md`「レイアウト」）。`<main>` の余白・最大幅・間隔を画面ごとに書かない
+- 色・余白・角丸・文字・階層は `docs/design/rules.md` の表から選ぶ。任意値・パレット色は使わない
 
 ## 4. Story を書く
 
