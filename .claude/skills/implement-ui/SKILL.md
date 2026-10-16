@@ -1,6 +1,6 @@
 ---
 name: implement-ui
-description: 社内アプリ（CT スケジュール）の画面・コンポーネント・Story を実装・変更するときの手順と検証。新しい画面を作る、既存画面を作り直す、部品や Story を追加する、見た目を直すときに使う。「画面を作って」「ページを追加」「Story を書いて」「UI を直して」など。
+description: 社内アプリの画面・コンポーネント・Story を実装・変更するときの手順と検証。新しい画面を作る、既存画面を作り直す、部品や Story を追加する、見た目を直すときに使う。「画面を作って」「ページを追加」「Story を書いて」「UI を直して」など。
 ---
 
 # UI を実装する
@@ -10,6 +10,8 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 依頼内容: $ARGUMENTS
 
 ## 0. 最初に読む
+
+このリポジトリのデザインシステムは社内アプリ共通のもの。まず依頼文から、どのアプリの画面・部品を作るのか（対象アプリ）を特定する。アプリごとの文脈は `docs/design/apps/<アプリ名>.md` にある。依頼文から特定できなければ、推測として記録する（`scope: "app"`）。
 
 1. `docs/design/` を読む。`principles.md`（文脈と原則）、`apps/<アプリ名>.md`（アプリ固有の文脈）、`rules.md`（色・余白・文字・部品・禁止事項）は全部
 2. 使えそうな部品の Story と docs（`parameters.docs.description`）、ガイドライン（`src/design-system/guidelines/*.mdx`）を読む
@@ -27,6 +29,7 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 - `docs/design/rules.md`「コンポーネント」の表から選ぶ。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
 - 足りない部品があれば、**画面より先に**部品と Story を作る（`src/app/components/`）。画面の中だけで使う独自カード・独自ラベルは作らない
+  - 部品の Story の `title` は、どのアプリでも使える部品なら `UI/<部品名>`、そのアプリ専用なら `Apps/<アプリ名>/Components/<部品名>`（`<アプリ名>` は `docs/design/apps/<アプリ名>.md`「Storybook での名前」）。迷ったら「別の社内アプリでもそのまま使えるか」で決める
 
 ## 3. 組み立てる
 
@@ -40,13 +43,13 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 - 置き場所: `src/design-system/drafts/<画面名>Page.stories.tsx`。**`src/design-system/pages/` には書かない**（`pages/` は人が確定させた正式な画面。下の「Drafts から Pages に移す」を参照）
   - 既存の画面を作り直すときも、`drafts/` に同じ名前のファイルを新しく作る。`pages/` の元のファイルは変えない
   - 部品の props が変わって `pages/` の Story が型エラーになる、のような追従の修正だけは `pages/` を直接直してよい
-- `title: "Drafts/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
+- `title: "Drafts/<アプリ名>/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
 - `parameters.docs.description.component` に、何の画面か・本番のどのパスか・どこから来るかを書く
-- モックデータは `src/design-system/mocks/ct.ts` を使う。足りなければそこに足す
+- モックデータは `src/design-system/mocks/` のアプリ用ファイル（`docs/design/apps/<アプリ名>.md` に書いてある）を使う。足りなければそこに足す
 - DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を作り、コメントで「本物は ○○」と書く
   - 置き場所は、その画面の Story ファイルの中。2画面以上で同じ代用品が必要になったときだけ `src/design-system/mocks/` に切り出し、使う側の Story からはそこを import する
   - 代用品は本物と同じ部品・variant で組む（パレット色の直書きなど、本物に残っている既知の違反は写さない）
-- 画面間のリンクは `href="/?path=/story/<drafts か pages>-<画面名>--default"` と `target="_top"` で Storybook 内を移動させる。リンク先も今回 `drafts/` に作るなら `drafts-`、すでに `pages/` にあるなら `pages-`
+- 画面間のリンクは `href="/?path=/story/<Story の ID>"` と `target="_top"` で Storybook 内を移動させる。ID は `title` を小文字にして `/` と空白を `-` に変え、`--default` を付けたもの。リンク先も今回 `drafts/` に作るなら `drafts-<アプリ名>-<画面名>--default`、すでに `pages/` にあるなら `apps-<アプリ名>-pages-<画面名>--default`（例: `apps-ctスケジュール-pages-メンバー一覧--default`）
 
 ### Drafts から Pages に移す
 
@@ -55,7 +58,7 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 指示されたら次のように移す。
 
 1. `git mv src/design-system/drafts/<画面名>Page.stories.tsx src/design-system/pages/`（作り直しなら `pages/` の元のファイルを置き換える）
-2. `title` を `Drafts/…` から `Pages/…` に、画面間リンクの `drafts-` を `pages-` に変える
+2. `title` を `Drafts/<アプリ名>/…` から `Apps/<アプリ名>/Pages/…` に、画面間リンクの `drafts-<アプリ名>-` を `apps-<アプリ名>-pages-` に変える
 3. `drafts/` に Story 以外のファイル（代用品など）を置いていたら、Story の中か `src/design-system/mocks/` に移し、その画面の分は `drafts/` に残さない
 4. `bun run verify:ui` を通す
 
@@ -67,7 +70,7 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 - 通常 / データ0件 / 長い名前・多い件数 / 読み込み中・エラー（あれば）
 - ログイン中 / 未ログイン で表示が変わるなら両方
-- CT 固有: 祝日の週、参加人数が奇数（お休みあり）、今週のカード
+- アプリ固有の状態: `docs/design/apps/<アプリ名>.md`「Story で用意する状態」
 
 各 Story には、どんな状態かを1行の JSDoc コメントで書く。
 
@@ -75,7 +78,7 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 
 `Default` は、**本番で主な利用者がいちばんよく目にする状態**にする。
 
-- データは本番に近い件数にする（例: CT組み合わせ表は本番と同じ20人）
+- データは本番に近い件数にする（件数は `docs/design/apps/<アプリ名>.md`「Story で用意する状態」）
 - ログインで表示が変わる画面は、主な利用者がログインして使うならログイン中を `Default` にし、未ログインは別の Story（`SignedOut`）にする
 - 誰が・どの状態で使うかは `docs/design/apps/<アプリ名>.md`「ユーザーと利用シーン」から決める。書かれておらず判断できなければ推測として記録する（`scope: "app"`）
 - `Default` の JSDoc には、どの状態か（例: 「ログイン中。各行の右端に削除ボタンがある」）を書く
@@ -83,7 +86,7 @@ description: 社内アプリ（CT スケジュール）の画面・コンポー�
 ## 5. 検証する
 
 ```bash
-bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド
+bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド（MDX のドキュメントも含む）
 ```
 
 - 新規・変更したコードは **lint のエラー0件・警告0件**
@@ -101,7 +104,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 - [ ] ライト・ダーク両方で崩れない（ツールバーのテーマ切替）
 - [ ] Accessibility パネルに違反がない
 - [ ] 長いテキストであふれない・レイアウトが崩れない
-- [ ] 必要な状態（0件・エラー・お休み・祝日など）が抜けていない
+- [ ] 必要な状態（0件・エラー・アプリ固有の状態）が抜けていない
 
 **ブラウザを操作できず、上の項目を自分で確かめられなかったときは「通過」と書かない。** report.json の `verification` では `result: "unchecked"` にし、最終報告で「人が確かめる必要がある項目」として挙げる。lint・test・ビルドが通ったことは、見た目を確かめたことの代わりにならない。
 

@@ -33,7 +33,7 @@ if [ "$kind" = reproduce ]; then
   done
 fi
 
-# 生成された画面を、このリポジトリの Storybook で正解 (Pages/) と並べて見られるようにする。
+# 生成された画面を、このリポジトリの Storybook で正解 (Apps/CTスケジュール/Pages/) と並べて見られるようにする。
 # src/design-system/drafts/experiments/ は git 管理外 (記録は上の files/ と generated.patch に残る)
 if [ -d src/design-system/drafts ]; then
   view="$repo/src/design-system/drafts/experiments/$kind-$run"

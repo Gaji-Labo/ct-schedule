@@ -99,8 +99,8 @@ export const semanticColors: ColorTokenGroup[] = [
     ],
   },
   {
-    title: "Domain (CTスケジュール)",
-    description: "このアプリ固有の意味を持つ色。gray-* を直接書かずにこちらを使う",
+    title: "Apps / CTスケジュール",
+    description: "CT スケジュール固有の意味を持つ色。ほかのアプリでは使わない。CT スケジュールの画面では gray-* を直接書かずにこちらを使う",
     tokens: [
       { name: "status-holiday", tailwind: "bg-status-holiday", usage: "祝日の週のカード背景" },
       {

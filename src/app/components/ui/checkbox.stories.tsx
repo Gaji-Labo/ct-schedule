@@ -29,14 +29,14 @@ const meta = {
     defaultChecked: { control: "boolean" },
   },
   args: {
-    id: "participate",
+    id: "notify",
     disabled: false,
     onCheckedChange: fn(),
   },
   render: (args) => (
     <div className="flex items-center gap-2">
       <Checkbox {...args} />
-      <Label htmlFor={args.id}>CTに参加する</Label>
+      <Label htmlFor={args.id}>Slack で通知を受け取る</Label>
     </div>
   ),
 } satisfies Meta<typeof Checkbox>;

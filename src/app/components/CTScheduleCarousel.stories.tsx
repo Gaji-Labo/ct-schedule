@@ -4,7 +4,7 @@ import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 import { CTScheduleCarousel } from "./CTScheduleCarousel";
 
 const meta = {
-  title: "Domain/CTScheduleCarousel",
+  title: "Apps/CTスケジュール/Components/CTScheduleCarousel",
   component: CTScheduleCarousel,
   tags: ["autodocs"],
   parameters: {

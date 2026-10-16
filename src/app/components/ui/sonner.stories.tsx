@@ -20,9 +20,9 @@ const meta = {
           "画面からは `import { toast } from \"sonner\"` で呼び出す。",
           "",
           "**使い分け**",
-          "- `toast.success`: 保存・追加・削除などが完了した（例: 「山田 を削除しました」）",
-          "- `toast.error`: 失敗した。何が失敗したかを書く（例: 「メンバーの削除に失敗しました」）",
-          "- `toast.warning`: 注意（例: 「uチャンネルが未設定のため、ハドルを開始できません」）",
+          "- `toast.success`: 保存・追加・削除などが完了した（例: 「報告書.pdf を削除しました」）",
+          "- `toast.error`: 失敗した。何が失敗したかを書く（例: 「ファイルの削除に失敗しました」）",
+          "- `toast.warning`: 注意（例: 「通知先が未設定のため、通知を送れません」）",
           "- `toast.info`: 補足のお知らせ",
           "- `toast`: 色の意味を持たない通知。`description` で補足を付けられる",
           "",
@@ -45,29 +45,29 @@ const meta = {
   },
   render: (args) => (
     <div className="flex min-h-96 flex-wrap items-center justify-center gap-2">
-      <Button variant="outline" onClick={() => toast.success("山田 を削除しました")}>
+      <Button variant="outline" onClick={() => toast.success("報告書.pdf を削除しました")}>
         成功
       </Button>
-      <Button variant="outline" onClick={() => toast.error("メンバーの削除に失敗しました")}>
+      <Button variant="outline" onClick={() => toast.error("ファイルの削除に失敗しました")}>
         失敗
       </Button>
       <Button
         variant="outline"
-        onClick={() => toast.warning("uチャンネルが未設定のため、ハドルを開始できません")}
+        onClick={() => toast.warning("通知先が未設定のため、通知を送れません")}
       >
         注意
       </Button>
       <Button
         variant="outline"
-        onClick={() => toast.info("次回の CT は祝日のためお休みです")}
+        onClick={() => toast.info("10月12日（月）はメンテナンスのため使えません")}
       >
         情報
       </Button>
       <Button
         variant="outline"
         onClick={() =>
-          toast("今週の組み合わせを更新しました", {
-            description: "10月13日（月）の CT",
+          toast("設定を更新しました", {
+            description: "10月13日（月）から反映されます",
           })
         }
       >
@@ -94,7 +94,7 @@ export const ShouldShowToast: Story = {
 
     await step("成功の toast を出す", async () => {
       await userEvent.click(await body.findByRole("button", { name: "成功" }));
-      await expect(await body.findByText("山田 を削除しました")).toBeInTheDocument();
+      await expect(await body.findByText("報告書.pdf を削除しました")).toBeInTheDocument();
     });
 
     await step("続けて出すと積み重なる", async () => {

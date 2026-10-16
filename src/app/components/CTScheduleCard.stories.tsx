@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
+import { repoUrl } from "@/src/design-system/repo";
 import type { CT } from "@/src/utils/member";
 import { CTScheduleCard } from "./CTScheduleCard";
 
@@ -7,7 +8,7 @@ const regularWeek = createSchedules(createMembers(6), 12).find((s) => !s.isHolid
 const oddWeek = createSchedules(createMembers(5), 12).find((s) => !s.isHoliday) as CT;
 
 const meta = {
-  title: "Domain/CTScheduleCard",
+  title: "Apps/CTスケジュール/Components/CTScheduleCard",
   component: CTScheduleCard,
   tags: ["autodocs"],
   parameters: {
@@ -21,7 +22,7 @@ const meta = {
           "- 祝日の週: 組み合わせは無く、祝日名のラベルだけを出す",
           "- 参加人数が奇数: 1人が「お休み」になる",
           "",
-          "※ 現状はパレット色（gray-*）の直書きが残っている（[eslint.config.mjs](https://github.com/Gaji-Labo/ct-schedule/blob/main/eslint.config.mjs) の既知の違反リスト）。",
+          `※ 現状はパレット色（gray-*）の直書きが残っている（[eslint.config.mjs](${repoUrl("eslint.config.mjs")}) の既知の違反リスト）。`,
           "Semantic トークン（`border-highlight-current` / `bg-status-holiday` / `bg-status-rest` など）への置き換え前後を、この Story で確認する。",
         ].join("\n"),
       },

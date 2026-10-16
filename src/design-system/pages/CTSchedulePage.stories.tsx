@@ -33,10 +33,10 @@ const CTSchedulePage = ({ participants, weeks }: PageProps) => {
           <section>
             <p>
               現在のメンバー：
-              {/* Storybook 内では「Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
+              {/* Storybook 内では「Apps/CTスケジュール/Pages/メンバー一覧」へ移動する (本物は next/link で /member へ) */}
               {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- Storybook の画面間移動 (next/link は使えない) */}
               <a
-                href="/?path=/story/pages-メンバー一覧--default"
+                href="/?path=/story/apps-ctスケジュール-pages-メンバー一覧--default"
                 target="_top"
                 className="underline"
               >
@@ -54,7 +54,7 @@ const CTSchedulePage = ({ participants, weeks }: PageProps) => {
 };
 
 const meta = {
-  title: "Pages/CT組み合わせ表",
+  title: "Apps/CTスケジュール/Pages/CT組み合わせ表",
   component: CTSchedulePage,
   parameters: {
     layout: "fullscreen",

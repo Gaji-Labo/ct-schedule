@@ -13,8 +13,8 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
 
 <UsageRules
   ok={[
-    <>状態・分類を 1〜2 語で示す（「参加中」「未設定」「管理者」など）。</>,
-    <>variant は意味で選ぶ（参加中・完了 = <code>success</code>、注意 = <code>warning</code>、お知らせ = <code>info</code>、エラー = <code>destructive</code>、控えめな補足 = <code>secondary</code> / <code>outline</code>）。</>,
+    <>状態・分類を 1〜2 語で示す（「有効」「未設定」「管理者」など）。</>,
+    <>variant は意味で選ぶ（有効・完了 = <code>success</code>、注意 = <code>warning</code>、お知らせ = <code>info</code>、エラー = <code>destructive</code>、控えめな補足 = <code>secondary</code> / <code>outline</code>）。</>,
     <>状態の違いは<strong>文言</strong>で伝える。色は補助にとどめる。</>,
   ]}
   ng={[
@@ -22,7 +22,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
     <>文言を同じにして、違いを色だけで示さない → 色を区別できない人に伝わらない。</>,
     <>長い文を入れない → 1〜2 語に収める。説明が要るなら本文に書く。</>,
     <>× を付けて「外せる」ように見せない → 状態は外せないもの。外せる値を並べる部品は別に用意する。</>,
-    <><code>className</code> で色を上書きしない（<code>bg-gray-400</code> など） → 足りない色は variant を追加する（例: CT の「お休み」「祝日」用）。</>,
+    <><code>className</code> で色を上書きしない（<code>bg-gray-400</code> など） → 足りない色は variant を追加する（例: アプリ固有の状態ラベル用）。</>,
   ]}
 />
 
@@ -32,7 +32,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   good={{
     example: (
       <div className="flex gap-2">
-        <Badge variant="success">参加中</Badge>
+        <Badge variant="success">有効</Badge>
         <Badge variant="warning">未設定</Badge>
       </div>
     ),

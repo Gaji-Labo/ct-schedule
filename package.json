@@ -10,7 +10,7 @@
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "verify:ui": "bun run lint && bun test && storybook build --test --quiet",
+    "verify:ui": "bun run lint && bun test && storybook build --quiet",
     "report:ui": "bun .claude/skills/implement-ui/report.ts"
   },
   "dependencies": {

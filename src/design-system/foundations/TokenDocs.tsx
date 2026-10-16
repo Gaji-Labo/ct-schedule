@@ -103,7 +103,7 @@ export const TypographyList = () => (
   <div className="flex flex-col divide-y rounded-lg border">
     {typography.map((item) => (
       <div key={item.tailwind} className="flex flex-col gap-1 p-4">
-        <span className={item.tailwind}>CTスケジュール 2026/10/05</span>
+        <span className={item.tailwind}>社内アプリ 2026/10/05</span>
         <div className="flex flex-wrap items-center gap-2">
           <Code>{item.tailwind}</Code>
           <span className="text-xs text-muted-foreground">{item.usage}</span>
