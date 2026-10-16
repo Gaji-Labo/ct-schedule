@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Plus, Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { fn } from "storybook/test";
 import { Button } from "./button";
 
@@ -14,7 +14,7 @@ const meta = {
           "ユーザーの操作を受け付けるボタン。`<button>` を自作せず、必ずこのコンポーネントを使う。",
           "",
           "**variant の選び方**",
-          "- `default`: 画面の主要アクション（保存・追加など）。1画面・1ダイアログに1つが目安",
+          "- `default`: 画面の主要アクション（保存など）。1画面・1ダイアログに1つが目安",
           "- `outline`: 主要アクションと並ぶ副次アクション（キャンセルなど）",
           "- `secondary`: 目立たせたくないが面として見せたいアクション",
           "- `ghost`: ツールバーやヘッダー内のアイコンボタン",
@@ -49,7 +49,7 @@ const meta = {
     children: { control: "text" },
   },
   args: {
-    children: "メンバーを追加",
+    children: "保存",
     onClick: fn(),
   },
 } satisfies Meta<typeof Button>;
@@ -79,8 +79,8 @@ export const Sizes: Story = {
       <Button {...args} size="sm">sm</Button>
       <Button {...args} size="default">default</Button>
       <Button {...args} size="lg">lg</Button>
-      <Button {...args} size="icon" aria-label="追加">
-        <Plus />
+      <Button {...args} size="icon" aria-label="編集">
+        <Pencil />
       </Button>
     </div>
   ),
@@ -91,8 +91,8 @@ export const WithIcon: Story = {
   args: {
     children: (
       <>
-        <Plus />
-        メンバーを追加
+        <Pencil />
+        プロフィールを編集
       </>
     ),
   },
@@ -119,6 +119,6 @@ export const AsLink: Story = {
   args: {
     asChild: true,
     variant: "outline",
-    children: <a href="#">メンバー管理へ</a>,
+    children: <a href="#">ユーザー管理へ</a>,
   },
 };

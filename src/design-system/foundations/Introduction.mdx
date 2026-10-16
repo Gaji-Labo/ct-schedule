@@ -2,19 +2,19 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 <Meta title="Foundations/Introduction" />
 
-# CTスケジュール デザインシステム
+# Gaji-Labo 社内アプリ デザインシステム
 
-CTスケジュールの UI を組み立てるための部品とルールをまとめたカタログです。
+Gaji-Labo の社内アプリの UI を組み立てるための部品とルールをまとめたカタログです。
 人と AI のどちらが新しい画面を実装する場合も、ここにあるトークンとコンポーネントだけで組み立てることを目指します。
 
 ## 構成
 
 | レイヤー | 置き場所 | 内容 |
 | --- | --- | --- |
-| Foundations | `src/app/globals.css` / `tailwind.config.ts` / `src/design-system/tokens.ts` | 色・タイポグラフィ・余白・角丸・影 |
+| Foundations | `src/app/globals.css` / `tailwind.config.ts` / `src/design-system/tokens.ts` / `src/lib/fonts.ts` | 色・タイポグラフィ（フォント・行間）・レイアウト（骨組み・ブレイクポイント・余白・角丸）・階層表現 |
 | UI | `src/app/components/ui/` | shadcn/ui ベースの汎用コンポーネント |
-| Domain | `src/app/components/` | CTスケジュール固有のコンポーネント (予定) |
-| Patterns | — | 画面レイアウトの型 (予定) |
+| Domain | `src/app/components/` | アプリ固有のコンポーネント（Storybook の Domain・Pages） |
+| Patterns | `src/app/components/PageLayout.tsx` | ページの骨組み (`PageLayout` / `PageHeader` / `PageSection`) |
 
 ## 基本ルール
 

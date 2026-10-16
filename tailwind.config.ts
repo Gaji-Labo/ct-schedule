@@ -14,6 +14,22 @@ export default {
   safelist: ["dark"],
   theme: {
   	extend: {
+  		// 欧文は Geist、和文は Noto Sans JP。読み込めないときは OS の和文ゴシックに落とす
+  		// (変数は src/lib/fonts.ts で定義。DESIGN.md「タイポグラフィ」)
+  		fontFamily: {
+  			sans: [
+  				'var(--font-geist-sans, ui-sans-serif)',
+  				'var(--font-noto-sans-jp, "Hiragino Sans")',
+  				'"Hiragino Kaku Gothic ProN"',
+  				'"Yu Gothic UI"',
+  				'Meiryo',
+  				'sans-serif'
+  			],
+  			mono: [
+  				'var(--font-geist-mono, ui-monospace)',
+  				'monospace'
+  			]
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -58,6 +74,66 @@ export default {
   					DEFAULT: 'hsl(var(--status-rest))',
   					foreground: 'hsl(var(--status-rest-foreground))'
   				}
+  			},
+  			avatar: {
+  				'1': {
+  					DEFAULT: 'hsl(var(--avatar-1))',
+  					foreground: 'hsl(var(--avatar-1-foreground))'
+  				},
+  				'2': {
+  					DEFAULT: 'hsl(var(--avatar-2))',
+  					foreground: 'hsl(var(--avatar-2-foreground))'
+  				},
+  				'3': {
+  					DEFAULT: 'hsl(var(--avatar-3))',
+  					foreground: 'hsl(var(--avatar-3-foreground))'
+  				},
+  				'4': {
+  					DEFAULT: 'hsl(var(--avatar-4))',
+  					foreground: 'hsl(var(--avatar-4-foreground))'
+  				},
+  				'5': {
+  					DEFAULT: 'hsl(var(--avatar-5))',
+  					foreground: 'hsl(var(--avatar-5-foreground))'
+  				},
+  				'6': {
+  					DEFAULT: 'hsl(var(--avatar-6))',
+  					foreground: 'hsl(var(--avatar-6-foreground))'
+  				},
+  				'7': {
+  					DEFAULT: 'hsl(var(--avatar-7))',
+  					foreground: 'hsl(var(--avatar-7-foreground))'
+  				},
+  			},
+  			feedback: {
+  				info: {
+  					subtle: 'hsl(var(--feedback-info-subtle))',
+  					foreground: 'hsl(var(--feedback-info-foreground))',
+  					border: 'hsl(var(--feedback-info-border))',
+  					icon: 'hsl(var(--feedback-info-icon))',
+  				},
+  				success: {
+  					subtle: 'hsl(var(--feedback-success-subtle))',
+  					foreground: 'hsl(var(--feedback-success-foreground))',
+  					border: 'hsl(var(--feedback-success-border))',
+  					icon: 'hsl(var(--feedback-success-icon))',
+  				},
+  				warning: {
+  					subtle: 'hsl(var(--feedback-warning-subtle))',
+  					foreground: 'hsl(var(--feedback-warning-foreground))',
+  					border: 'hsl(var(--feedback-warning-border))',
+  					icon: 'hsl(var(--feedback-warning-icon))',
+  				},
+  				destructive: {
+  					subtle: 'hsl(var(--feedback-destructive-subtle))',
+  					foreground: 'hsl(var(--feedback-destructive-foreground))',
+  					border: 'hsl(var(--feedback-destructive-border))',
+  					icon: 'hsl(var(--feedback-destructive-icon))',
+  				},
+  			},
+  			'site-header': {
+  				DEFAULT: 'hsl(var(--site-header))',
+  				foreground: 'hsl(var(--site-header-foreground))'
   			},
   			highlight: {
   				current: 'hsl(var(--highlight-current))'
