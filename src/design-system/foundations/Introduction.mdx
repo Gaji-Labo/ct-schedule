@@ -6,18 +6,16 @@ import { repoUrl } from "../repo";
 # Gaji-Labo 社内アプリ デザインシステム
 
 Gaji-Labo の社内アプリの UI を組み立てるための部品とルールをまとめたカタログです。
-最初の利用例は CT スケジュールで、Apps にはその部品と画面を載せています。
 人と AI のどちらが新しい画面を実装する場合も、ここにあるトークンとコンポーネントだけで組み立てることを目指します。
 
 ## 構成
 
 | サイドバー | 置き場所 | 内容 |
 | --- | --- | --- |
-| Foundations | `src/design-system/foundations/`（値は `src/app/globals.css` / `tailwind.config.ts`、用途は `src/design-system/tokens.ts`） | 色・タイポグラフィ・余白・角丸・影・ロゴ |
-| UI | `src/app/components/ui/*.stories.tsx`、`src/app/components/SiteHeader.stories.tsx` | どのアプリでも使う汎用コンポーネント（shadcn/ui ベースと、社内アプリ共通のヘッダー）。各部品の「ガイドライン」ページ（`src/design-system/guidelines/`）もここに出る |
-| Apps / &lt;アプリ名&gt; / Components | `src/app/components/*.stories.tsx`（`SiteHeader` 以外） | そのアプリ専用のコンポーネント（CT スケジュールの週カード、メンバー一覧の行など） |
-| Apps / &lt;アプリ名&gt; / Pages | `src/design-system/pages/` | 画面全体をモックデータで再現したもの。部品の組み合わせ方の見本（人が確定させた正式な画面） |
-| Drafts / &lt;アプリ名&gt; | `src/design-system/drafts/` | 確認待ちの画面。AI や人が作った画面はまずここに置き、確認して確定したら Apps / &lt;アプリ名&gt; / Pages に移す。`main` には残さない |
+| Foundations | `src/app/globals.css` / `tailwind.config.ts` / `src/design-system/tokens.ts` / `src/lib/fonts.ts` | 色・タイポグラフィ（フォント・行間）・レイアウト（骨組み・ブレイクポイント・余白・角丸）・階層表現 |
+| UI | `src/app/components/ui/` | shadcn/ui ベースの汎用コンポーネント |
+| Domain | `src/app/components/` | アプリ固有のコンポーネント（Storybook の Domain・Pages） |
+| Patterns | `src/app/components/PageLayout.tsx` | ページの骨組み (`PageLayout` / `PageHeader` / `PageSection`) |
 
 ## 基本ルール
 

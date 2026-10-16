@@ -35,10 +35,13 @@ export function createMember(index: number, overrides: Partial<User> = {}): User
   };
 }
 
-/** 参加者 count 人 (+ 不参加 1 人) */
-export function createMembers(count: number): User[] {
+/** 参加者 count 人 + 不参加 nonParticipants 人 (既定 1 人) */
+export function createMembers(count: number, nonParticipants = 1): User[] {
   const members = Array.from({ length: count }, (_, i) => createMember(i));
-  return [...members, createMember(count, { participate: false })];
+  const absent = Array.from({ length: nonParticipants }, (_, i) =>
+    createMember(count + i, { participate: false }),
+  );
+  return [...members, ...absent];
 }
 
 /** 月曜の祝日 (2026〜2027) */

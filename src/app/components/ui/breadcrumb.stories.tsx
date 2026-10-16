@@ -29,7 +29,7 @@ const meta = {
           "- アプリ内のリンクは `BreadcrumbLink asChild` で `next/link` の `Link` を包む",
           "- 区切りは `BreadcrumbSeparator`（既定は「>」のアイコン）",
           "",
-          "**使い分け**: アプリのトップページには付けない。2階層目以降のページに付ける。",
+          "**使い分け**: トップページには付けない。2階層目以降のページに付ける。",
         ].join("\n"),
       },
     },
@@ -42,7 +42,7 @@ const meta = {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>設定</BreadcrumbPage>
+          <BreadcrumbPage>ユーザー一覧</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -52,7 +52,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** 2階層 */
+/** 2階層（このアプリでの使い方） */
 export const Default: Story = {};
 
 /** 3階層以上 */
@@ -65,11 +65,11 @@ export const Deep: Story = {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="#">設定</BreadcrumbLink>
+          <BreadcrumbLink href="#">ユーザー一覧</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>通知</BreadcrumbPage>
+          <BreadcrumbPage>山田</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -90,7 +90,7 @@ export const WithEllipsis: Story = {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>通知</BreadcrumbPage>
+          <BreadcrumbPage>山田</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -109,7 +109,7 @@ export const CustomSeparator: Story = {
           <Slash />
         </BreadcrumbSeparator>
         <BreadcrumbItem>
-          <BreadcrumbPage>設定</BreadcrumbPage>
+          <BreadcrumbPage>ユーザー一覧</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

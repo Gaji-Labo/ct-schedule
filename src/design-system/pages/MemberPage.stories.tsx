@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Trash2 } from "lucide-react";
-import { Fragment } from "react";
-import { MemberListItem } from "@/components/MemberListItem";
-import { SiteHeader } from "@/components/SiteHeader";
+import { MemberGroup } from "@/components/MemberGroup";
+import { PageHeader, PageLayout } from "@/components/PageLayout";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,7 +20,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { createMembers } from "@/src/design-system/mocks/ct";
 import type { User } from "@/app/actions";
 
@@ -40,7 +38,7 @@ const DeleteMemberButton = ({ member }: { member: User }) => (
         <Trash2 />
       </Button>
     </DialogTrigger>
-    <DialogContent className="sm:max-w-md">
+    <DialogContent size="confirm">
       <div className="grid gap-5">
         <DialogHeader>
           <DialogTitle>メンバーを削除</DialogTitle>
@@ -64,8 +62,10 @@ const DeleteMemberButton = ({ member }: { member: User }) => (
 );
 
 type PageProps = {
-  /** 参加者の人数 (このほかに不参加が1人いる) */
+  /** 参加者の人数 */
   participants: number;
+  /** 不参加の人数 (メンバー = 参加者 + 不参加 = 社員全員) */
+  nonParticipants: number;
   /** ログイン中なら各行の右端に削除ボタンが出る (アプリと同じ条件) */
   signedIn: boolean;
 };
@@ -75,14 +75,18 @@ type PageProps = {
  * 一覧の行 (MemberListItem) は本物を使い、ログインボタンと削除ボタンだけ代用品にしている
  * (本物はサーバーアクションで DB に接続するため)。
  */
-const MemberPage = ({ participants, signedIn }: PageProps) => {
-  const members = createMembers(participants);
+const MemberPage = ({ participants, nonParticipants, signedIn }: PageProps) => {
+  const members = createMembers(participants, nonParticipants);
+  const renderAction = signedIn
+    ? // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
+      (member: User) => <DeleteMemberButton member={member} />
+    : undefined;
 
   return (
-    <>
-      <SiteHeader />
-      <main className="mx-auto grid max-w-7xl gap-10 p-10">
-        <div className="grid gap-2">
+    <PageLayout>
+      <PageHeader
+        title="メンバー一覧"
+        breadcrumb={
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -100,30 +104,23 @@ const MemberPage = ({ participants, signedIn }: PageProps) => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="flex items-center justify-between gap-10">
-            <h1 className="text-2xl font-bold">メンバー一覧</h1>
-            {/* 本物は SigninWithSlackButton / UserDropdown */}
-            {signedIn ? null : (
-              <Button variant="outline">Sign in with Slack</Button>
-            )}
-          </div>
-        </div>
-        <section className="grid gap-3">
-          {members.map((member) => (
-            <Fragment key={member.id}>
-              <MemberListItem
-                member={member}
-                action={
-                  // 本物は DeleteMemberDialog (アプリではログイン中だけ表示)
-                  signedIn && <DeleteMemberButton member={member} />
-                }
-              />
-              <Separator />
-            </Fragment>
-          ))}
-        </section>
-      </main>
-    </>
+        }
+        // 本物は SigninWithSlackButton / UserDropdown
+        actions={signedIn ? null : <Button variant="outline">Sign in with Slack</Button>}
+      />
+      <MemberGroup
+        label="参加"
+        members={members.filter((member) => member.participate)}
+        emptyText="CTに参加しているメンバーはいません"
+        renderAction={renderAction}
+      />
+      <MemberGroup
+        label="不参加"
+        members={members.filter((member) => !member.participate)}
+        emptyText="不参加のメンバーはいません"
+        renderAction={renderAction}
+      />
+    </PageLayout>
   );
 };
 
@@ -135,15 +132,17 @@ const meta = {
     docs: {
       description: {
         component:
-          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「現在のメンバー：○人」のリンク先。",
+          "本番（https://ct-schedule.vercel.app/member）のメンバー一覧ページをモックデータで再現した画面。CT組み合わせ表の「メンバー一覧を見る」のリンク先。Slack 連携で登録された社員全員を「参加」「不参加」に分けて並べる。見出しの「参加（○人）」は CT組み合わせ表の「CTの参加者：○人」と同じ数。",
       },
     },
   },
   argTypes: {
     participants: { control: { type: "range", min: 0, max: 30, step: 1 } },
+    nonParticipants: { control: { type: "range", min: 0, max: 30, step: 1 } },
   },
   args: {
     participants: 20,
+    nonParticipants: 15,
     signedIn: true,
   },
 } satisfies Meta<typeof MemberPage>;
@@ -161,5 +160,10 @@ export const SignedOut: Story = {
 
 /** メンバーが少ない */
 export const FewMembers: Story = {
-  args: { participants: 2 },
+  args: { participants: 2, nonParticipants: 1 },
+};
+
+/** 全員が参加している（不参加は0人） */
+export const AllParticipating: Story = {
+  args: { nonParticipants: 0 },
 };

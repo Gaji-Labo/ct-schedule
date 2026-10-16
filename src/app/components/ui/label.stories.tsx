@@ -50,9 +50,9 @@ export const WithInput: Story = {
 export const Disabled: Story = {
   render: (args) => (
     <div className="flex items-center gap-2">
-      <Input id="employeeNumber" disabled className="peer w-40" defaultValue="1234" />
-      <Label {...args} htmlFor="employeeNumber">
-        社員番号
+      <Input id="userId" disabled className="peer w-40" defaultValue="1234" />
+      <Label {...args} htmlFor="userId">
+        ユーザー ID
       </Label>
     </div>
   ),

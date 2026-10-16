@@ -31,14 +31,19 @@ const meta = {
           "",
           "**使い分け**",
           "- 削除など取り消せない操作の確認 → 実行ボタンは `Button variant=\"destructive\"`",
-          "- 短いフォーム（項目の追加・プロフィール編集など）→ 実行ボタンは `Button variant=\"default\"`",
+          "- 数項目だけ入力してもらう短いフォーム（プロフィール編集・設定の変更など）→ 実行ボタンは `Button variant=\"default\"`",
           "- 結果を知らせるだけなら Dialog ではなく `toast` を使う",
           "",
           "**構成のルール**",
           "- `DialogHeader` に `DialogTitle`（必須）と、必要なら `DialogDescription`",
           "- `DialogFooter` は右寄せで「キャンセル（`outline`）→ 実行」の順。キャンセルは `DialogClose asChild` で `Button` を包む",
           "- トリガーも `DialogTrigger asChild` で `Button` を包む（素の `<button>` にしない）",
-          "- 幅は既定（`max-w-lg`）を使う。`sm:max-w-[425px]` のような任意値は使わない",
+          "",
+          "**幅（`DialogContent` の `size`）**",
+          "- 確認ダイアログ（本文とボタン2つだけ）→ `size=\"confirm\"`（448px / `max-w-md`）",
+          "- 入力フォームを載せる → `size=\"default\"`（512px / `max-w-lg`。省略時）",
+          "- `className` で `max-w-*` を上書きしない。`sm:max-w-[425px]` のような任意値も使わない",
+          "- 画面幅が足りないときは画面いっぱいの幅になる",
         ].join("\n"),
       },
     },
@@ -48,14 +53,14 @@ const meta = {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Trash2 />
-          ファイルを削除
+          ユーザーを削除
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent size="confirm">
         <DialogHeader>
-          <DialogTitle>ファイルを削除</DialogTitle>
+          <DialogTitle>ユーザーを削除</DialogTitle>
           <DialogDescription>
-            報告書.pdf を削除しますか？この操作は取り消せません。
+            山田 を削除しますか？この操作は取り消せません。
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -74,10 +79,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** 削除の確認。取り消せない操作は必ず確認を挟む */
+/** 削除の確認。取り消せない操作は必ず確認を挟む。幅は `size="confirm"`（448px） */
 export const Confirm: Story = {};
 
-/** 短いフォームを載せる例（プロフィール編集） */
+/** 短いフォームを載せる例（プロフィール編集）。幅は既定（512px） */
 export const WithForm: Story = {
   render: (args) => (
     <Dialog {...args}>
@@ -88,7 +93,7 @@ export const WithForm: Story = {
         <form className="grid gap-6" onSubmit={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>プロフィール編集</DialogTitle>
-            <DialogDescription>社内アプリのプロフィールに表示される情報です。</DialogDescription>
+            <DialogDescription>ほかのユーザーに表示される情報です。</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-2">
@@ -96,12 +101,12 @@ export const WithForm: Story = {
               <Input id="displayName" defaultValue="山田" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="employeeNumber">社員番号</Label>
-              <Input id="employeeNumber" type="number" defaultValue="1234" />
+              <Label htmlFor="email">メールアドレス</Label>
+              <Input id="email" type="email" defaultValue="yamada@example.com" />
             </div>
             <div className="flex items-center gap-2">
               <Checkbox id="notify" defaultChecked />
-              <Label htmlFor="notify">Slack で通知を受け取る</Label>
+              <Label htmlFor="notify">メールでお知らせを受け取る</Label>
             </div>
           </div>
           <DialogFooter>
@@ -116,8 +121,12 @@ export const WithForm: Story = {
   ),
 };
 
-/** 開いた状態（表示確認用） */
+/**
+ * 開いた状態（表示確認用）。サイドバーから単体で開いて使う。
+ * Docs ページに載せると、ページを開くたびに開いた状態で表示されてしまうため、autodocs からは外している
+ */
 export const Opened: Story = {
+  tags: ["!autodocs"],
   args: { defaultOpen: true },
 };
 
@@ -128,7 +137,7 @@ export const ShouldCloseWithCancel: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ユーザーを削除" }));
       await expect(await body.findByRole("dialog")).toHaveAttribute("data-state", "open");
     });
 
@@ -146,7 +155,7 @@ export const ShouldCloseWithCross: Story = {
     const body = within(canvasElement.ownerDocument.body);
 
     await step("開く", async () => {
-      await userEvent.click(await body.findByRole("button", { name: "ファイルを削除" }));
+      await userEvent.click(await body.findByRole("button", { name: "ユーザーを削除" }));
       await expect(await body.findByRole("dialog")).toBeInTheDocument();
     });
 
