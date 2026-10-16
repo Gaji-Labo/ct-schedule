@@ -9,9 +9,9 @@ run="${2:?連番を指定してください: 例 01}"
 repo="$(cd "$(dirname "$0")/.." && pwd)"
 src="${CT_EXPERIMENTS_DIR:-$HOME/ct-schedule-experiments}/$kind-$run"
 out="$repo/experiments/results/$kind-$run"
-mkdir -p "$out/files"
-
 cd "$src"
+# 再実行しても古い生成物が残らないように作り直す
+rm -rf "$out/files" && mkdir -p "$out/files"
 git add -A
 # 初期状態からの差分 (生成されたもの全部)
 git diff --cached --binary HEAD > "$out/generated.patch"
@@ -22,6 +22,7 @@ done
 
 # 再現の場合は正解との差分も残す (正解は pages/、生成物は Skill の手順どおり drafts/ にある)
 if [ "$kind" = reproduce ]; then
+  : > "$out/answer.diff"
   for name in CTSchedulePage MemberPage; do
     f="src/design-system/drafts/$name.stories.tsx"
     if [ -f "$f" ]; then
@@ -43,7 +44,7 @@ if [ -d src/design-system/drafts ]; then
     [ -f "$f" ] || continue
     sed -i.bak -e "s|title: \"Drafts/|title: \"Drafts/$kind-$run/|" -e "s|/story/drafts-|/story/drafts-$kind-$run-|g" "$f" && rm "$f.bak"
   done
-  echo "Storybook の「Drafts/$kind-$run」で見られます: $view"
+  echo "Storybook の「Drafts/${kind}-${run}」で見られます: $view"
   others=$(git diff --cached --name-only --diff-filter=A HEAD | grep -v '^src/design-system/drafts/' | grep -E '\.(tsx?|css)$' || true)
   [ -n "$others" ] && printf '注意: drafts/ の外にも新しいファイルがあります。Storybook で読み込めない Story があれば、これらを手で持ってきてください:\n%s\n' "$others"
 fi
