@@ -1,9 +1,31 @@
 import { Meta } from "@storybook/addon-docs/blocks";
-import { RadiusList, ShadowList, SpacingList } from "./TokenDocs";
+import {
+  BreakpointList,
+  PageLayoutTable,
+  PageSkeletonDiagram,
+  RadiusList,
+  SpacingList,
+} from "./TokenDocs";
 
-<Meta title="Foundations/Spacing, Radius & Shadow" />
+<Meta title="Foundations/Layout" />
 
-# Spacing, Radius & Shadow
+# Layout
+
+## ページの骨組み
+
+すべての画面は `PageLayout`・`PageHeader`・`PageSection`（`src/app/components/PageLayout.tsx`）で組み立てます。
+`<main>` の余白・最大幅・セクションの間隔を画面ごとに書かないでください。実物は「Patterns/PageLayout」で確認できます。
+
+<PageSkeletonDiagram />
+
+<PageLayoutTable />
+
+## ブレイクポイント
+
+Tailwind の既定値をそのまま使います。社内アプリなので **PC を基準に作り**、`md`（768px）未満は「崩れずに使える」ことだけを確かめます。
+独自のブレイクポイントや `min-[900px]:` のような任意値は使いません。
+
+<BreakpointList />
 
 ## Spacing
 
@@ -16,7 +38,3 @@ Tailwind の 4px グリッドを使います (`p-4` = 16px)。任意値 (`p-[13p
 `--radius` (0.5rem) を基準に派生させています。
 
 <RadiusList />
-
-## Shadow
-
-<ShadowList />

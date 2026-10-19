@@ -11,7 +11,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
 <UsageRules
   ok={[
     <>必ず <code>Label</code> と並べ、<code>id</code> と <code>htmlFor</code> で結ぶ。文字を押しても切り替わるようにする。</>,
-    <>ラベルは肯定形で書き、チェック = 有効にそろえる（「通知を受け取る」）。</>,
+    <>ラベルは肯定形で書き、チェック = 有効にそろえる（「メールでお知らせを受け取る」）。</>,
     <>選択肢が複数あるときは縦に並べる（<code>grid gap-2</code> / <code>flex flex-col gap-2</code>）。2 つでも縦。</>,
     <>複数のまとまりがあるときは、見出し（<code>Label</code> や <code>fieldset</code> / <code>legend</code>）で区切る。</>,
   ]}
@@ -30,8 +30,8 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   good={{
     example: (
       <div className="flex items-center gap-2">
-        <Checkbox id="gl-participate" />
-        <Label htmlFor="gl-participate">通知を受け取る</Label>
+        <Checkbox id="gl-notify" />
+        <Label htmlFor="gl-notify">メールでお知らせを受け取る</Label>
       </div>
     ),
     caption: "Label の htmlFor で結ぶ。文字を押しても切り替わり、読み上げでも名前が伝わる。",
@@ -40,7 +40,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
     example: (
       <div className="flex items-center gap-2">
         <Checkbox />
-        <span className="text-sm font-medium">通知を受け取る</span>
+        <span className="text-sm font-medium">メールでお知らせを受け取る</span>
       </div>
     ),
     caption: "ただの文字を横に置くだけでは、文字を押しても切り替わらず、名前も結び付かない。",
@@ -53,7 +53,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   good={{
     example: (
       <div className="grid gap-2">
-        {["完了した項目", "アーカイブ済みの項目", "過去の予定"].map((t, i) => (
+        {["更新日", "無効のユーザー", "完了した項目"].map((t, i) => (
           <div key={t} className="flex items-center gap-2">
             <Checkbox id={`gl-v-${i}`} defaultChecked={i === 0} />
             <Label htmlFor={`gl-v-${i}`}>{t}</Label>
@@ -66,7 +66,7 @@ import { DoDont, UsageRules } from "./GuidelineBlocks";
   dont={{
     example: (
       <div className="flex flex-wrap gap-6">
-        {["完了した項目", "アーカイブ済みの項目", "過去の予定"].map((t, i) => (
+        {["更新日", "無効のユーザー", "完了した項目"].map((t, i) => (
           <div key={t} className="flex items-center gap-2">
             <Checkbox id={`gl-h-${i}`} defaultChecked={i === 0} />
             <Label htmlFor={`gl-h-${i}`}>{t}</Label>

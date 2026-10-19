@@ -64,9 +64,6 @@ export default [
   {
     files: [
       "src/app/components/CTScheduleCard.tsx",
-      "src/app/components/DeleteMemberDialog.tsx",
-      "src/app/components/SetupDataDialog.tsx",
-      "src/app/components/UserDropdown.tsx",
     ],
     rules: { "design-system/no-arbitrary-value": "warn" },
   },

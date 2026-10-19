@@ -3,10 +3,11 @@ import { GajiLaboLogo } from "@/components/GajiLaboLogo";
 /**
  * ページ最上部の帯。黒地 (site-header) に、左上に白抜きの Gaji-Labo ロゴを置く。
  * ページタイトルやログインボタン (Header) はこの下の <main> 内に置く。
+ * 通常は直接使わず PageLayout 経由で使う。左右の余白は PageLayout の <main> と揃える。
  */
 export const SiteHeader = () => (
   <header className="bg-site-header text-site-header-foreground">
-    <div className="mx-auto flex max-w-7xl items-center justify-start px-10 py-4">
+    <div className="mx-auto flex max-w-7xl items-center justify-start px-4 py-4 md:px-10">
       <a
         href="https://www.gaji.jp/"
         target="_blank"

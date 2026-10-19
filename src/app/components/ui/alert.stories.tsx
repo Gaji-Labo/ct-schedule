@@ -17,9 +17,9 @@ const meta = {
           "ページの中に置いておく、お知らせ・注意・エラーのメッセージ。ユーザーが読み終えるまで消えない。",
           "",
           "**variant の選び方**（内容の意味で選ぶ）",
-          "- `info`: 情報・お知らせ（例: メンテナンスの予定）",
+          "- `info`: 情報・お知らせ（例: メンテナンスのお知らせ）",
           "- `success`: 完了・有効になったこと（例: 初期設定が完了した）",
-          "- `warning`: 注意・このままだと困ること（例: 通知先が未設定）",
+          "- `warning`: 注意・このままだと困ること（例: プロフィールが未設定）",
           "- `destructive`: エラー・失敗（例: データを読み込めなかった）",
           "- `default`: 色の意味を持たせない中立のメッセージ",
           "",
@@ -56,7 +56,7 @@ const meta = {
       <Info aria-hidden />
       <AlertTitle>メンテナンスのお知らせ</AlertTitle>
       <AlertDescription>
-        10月12日（月）9:00〜10:00 は、メンテナンスのため使えません。
+        10月12日（月）は終日メンテナンスのため利用できません。
       </AlertDescription>
     </Alert>
   ),
@@ -88,9 +88,9 @@ export const Warning: Story = {
   render: (args) => (
     <Alert {...args}>
       <TriangleAlert aria-hidden />
-      <AlertTitle>通知先が未設定です</AlertTitle>
+      <AlertTitle>プロフィールが未設定です</AlertTitle>
       <AlertDescription>
-        通知を受け取るには、設定で通知先のチャンネルを選んでください。
+        通知を受け取るには、プロフィールでメールアドレスを設定してください。
       </AlertDescription>
     </Alert>
   ),
@@ -102,8 +102,8 @@ export const Success: Story = {
   render: (args) => (
     <Alert {...args}>
       <CircleCheck aria-hidden />
-      <AlertTitle>初期設定が完了しました</AlertTitle>
-      <AlertDescription>次回から通知を受け取れます。</AlertDescription>
+      <AlertTitle>設定を保存しました</AlertTitle>
+      <AlertDescription>次回のログインから反映されます。</AlertDescription>
     </Alert>
   ),
 };
@@ -113,7 +113,7 @@ export const TitleOnly: Story = {
   render: (args) => (
     <Alert {...args}>
       <Info aria-hidden />
-      <AlertTitle>未読のお知らせが 3 件あります</AlertTitle>
+      <AlertTitle>登録ユーザーは 10 人です</AlertTitle>
     </Alert>
   ),
 };
@@ -130,7 +130,7 @@ export const Variants: Story = {
       <Alert variant="info">
         <Info aria-hidden />
         <AlertTitle>お知らせ（info）</AlertTitle>
-        <AlertDescription>10月12日（月）はメンテナンスのため使えません。</AlertDescription>
+        <AlertDescription>10月12日（月）は終日メンテナンスのため利用できません。</AlertDescription>
       </Alert>
       <Alert variant="success">
         <CircleCheck aria-hidden />
@@ -140,7 +140,7 @@ export const Variants: Story = {
       <Alert variant="warning">
         <TriangleAlert aria-hidden />
         <AlertTitle>注意（warning）</AlertTitle>
-        <AlertDescription>通知先が未設定です。</AlertDescription>
+        <AlertDescription>プロフィールが未設定です。</AlertDescription>
       </Alert>
       <Alert variant="destructive">
         <CircleAlert aria-hidden />

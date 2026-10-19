@@ -2,7 +2,7 @@ import { getUsers, getUserBySlackId, getHolidays } from "@/app/actions";
 import { auth } from "@/auth";
 import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
 import { Header } from "@/components/Header";
-import { SiteHeader } from "@/components/SiteHeader";
+import { PageLayout, PageSection } from "@/components/PageLayout";
 import { SetupDataDialog } from "@/components/SetupDataDialog";
 import { getChannels } from "@/src/lib/slack";
 import {
@@ -25,27 +25,21 @@ export default async function Home() {
   const participantsMember = memberData.filter((member) => member.participate);
 
   return (
-    <>
-      <SiteHeader />
-      <main className="max-w-7xl mx-auto p-10">
-        <div className="grid gap-5">
-          <Header title="CT組み合わせ表" user={user} session={session} />
-          {user && (!user.employee_number || !user?.slack_u_channel_id) && (
-            <SetupDataDialog user={user} channels={uchannels} />
-          )}
-          <section>
-            <p>
-              現在のメンバー：
-              <Link href="/member" className="underline">
-                {participantsMember.length}人
-              </Link>
-            </p>
-          </section>
+    <PageLayout>
+      <Header title="CT組み合わせ表" user={user} session={session} />
+      {user && (!user.employee_number || !user?.slack_u_channel_id) && (
+        <SetupDataDialog user={user} channels={uchannels} />
+      )}
+      <PageSection>
+        {/* 人数は「参加者」(participate=true) の数。リンク先は社員全員なので、数字とリンクを分ける */}
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-sm">
+          <p>CTの参加者：{participantsMember.length}人</p>
+          <Link href="/member" className="text-foreground underline underline-offset-4">
+            メンバー一覧を見る
+          </Link>
         </div>
-        <div className="mt-10">
-          <CTScheduleCarousel schedules={ctSchedules} />
-        </div>
-      </main>
-    </>
+        <CTScheduleCarousel schedules={ctSchedules} />
+      </PageSection>
+    </PageLayout>
   );
 }

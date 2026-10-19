@@ -74,10 +74,10 @@ export const WithLabel: Story = {
 export const WithHelperText: Story = {
   render: (args) => (
     <div className="grid gap-2">
-      <Label htmlFor="employeeNumber">社員番号</Label>
-      <Input {...args} id="employeeNumber" type="number" placeholder="例: 1234" />
+      <Label htmlFor="email">メールアドレス</Label>
+      <Input {...args} id="email" type="email" placeholder="例: name@example.com" />
       <p className="text-sm text-muted-foreground">
-        社内の名簿と照合するために使います。
+        お知らせの送信先に使います。
       </p>
     </div>
   ),
@@ -87,7 +87,7 @@ export const WithHelperText: Story = {
 export const WithButton: Story = {
   render: (args) => (
     <div className="flex items-center gap-2">
-      <Input {...args} type="search" placeholder="メンバーを検索" aria-label="メンバーを検索" />
+      <Input {...args} type="search" placeholder="ユーザーを検索" aria-label="ユーザーを検索" />
       <Button variant="outline" size="icon" aria-label="検索">
         <Search />
       </Button>

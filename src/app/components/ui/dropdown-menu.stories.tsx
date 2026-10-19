@@ -71,8 +71,12 @@ type Story = StoryObj<typeof meta>;
 /** ヘッダーのユーザーメニュー（アプリでの使い方） */
 export const UserMenu: Story = {};
 
-/** 開いた状態（表示確認用） */
+/**
+ * 開いた状態（表示確認用）。サイドバーから単体で開いて使う。
+ * Docs ページに載せると、ページを開くたびに開いた状態で表示されてしまうため、autodocs からは外している
+ */
 export const Opened: Story = {
+  tags: ["!autodocs"],
   args: { defaultOpen: true },
 };
 
@@ -86,8 +90,8 @@ export const WithCheckboxes: Story = {
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>表示する情報</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked>完了した項目</DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem>アーカイブ済みの項目</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem checked>更新日</DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem>無効のユーザー</DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),
@@ -103,8 +107,8 @@ export const WithRadioItems: Story = {
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>並び順</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value="employeeNumber">
-          <DropdownMenuRadioItem value="employeeNumber">社員番号順</DropdownMenuRadioItem>
+        <DropdownMenuRadioGroup value="updatedAt">
+          <DropdownMenuRadioItem value="updatedAt">更新日順</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="name">名前順</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

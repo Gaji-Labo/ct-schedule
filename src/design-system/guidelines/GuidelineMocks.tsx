@@ -14,12 +14,12 @@ export const MockDialog = ({
   description?: React.ReactNode;
   footer: React.ReactNode;
 }) => (
-  <div className="relative grid w-full max-w-sm gap-4 rounded-lg border bg-background p-6 shadow-lg">
+  <div className="relative grid w-full max-w-md gap-4 rounded-lg border bg-background p-6 shadow-lg">
     <X aria-hidden className="absolute right-4 top-4 size-4 opacity-70" />
     <div className="grid gap-1.5">
-      <p className="text-lg font-semibold leading-none">{title}</p>
+      <p className="text-lg font-semibold leading-snug">{title}</p>
       {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
       )}
     </div>
     <div className="flex justify-end gap-2">{footer}</div>
@@ -85,7 +85,7 @@ export const MockToast = ({
   description?: React.ReactNode;
 }) => (
   <div
-    className={`flex w-full max-w-sm gap-2 rounded-lg border p-4 shadow-lg ${TOAST_STYLE[kind]}`}
+    className={`flex w-full max-w-sm gap-2 rounded-lg border p-4 shadow-md ${TOAST_STYLE[kind]}`}
   >
     {kind === "success" && (
       <CircleCheck

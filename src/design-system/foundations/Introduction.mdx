@@ -13,9 +13,10 @@ Gaji-Labo の社内アプリの UI を組み立てるための部品とルール
 
 | サイドバー | 置き場所 | 内容 |
 | --- | --- | --- |
-| Foundations | `src/design-system/foundations/`（値は `src/app/globals.css` / `tailwind.config.ts`、用途は `src/design-system/tokens.ts`） | 色・タイポグラフィ・余白・角丸・影・ロゴ |
+| Foundations | `src/design-system/foundations/`（値は `src/app/globals.css` / `tailwind.config.ts` / `src/lib/fonts.ts`、用途は `src/design-system/tokens.ts`） | 色・タイポグラフィ（フォント・行間）・レイアウト（骨組み・ブレイクポイント・余白・角丸）・階層表現・ロゴ |
 | UI | `src/app/components/ui/*.stories.tsx`、`src/app/components/SiteHeader.stories.tsx` | どのアプリでも使う汎用コンポーネント（shadcn/ui ベースと、社内アプリ共通のヘッダー）。各部品の「ガイドライン」ページ（`src/design-system/guidelines/`）もここに出る |
-| Apps / &lt;アプリ名&gt; / Components | `src/app/components/*.stories.tsx`（`SiteHeader` 以外） | そのアプリ専用のコンポーネント（CT スケジュールの週カード、メンバー一覧の行など） |
+| Patterns | `src/app/components/PageLayout.stories.tsx` | どのアプリでも使うページの骨組み（`PageLayout` / `PageHeader` / `PageSection`） |
+| Apps / &lt;アプリ名&gt; / Components | `src/app/components/*.stories.tsx`（`SiteHeader`・`PageLayout` 以外） | そのアプリ専用のコンポーネント（CT スケジュールの週カード、メンバー一覧の行など） |
 | Apps / &lt;アプリ名&gt; / Pages | `src/design-system/pages/` | 画面全体をモックデータで再現したもの。部品の組み合わせ方の見本（人が確定させた正式な画面） |
 | Drafts / &lt;アプリ名&gt; | `src/design-system/drafts/` | 確認待ちの画面。AI や人が作った画面はまずここに置き、確認して確定したら Apps / &lt;アプリ名&gt; / Pages に移す。`main` には残さない |
 

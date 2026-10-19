@@ -38,13 +38,13 @@ export const Horizontal: Story = {
   render: (args) => (
     <div className="w-80">
       <div className="grid gap-1">
-        <h2 className="text-lg font-semibold">通知設定</h2>
+        <h2 className="text-lg font-semibold leading-snug">ユーザー一覧</h2>
         <p className="text-sm text-muted-foreground">
-          受け取る通知を選びます
+          アプリを使うユーザーを管理します
         </p>
       </div>
       <Separator {...args} orientation="horizontal" className="my-4" />
-      <p className="text-sm">有効 3件 / 無効 2件</p>
+      <p className="text-sm">有効 8人 / 無効 2人</p>
     </div>
   ),
 };
@@ -55,7 +55,7 @@ export const Vertical: Story = {
     <div className="flex h-5 items-center gap-4 text-sm">
       <span>ホーム</span>
       <Separator {...args} orientation="vertical" />
-      <span>設定</span>
+      <span>ユーザー一覧</span>
     </div>
   ),
 };

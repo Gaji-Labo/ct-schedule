@@ -21,8 +21,8 @@ const meta = {
           "- `outline`: 面を持たせず、文字と枠だけで示したいとき",
           "- `info` / `success` / `warning`: 状態の色付きパターン（Alert・toast と同じ `feedback-*` トークン）。例: 有効 = `success`、未設定 = `warning`",
           "",
-          "**アプリ固有の状態ラベル**",
-          "既存の variant に合う色が無いときは、className で色を上書きせず、Badge に variant を追加してから使う（className での上書きは禁止事項）。",
+          "**アプリ固有の状態ラベルについて**",
+          "ここに無い色のラベルが必要になったら、className で色を上書きせず、Badge に variant を追加してから使う（className での上書きは禁止事項）。",
         ].join("\n"),
       },
     },
@@ -61,7 +61,7 @@ export const Variants: Story = {
 
 /** 控えめな補足情報。リスト行の中などで使う */
 export const Secondary: Story = {
-  args: { variant: "secondary", children: "下書き" },
+  args: { variant: "secondary", children: "無効" },
 };
 
 /** エラーや要対応の状態 */
@@ -76,7 +76,7 @@ export const Outline: Story = {
 
 /** ラベルは短く保つ。長い文言でも折り返さず1行に収まるか確認する */
 export const LongText: Story = {
-  args: { variant: "secondary", children: "承認待ち（差し戻しあり）" },
+  args: { variant: "secondary", children: "スポーツの日（振替休日）" },
 };
 
 /** 状態の色付きパターン（Alert・toast と同じ色） */

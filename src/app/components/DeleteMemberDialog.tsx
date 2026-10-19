@@ -43,7 +43,7 @@ export const DeleteMemberDialog = ({ member }: { member: User }) => {
           <Trash2 />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent size="confirm">
         <form action={handleSubmit} className="grid gap-5">
           <DialogHeader>
             <DialogTitle>メンバーを削除</DialogTitle>

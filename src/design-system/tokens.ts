@@ -37,8 +37,8 @@ export const semanticColors: ColorTokenGroup[] = [
         tailwind: "text-muted-foreground",
         usage: "補足テキスト・番号・区切り記号・非活性アイコン",
       },
-      { name: "border", tailwind: "border-border", usage: "枠線・区切り線 (border クラスの既定色)" },
-      { name: "input", tailwind: "border-input", usage: "フォーム入力欄の枠線" },
+      { name: "border", tailwind: "border-border", usage: "枠線・区切り線 (border クラスの既定色)。飾りの区切りなのでコントラスト基準の対象外" },
+      { name: "input", tailwind: "border-input", usage: "フォーム入力欄・セレクト・outline ボタンの枠線。部品の境界なので背景と 3:1 以上" },
       { name: "ring", tailwind: "ring-ring", usage: "フォーカスリング" },
     ],
   },
@@ -76,7 +76,7 @@ export const semanticColors: ColorTokenGroup[] = [
         tailwind: "text-destructive-foreground",
         usage: "destructive 上のテキスト",
       },
-      { name: "success", tailwind: "bg-success", usage: "成功・有効状態 (参加中インジケーターなど)" },
+      { name: "success", tailwind: "bg-success", usage: "成功・有効状態 (有効を示すインジケーターなど)" },
       { name: "success-foreground", tailwind: "text-success-foreground", usage: "success 上のテキスト" },
     ],
   },
@@ -99,8 +99,8 @@ export const semanticColors: ColorTokenGroup[] = [
     ],
   },
   {
-    title: "Apps / CTスケジュール",
-    description: "CT スケジュール固有の意味を持つ色。ほかのアプリでは使わない。CT スケジュールの画面では gray-* を直接書かずにこちらを使う",
+    title: "アプリ固有：CT スケジュール",
+    description: "CT スケジュールだけで使う色。汎用の部品（UI・Patterns）やほかのアプリからは使わない。ほかのアプリで同じような色が要るときは、そのアプリ用のトークンを追加する",
     tokens: [
       { name: "status-holiday", tailwind: "bg-status-holiday", usage: "祝日の週のカード背景" },
       {
@@ -117,7 +117,7 @@ export const semanticColors: ColorTokenGroup[] = [
       {
         name: "highlight-current",
         tailwind: "border-highlight-current",
-        usage: "今週 (直近) のスケジュールを示す強調枠",
+        usage: "今週 (直近) のスケジュールを示す強調枠。枠だけで意味を伝えるので背景と 3:1 以上",
       },
     ],
   },
@@ -140,7 +140,7 @@ export const semanticColors: ColorTokenGroup[] = [
 export const primitiveColors: { title: string; names: string[] }[] = [
   {
     title: "Neutral",
-    names: ["0", "50", "100", "200", "300", "400", "500", "600", "700", "800", "900", "950"].map(
+    names: ["0", "50", "100", "200", "300", "400", "450", "500", "550", "600", "700", "800", "900", "950"].map(
       (step) => `neutral-${step}`,
     ),
   },
@@ -196,29 +196,69 @@ export const radii = [
   { tailwind: "rounded-full", value: "9999px", usage: "アバター・ステータスラベル (pill)" },
 ];
 
-/** タイポグラフィ。Tailwind 既定スケールのうち、このアプリで使うもの */
-export const typography = [
-  { tailwind: "text-2xl font-bold", usage: "ページタイトル (h1)" },
-  { tailwind: "text-lg font-semibold", usage: "セクション・カードの見出し (h2)" },
-  { tailwind: "text-sm font-medium", usage: "本文・ラベル・ユーザー名 (既定)" },
-  { tailwind: "text-sm text-muted-foreground", usage: "補足説明" },
-  { tailwind: "text-xs", usage: "番号・バッジ・注釈" },
+/** フォントファミリー。src/lib/fonts.ts で読み込み、tailwind.config.ts の fontFamily で使う */
+export const fontFamilies = [
+  {
+    tailwind: "font-sans",
+    fonts: "Geist（欧文・数字）→ Noto Sans JP（和文）→ ヒラギノ角ゴ / Yu Gothic UI / メイリオ（読み込めないとき）",
+    usage: "すべてのテキスト（既定。指定しなくてよい）",
+  },
+  {
+    tailwind: "font-mono",
+    fonts: "Geist Mono",
+    usage: "コード・ID など桁を揃えたい文字列",
+  },
 ];
 
-/** 余白。Tailwind 既定の 4px グリッドのうち、このアプリで使うもの */
+/**
+ * タイポグラフィ。Tailwind 既定スケールのうち、このデザインシステムで使う組み合わせ。
+ * 行間は和文に合わせて役割ごとに決める（見出し 1.375 / 文章 1.625 / 1行の部品は各部品の既定）。
+ */
+export const typography = [
+  { tailwind: "text-2xl font-bold leading-snug", usage: "ページタイトル (h1)", lineHeight: "1.375" },
+  { tailwind: "text-lg font-semibold leading-snug", usage: "セクション・カード・ダイアログの見出し (h2)", lineHeight: "1.375" },
+  { tailwind: "text-sm leading-relaxed", usage: "本文（2行以上になりうる文章）", lineHeight: "1.625" },
+  { tailwind: "text-sm text-muted-foreground leading-relaxed", usage: "補足説明", lineHeight: "1.625" },
+  { tailwind: "text-sm font-medium", usage: "ラベル・ユーザー名など1行で終わるもの", lineHeight: "20px（text-sm の既定）" },
+  { tailwind: "text-xs", usage: "番号・バッジ・注釈", lineHeight: "16px（text-xs の既定）" },
+];
+
+/** 余白。Tailwind 既定の 4px グリッドのうち、このデザインシステムで使うもの */
 export const spacing = [
   { tailwind: "1", px: 4, usage: "アイコンとテキストの最小間隔" },
-  { tailwind: "2", px: 8, usage: "要素内の間隔 (gap-2)・小さいパディング" },
-  { tailwind: "3", px: 12, usage: "リスト行のパディング (p-3)" },
-  { tailwind: "4", px: 16, usage: "カードのパディング (p-4)・セクション内の間隔" },
-  { tailwind: "6", px: 24, usage: "セクション間の間隔" },
-  { tailwind: "8", px: 32, usage: "ページの上下余白" },
+  { tailwind: "2", px: 8, usage: "要素内の間隔 (gap-2)・パンくずとページタイトルの間" },
+  { tailwind: "3", px: 12, usage: "リスト行のパディング (p-3)・リストの行間" },
+  { tailwind: "4", px: 16, usage: "カードのパディング (p-4)・セクション内の間隔・スマホのページ左右余白" },
+  { tailwind: "6", px: 24, usage: "ダイアログのパディング (p-6)" },
+  { tailwind: "8", px: 32, usage: "スマホのページ上下余白" },
+  { tailwind: "10", px: 40, usage: "セクション同士の間隔・PC (md 以上) のページ余白" },
 ];
 
-/** 影 */
-export const shadows = [
-  { tailwind: "shadow-sm", usage: "カード・入力欄" },
-  { tailwind: "shadow", usage: "ボタン (primary / destructive)" },
-  { tailwind: "shadow-md", usage: "ポップオーバー・ドロップダウン" },
-  { tailwind: "shadow-lg", usage: "ダイアログ" },
+/** ページの骨組み。PageLayout / PageHeader / PageSection (src/app/components/PageLayout.tsx) に実装済み */
+export const pageLayout = [
+  { part: "最大幅", tailwind: "max-w-7xl", value: "1280px", usage: "<main> と SiteHeader の中身。中央寄せ (mx-auto)" },
+  { part: "ページ余白（スマホ）", tailwind: "px-4 py-8", value: "左右 16px / 上下 32px", usage: "md 未満" },
+  { part: "ページ余白（PC）", tailwind: "md:p-10", value: "40px", usage: "md (768px) 以上" },
+  { part: "セクション同士の間隔", tailwind: "gap-10", value: "40px", usage: "PageHeader と PageSection、PageSection 同士" },
+  { part: "セクション内の間隔", tailwind: "gap-4", value: "16px", usage: "PageSection の中の要素同士" },
+  { part: "パンくずとタイトルの間", tailwind: "gap-2", value: "8px", usage: "PageHeader の中" },
+];
+
+/** ブレイクポイント。Tailwind の既定値をそのまま使う */
+export const breakpoints = [
+  { name: "sm", px: 640, usage: "ダイアログが角丸・ボタン横並びになる" },
+  { name: "md", px: 768, usage: "ページ余白がスマホ用から PC 用に変わる（主な切り替え点）" },
+  { name: "lg", px: 1024, usage: "—" },
+  { name: "xl", px: 1280, usage: "max-w-7xl と同じ幅。これより広い画面では中央寄せになる" },
+];
+
+/**
+ * 階層表現 (Elevation)。階層は枠線で表し、影は「画面から浮いて重なるもの」にだけ付ける。
+ * ダークモードでは影がほとんど見えないため、どの階層でも枠線を必ず付ける。
+ */
+export const elevation = [
+  { level: 0, name: "ページの面", tailwind: "bg-background", usage: "ページ全体の背景" },
+  { level: 1, name: "面の区切り", tailwind: "border", usage: "カード・リスト・入力欄・ボタン・バッジ（影は付けない）" },
+  { level: 2, name: "浮く要素", tailwind: "border shadow-md", usage: "ドロップダウン・セレクトの選択肢・toast・カードに重なるカルーセルの前後ボタン" },
+  { level: 3, name: "モーダル", tailwind: "border shadow-lg", usage: "ダイアログ（背景を暗くするオーバーレイと一緒に使う）" },
 ];
