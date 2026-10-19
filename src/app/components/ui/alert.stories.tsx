@@ -76,7 +76,7 @@ export const Destructive: Story = {
       <CircleAlert aria-hidden />
       <AlertTitle>データを読み込めませんでした</AlertTitle>
       <AlertDescription>
-        時間をおいてページを再読み込みしてください。解決しない場合は #ct-schedule で知らせてください。
+        時間をおいてページを再読み込みしてください。解決しない場合は担当者に知らせてください。
       </AlertDescription>
     </Alert>
   ),
