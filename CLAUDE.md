@@ -24,8 +24,11 @@ Gaji-Labo の社内アプリ向けデザインシステム。トークン・コ�
 | 色・余白・文字・使う部品・禁止事項 | [docs/design/rules.md](./docs/design/rules.md) |
 | 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [docs/design/principles.md](./docs/design/principles.md) |
 | アプリ固有の目的・画面・利用シーン・部品・Story で用意する状態 | [docs/design/apps/](./docs/design/apps/)（CT スケジュールは [ct-schedule.md](./docs/design/apps/ct-schedule.md)） |
+| 画面ごとの要件（表示と操作・状態・文言・未決のこと） | `docs/design/apps/<アプリ名>/screens/`（アプリの md の「主な画面」からリンク）。ないときは Skill `screen-brief`（`/screen-brief`）で作る |
 | 実装の手順・検証 | Skill `implement-ui`（[.claude/skills/implement-ui/SKILL.md](./.claude/skills/implement-ui/SKILL.md)、`/implement-ui`） |
+| 確認で決めたことの戻し方 | Skill `reflect-decisions`（`/reflect-decisions`） |
 | 仕組みの全体像・フィードバックの戻し先 | [docs/design/workflow.md](./docs/design/workflow.md) |
+| 依頼から生成・戻すまでの流れ（案） | [docs/design/generation-flow.md](./docs/design/generation-flow.md) |
 
 ## Development Commands
 
@@ -80,6 +83,8 @@ wrangler.jsonc                  # Storybook の静的ビルドを Cloudflare Wor
 .claude/skills/
 ├── implement-ui/               # Skill implement-ui (/implement-ui): UI 実装の手順・検証・報告
 │   └── report.ts               # bun run report:ui。作業レポートを .implement-ui/report.html に出す (git 管理外)
+├── screen-brief/               # Skill screen-brief (/screen-brief): 画面を作る前に要件を聞き取り、docs/design/apps/<アプリ名>/screens/ に書く (試作)
+├── reflect-decisions/          # Skill reflect-decisions (/reflect-decisions): 確認で決めたことを、承認を取ってから要件ファイル・アプリの md・ルール資料に書き足す (試作)
 └── worktree/                   # git worktree の操作
 experiments/                    # AI の生成検証。今は CT スケジュールの画面を題材にしている
 ├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
