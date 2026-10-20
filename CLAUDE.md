@@ -19,6 +19,8 @@ Gaji-Labo の社内アプリ向けデザインシステム。トークン・コ�
 
 **UI（画面・コンポーネント・スタイル）を実装・変更する前に、`docs/design/` の該当ファイルを読むこと。**
 
+画面を作る・直す依頼は、Skill の名前がなくても Skill `implement-ui` の手順から始める。要件の聞き取り（`screen-brief`）と、決めたことの書き戻し（`reflect-decisions`）は `implement-ui` の中から呼ぶ。
+
 | 知りたいこと | ファイル |
 | --- | --- |
 | 色・余白・文字・使う部品・禁止事項 | [docs/design/rules.md](./docs/design/rules.md) |
