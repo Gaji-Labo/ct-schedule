@@ -20,6 +20,7 @@ const meta = {
           "- `destructive`: エラー・要対応の状態",
           "- `outline`: 面を持たせず、文字と枠だけで示したいとき",
           "- `info` / `success` / `warning`: 状態の色付きパターン（Alert・toast と同じ `feedback-*` トークン）。例: 有効 = `success`、未設定 = `warning`",
+          "- `rest`: CT スケジュールの「お休み」「祝日名」ラベル（アプリ固有の `status-rest` トークン）",
           "",
           "**アプリ固有の状態ラベルについて**",
           "ここに無い色のラベルが必要になったら、className で色を上書きせず、Badge に variant を追加してから使う（className での上書きは禁止事項）。",
@@ -30,7 +31,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "secondary", "destructive", "outline", "info", "success", "warning"],
+      options: ["default", "secondary", "destructive", "outline", "info", "success", "warning", "rest"],
       description: "見た目の種類。用途に応じて選ぶ",
       table: { defaultValue: { summary: "default" } },
     },
@@ -87,6 +88,16 @@ export const StatusColors: Story = {
       <Badge {...args} variant="success">有効</Badge>
       <Badge {...args} variant="warning">未設定</Badge>
       <Badge {...args} variant="destructive">エラー</Badge>
+    </div>
+  ),
+};
+
+/** CT スケジュールの「お休み」「祝日名」ラベル */
+export const Rest: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-2">
+      <Badge {...args} variant="rest">お休み</Badge>
+      <Badge {...args} variant="rest">勤労感謝の日</Badge>
     </div>
   ),
 };
