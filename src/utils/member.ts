@@ -125,3 +125,35 @@ export function generateCTSchedules(
     };
   });
 }
+
+export type MyPair = {
+  date: string;
+  partner: User | null; // nullはお休み（祝日 or 奇数人数で余った週）
+  isHoliday: boolean;
+  holidayName?: string;
+};
+
+// スケジュールから指定ユーザーのペア相手だけを抜き出す
+export function findMyPairs(
+  schedules: Schedule,
+  userId: number,
+  limit: number = schedules.length,
+): MyPair[] {
+  const isParticipant = schedules.some((schedule) =>
+    schedule.round?.some((pair) => pair.some((user) => user?.id === userId)),
+  );
+  if (!isParticipant) return [];
+
+  return schedules
+    .slice(0, limit)
+    .map(({ date, round, isHoliday, holidayName }) => {
+      if (isHoliday) return { date, partner: null, isHoliday, holidayName };
+
+      const myPair = round?.find((pair) =>
+        pair.some((user) => user?.id === userId),
+      );
+      const partner =
+        myPair?.find((user) => user !== null && user.id !== userId) ?? null;
+      return { date, partner, isHoliday };
+    });
+}
