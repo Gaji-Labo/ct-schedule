@@ -42,3 +42,12 @@ next-env.d.ts
 
 # mcp
 .mcp.json
+
+# storybook
+/storybook-static
+*storybook.log
+# implement-ui の作業レポート
+/.implement-ui
+
+# 生成検証の結果を Storybook で見るためのコピー (experiments/collect.sh が作る。記録は experiments/results/ にある)
+/src/design-system/drafts/experiments/

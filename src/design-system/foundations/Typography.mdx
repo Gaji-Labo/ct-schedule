@@ -1,0 +1,37 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { FontFamilyList, TypographyList } from "./TokenDocs";
+
+<Meta title="Foundations/Typography" />
+
+# Typography
+
+Tailwind の既定スケールのうち、社内アプリで使う組み合わせです。ここに無いサイズを使う場合は、先にこの一覧へ追加してください。
+
+## フォントファミリー
+
+欧文・数字は **Geist**、和文は **Noto Sans JP** を使います。どちらも `next/font` で読み込み（`src/lib/fonts.ts`）、`tailwind.config.ts` の `font-sans` にまとめています。
+`font-sans` は既定なので、コンポーネントで `font-*` を指定する必要はありません。
+
+- 和文を Web フォントにしているのは、Mac・Windows で見た目（字幅・太さ・行の高さ）を揃えるため
+- 読み込めないときは、ヒラギノ角ゴ → Yu Gothic UI → メイリオの順に OS のゴシック体を使う
+- 明朝体や、ここに無いフォントは使わない
+
+<FontFamilyList />
+
+## サイズと行間
+
+Tailwind の既定スケールのうち、このデザインシステムで使う組み合わせです。ここに無いサイズを使う場合は、先にこの一覧へ追加してください。
+
+行間は和文が詰まって見えないよう、役割ごとに決めています。
+
+| 役割 | 行間 | クラス |
+| --- | --- | --- |
+| 見出し（h1・h2・ダイアログのタイトル） | 1.375 | `leading-snug` |
+| 文章（本文・補足説明・ダイアログの説明文） | 1.625 | `leading-relaxed` |
+| 1行で終わるもの（ラベル・ボタン・バッジ・ユーザー名） | 各サイズの既定 | 指定しない |
+
+- `leading-none` は見出しに使わない（和文が2行になったとき行が重なる）
+- 字間は詰めない（`tracking-tight` などは使わない）
+- 行間の任意値（`leading-[1.8]`）は使わない
+
+<TypographyList />
