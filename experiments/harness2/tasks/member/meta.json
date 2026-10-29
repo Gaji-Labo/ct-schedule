@@ -1,0 +1,9 @@
+{
+  "domain": "ct-schedule",
+  "kind": "reproduce",
+  "hide": [
+    "src/design-system/pages/MemberPage.stories.tsx",
+    "src/app/member"
+  ],
+  "note": "既存画面の再現。正解は src/design-system/pages/MemberPage.stories.tsx。基底ハーネスでも高得点になりやすいので、改善の効果より後退していないかを見る題材"
+}

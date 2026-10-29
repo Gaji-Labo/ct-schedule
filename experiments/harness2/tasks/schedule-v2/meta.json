@@ -1,0 +1,9 @@
+{
+  "domain": "ct-schedule",
+  "kind": "redesign",
+  "hide": [
+    "src/design-system/pages/CTSchedulePage.stories.tsx",
+    "src/app/page.tsx"
+  ],
+  "note": "要件ファイルは feature/screen-brief-skill の作業ツリーにあった改訂版（reproduce-02 の聞き取り後）。採点基準は experiments/results/reproduce-02/notes.md の「生成後の指摘」「正解との違い」から起こした"
+}

@@ -7,6 +7,8 @@
 | `reproduce` | 既存の2画面を、どれだけ本物に近く作り直せるか | `src/design-system/pages/` の2画面の Story と、`src/app/page.tsx`・`src/app/member/page.tsx`（同じ組み立てなので） | 隠した2つの Story（AI は Skill の手順どおり `drafts/` に作る） |
 | `add-page` | 新しい画面を足したとき、どれだけルールに沿うか | なし（既存画面を参考にできる状態が実際の使い方に近い） | `docs/design/` と `results/_template.md` の観点 |
 
+人が1回ずつ回して評価するのがこの仕組み。AI に何度も作らせて、ハーネス（指示書と Skill）の直し方を AI に提案させる改善ループは [harness2/](./harness2/README.md) にある。
+
 ## 進め方
 
 ```bash
