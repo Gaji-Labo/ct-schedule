@@ -17,6 +17,8 @@
 
 画面・部品・Story を作るときの手順、用意する状態、検証の方法は Skill [`.claude/skills/implement-ui/SKILL.md`](../../.claude/skills/implement-ui/SKILL.md) にまとめている。Claude Code では `/implement-ui <やりたいこと>` で呼び出せる。`docs/design/` は「何を守るか」、Skill は「どう進めて、どう確かめるか」を扱う。
 
+画面を作る前の要件の聞き取りは Skill `screen-brief`、確認で決めたことを戻すのは Skill `reflect-decisions`（どちらも試作）。依頼から戻すまでの流れは [generation-flow.md](./generation-flow.md) にある。
+
 ## フィードバックの戻し先
 
 レビューの指摘や AI の生成ミスは、その場の修正で終わらせず、次に同じことが起きないよう仕組みへ戻す。
@@ -29,6 +31,7 @@
 | 同じ任意値・独自 UI が複数箇所に出る | コンポーネントの variant か、新しいコンポーネント（＋Story）にする |
 | 意味のある色が足りない | Semantic トークンを追加（3箇所を揃える） |
 | 判断の前提が AI に伝わっていない | [principles.md](./principles.md)（社内アプリ共通）か [apps/](./apps/)（アプリ固有）に追記 |
+| その画面だけの事実（文言・状態・挙動）が AI に伝わっていない | 画面の要件ファイル（`apps/<アプリ名>/screens/<画面>.md`）に追記。Skill `reflect-decisions` で承認を取ってから書く |
 | 部品の使い分けを間違える | その部品の Story の docs（`parameters.docs.description`）に使い分けを追記 |
 | 手順の抜け・用意する状態や検証の漏れ | Skill `implement-ui`（`.claude/skills/implement-ui/SKILL.md`）に追記 |
 | 部品の組み合わせ方・並べ方を間違える | その部品の「ガイドライン」ページ（`src/design-system/guidelines/`）に OK / NG を追記 |
