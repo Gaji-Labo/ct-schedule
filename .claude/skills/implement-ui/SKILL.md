@@ -102,11 +102,16 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 ## 5. 検証する
 
 ```bash
-bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド（MDX のドキュメントも含む）
+bun run verify:ui   # lint（design-system/* ルール）→ test → Storybook ビルド（MDX のドキュメントも含む）→ 全 Story の a11y チェック
 ```
 
 - 新規・変更したコードは **lint のエラー0件・警告0件**
 - `eslint.config.mjs` の「既知の違反」リストに入っているファイルは警告扱いになっている。置き換えたらリストから外してエラー扱いに戻す
+- a11y チェック（`bun run check:a11y`）は、全 Story をライト・ダークで開いて axe（WCAG 2.2 AA）を当てる。違反は Story ID・規則・要素のセレクタ・理由（コントラスト比など）つきで出る
+  - 作った・変えた Story の違反は直す。`.storybook/a11y-known.ts` に足して通さない
+  - 原因が自分の触っていない部品やトークンにあり、この作業では直せないときだけ、`a11y-known.ts` に理由と直し方の方針つきで書く。足したことは report.json の `verification`（`bun run check:a11y` の `note`）と最終報告の検証の結果に書く（残すかどうかは人が決める）
+  - 既知の違反を直したら、`a11y-known.ts` の行を消す（消し忘れるとチェックが落ちる）
+- トークンを追加・変更したら、`src/design-system/contrast.test.ts` の組み合わせ（文字と地、部品の境界と地）に足す
 
 Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる。`verify:ui` が通っても、見た目の崩れ（横へのはみ出しなど）は検出されない。
 
@@ -118,7 +123,6 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
   `true` なら、どの要素がはみ出しているかを探して直す（例: カルーセルなど横に送る部品を grid の子に直接置くと、中身の幅でページごと広がる）
 - [ ] ライト・ダーク両方で崩れない（ツールバーのテーマ切替）
-- [ ] Accessibility パネルに違反がない
 - [ ] 長いテキストであふれない・レイアウトが崩れない
 - [ ] 必要な状態（0件・エラー・アプリ固有の状態）が抜けていない
 
