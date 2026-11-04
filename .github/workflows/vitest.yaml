@@ -25,9 +25,20 @@ jobs:
       - name: Run tests
         run: bun test
 
+      # .storybook/ のテスト（a11y チェックの判定）。bun test は隠しフォルダを拾わないので別に渡す
+      - name: Run Storybook tests
+        run: bun test ./.storybook
+
       - name: Run linter
         run: bun run lint
 
       # MDX のドキュメントも含めてビルドする (--test は MDX を対象にしないので付けない)
       - name: Build Storybook
         run: bun run build-storybook --quiet
+
+      # 全 Story に axe を当てる（WCAG 2.2 AA、ライト・ダーク）。直すまで残す違反は .storybook/a11y-known.ts
+      - name: Install Chromium for a11y check
+        run: bunx playwright install --with-deps chromium
+
+      - name: Check a11y of Stories
+        run: bun run check:a11y

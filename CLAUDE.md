@@ -38,8 +38,11 @@ Gaji-Labo の社内アプリ向けデザインシステム。トークン・コ�
 # Storybook（デザインシステムのカタログ）
 bun run storybook
 
-# lint → test → Storybook ビルド（UI を変えたら通す）
+# lint → test → Storybook ビルド → 全 Story の a11y チェック（UI を変えたら通す）
 bun run verify:ui
+
+# ビルド済みの Storybook（storybook-static/）の全 Story に axe を当てる（WCAG 2.2 AA、ライト・ダーク）
+bun run check:a11y
 
 # Lint実行
 bun run lint

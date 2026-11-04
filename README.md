@@ -11,11 +11,11 @@ Gaji-Labo の社内アプリで使うデザインシステムです。トーク�
 
 - UI: [shadcn/ui](https://ui.shadcn.com/), [Tailwind](https://tailwindcss.com/)
 - カタログ: [Storybook](https://storybook.js.org/)
-- 検証: ESLint（`design-system/*` ルール）、Storybook の a11y チェック
+- 検証: ESLint（`design-system/*` ルール）、トークンのコントラストのテスト、全 Story の a11y チェック（axe）
 
 ```bash
 bun run storybook   # カタログ
-bun run verify:ui   # lint → test → Storybook ビルド
+bun run verify:ui   # lint → test → Storybook ビルド → 全 Story の a11y チェック
 ```
 
 ## CT Schedule 🗓️
