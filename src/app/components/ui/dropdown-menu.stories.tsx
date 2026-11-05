@@ -23,6 +23,9 @@ const meta = {
   component: DropdownMenu,
   tags: ["autodocs"],
   parameters: {
+    // 許容している a11y の違反: メニューを開いている間、Radix がメニューの外に aria-hidden を付け、その中に開くボタンが残る。
+    // フォーカスはメニューの中に閉じ込められるので、操作では届かない（Radix の挙動）
+    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
     docs: {
       description: {
         component: [

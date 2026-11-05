@@ -14,12 +14,14 @@ if (typeof document !== "undefined") {
 const preview: Preview = {
   parameters: {
     layout: "centered",
+
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
     },
+
     options: {
       storySort: {
         order: [
@@ -32,6 +34,13 @@ const preview: Preview = {
           "Drafts",
         ],
       },
+    },
+
+    // bun run test:stories で全 Story に axe（WCAG 2.2 AA）を当て、違反があれば落とす。
+    // 直すまで残す違反は、その Story（か meta）の parameters.a11y で規則を止め、理由をコメントに書く
+    a11y: {
+      test: "error",
+      options: { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] } },
     },
   },
   decorators: [

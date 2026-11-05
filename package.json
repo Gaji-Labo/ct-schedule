@@ -10,9 +10,9 @@
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "verify:ui": "bun run lint && bun test && bun test ./.storybook && storybook build --quiet && bun run check:a11y",
-    "check:a11y": "bun .storybook/a11y-check.ts",
-    "report:ui": "bun .claude/skills/implement-ui/report.ts"
+    "verify:ui": "bun run lint && bun test && bun run test:stories && storybook build --quiet",
+    "report:ui": "bun .claude/skills/implement-ui/report.ts",
+    "test:stories": "vitest run --project storybook"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -43,13 +43,14 @@
     "@storybook/addon-a11y": "^10.6.3",
     "@storybook/addon-docs": "^10.6.3",
     "@storybook/addon-themes": "^10.6.3",
+    "@storybook/addon-vitest": "^10.6.3",
     "@storybook/nextjs-vite": "^10.6.3",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
-    "axe-core": "^4.11.0",
+    "@vitest/browser": "3.2.7",
     "date-fns": "^4.4.0",
     "eslint": "^10.10.0",
     "eslint-config-next": "16.3.8",

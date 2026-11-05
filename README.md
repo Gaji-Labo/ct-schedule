@@ -15,7 +15,7 @@ Gaji-Labo の社内アプリで使うデザインシステムです。トーク�
 
 ```bash
 bun run storybook   # カタログ
-bun run verify:ui   # lint → test → Storybook ビルド → 全 Story の a11y チェック
+bun run verify:ui   # lint → test → Story のテスト（play・a11y）→ Storybook ビルド
 ```
 
 ## CT Schedule 🗓️

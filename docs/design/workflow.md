@@ -10,7 +10,7 @@
 | --- | --- |
 | 制約 | Semantic トークン (`src/app/globals.css`, `tailwind.config.ts`)、コンポーネント (`src/app/components/`)、[rules.md](./rules.md) |
 | 文脈 | [principles.md](./principles.md)、[apps/](./apps/)、Storybook の Story |
-| 検証 | ESLint の `design-system/*` ルール、トークンのコントラストのテスト（`contrast.test.ts`）、全 Story の a11y チェック（`bun run check:a11y`）、Skill `implement-ui` の検証手順 |
+| 検証 | ESLint の `design-system/*` ルール、トークンのコントラストのテスト（`contrast.test.ts`）、全 Story の play 関数と a11y チェック（`bun run test:stories`）、Skill `implement-ui` の検証手順 |
 | 評価 | 本書の「フィードバックの戻し先」 |
 
 ## 実装の進め方と検証

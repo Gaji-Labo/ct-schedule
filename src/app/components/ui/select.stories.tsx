@@ -105,6 +105,10 @@ export const WithGroups: Story = {
 export const ShouldSelectOption: Story = {
   name: "選択肢を選ぶと表示が切り替わる",
   tags: ["!dev", "!autodocs"],
+  parameters: {
+    // 許容している a11y の違反: 閉じた直後、Radix がリストの外に付けた aria-hidden の中にトリガーが残る（UI/DropdownMenu と同じ Radix の挙動）
+    a11y: { config: { rules: [{ id: "aria-hidden-focus", enabled: false }] } },
+  },
   play: async ({ canvasElement, step }) => {
     const body = within(canvasElement.ownerDocument.body);
     const select = await body.findByRole("combobox");
