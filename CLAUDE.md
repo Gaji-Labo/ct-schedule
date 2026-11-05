@@ -41,7 +41,7 @@ bun run storybook
 # lint → test → Story のテスト → Storybook ビルド（UI を変えたら通す）
 bun run verify:ui
 
-# 全 Story を描画し、play 関数と a11y チェック（axe、WCAG 2.2 AA）を当てる（@storybook/addon-vitest、vitest.config.ts）
+# 全 Story を描画し、play 関数と a11y チェック（axe、WCAG 2.2 AA）を当てる（@storybook/addon-vitest、vitest.config.mts）
 bun run test:stories
 
 # Lint実行
