@@ -109,8 +109,9 @@ bun run verify:ui   # lint（design-system/* ルール）→ test → Story の�
 - `eslint.config.mjs` の「既知の違反」リストに入っているファイルは警告扱いになっている。置き換えたらリストから外してエラー扱いに戻す
 - Story のテスト（`bun run test:stories`、@storybook/addon-vitest）は、全 Story を描画して play 関数を動かし、axe（WCAG 2.2 AA）を当てる。違反は Story・規則・要素のセレクタ・理由（コントラスト比など）つきで出る。1つのファイルだけなら `bun run test:stories <Story のファイル>` で回せる
   - 作った・変えた Story の違反は直す。`parameters.a11y` で規則を止めて通さない
-  - 原因が自分の触っていない部品やトークンにあり、この作業では直せないときだけ、その Story の `parameters.a11y.config.rules` で止める。止めるのはその規則だけにし、できれば `selector` で原因の要素だけを外す（例: UI/Button の `*:not(.bg-destructive)`）。理由と直し方の方針をコメントに書き、report.json の `verification`（`note`）と最終報告の検証の結果にも書く（残すかどうかは人が決める）
-  - 部品やトークンを直したら、その部品を使う Story で止めていた規則も外す
+  - 原因が自分の触っていない部品やトークンにあり、この作業では直せないときだけ止める。部品ごとの既知の違反は `src/design-system/a11y-known.ts` にまとまっているので、その部品を使う Story では読み込んで `parameters: { a11y: { config: { rules } } }` に渡す（例: CTScheduleCard を使う Story は `ctScheduleCardKnown`）
+  - `a11y-known.ts` に無い違反を新しく止めるときは、そこに部品ごとの定数として足す。止めるのはその規則だけにし、できれば `selector` で原因の要素だけを外す（例: `destructiveButtonKnown` の `*:not(.bg-destructive)`）。理由と直し方の方針をコメントに書き、report.json の `verification`（`note`）と最終報告の検証の結果にも書く（残すかどうかは人が決める）
+  - 部品やトークンを直したら、`a11y-known.ts` から消す
 - トークンを追加・変更したら、`src/design-system/contrast.test.ts` の組み合わせ（文字と地、部品の境界と地）に足す
 
 Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる。`verify:ui` が通っても、見た目の崩れ（横へのはみ出しなど）は検出されない。

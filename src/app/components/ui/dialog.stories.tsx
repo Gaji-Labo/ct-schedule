@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import { destructiveButtonKnown } from "@/src/design-system/a11y-known";
 import { Input } from "./input";
 import { Label } from "./label";
 
@@ -24,9 +25,8 @@ const meta = {
   component: Dialog,
   tags: ["autodocs"],
   parameters: {
-    // 直すまで残す a11y の違反: 削除ボタンの白い文字が赤 (red-500) の地で 3.6:1（UI/Button と同じ）。
-    // トークン --destructive を濃い赤にして直したら、この a11y を消す
-    a11y: { config: { rules: [{ id: "color-contrast", selector: "*:not(.bg-destructive)" }] } },
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: destructiveButtonKnown } },
     docs: {
       description: {
         component: [

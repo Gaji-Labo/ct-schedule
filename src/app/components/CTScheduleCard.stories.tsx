@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 import { repoUrl } from "@/src/design-system/repo";
+import { ctScheduleCardKnown } from "@/src/design-system/a11y-known";
 import type { CT } from "@/src/utils/member";
 import { CTScheduleCard } from "./CTScheduleCard";
 
@@ -12,18 +13,8 @@ const meta = {
   component: CTScheduleCard,
   tags: ["autodocs"],
   parameters: {
-    // 直すまで残す a11y の違反（CTScheduleCard を使う Story で同じものを止めている）。直したらこの a11y を消す
-    // - color-contrast: パレット色の直書き（eslint.config.mjs の既知の違反）。お休み・祝日名のラベル (bg-gray-400 に白) と日付 (text-gray-400) が 2.4:1。
-    //   トークン (status-holiday / status-rest) に置き換えて直す
-    // - link-name: ハドルのリンクがアイコンだけで、読み上げる名前が無い。aria-label（「○○ とハドルを開始」など）を付けて直す
-    a11y: {
-      config: {
-        rules: [
-          { id: "color-contrast", enabled: false },
-          { id: "link-name", enabled: false },
-        ],
-      },
-    },
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: ctScheduleCardKnown } },
     docs: {
       description: {
         component: [
