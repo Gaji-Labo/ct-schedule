@@ -146,11 +146,12 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
 ### report.json を書いて HTML にする
 
-最後に `.implement-ui/report.json` を次の形で書き、`bun run report:ui` を実行する。`.implement-ui/report.html` ができる（推測リスト、セッション記録から作る行動ログ、触ったファイル、作業のまとめ）。
+`.implement-ui/report.json` を次の形で書き、`bun run report:ui` を実行する。`.implement-ui/report.html` ができる（推測リスト、セッション記録から作る行動ログ、触ったファイル、作業のまとめ）。
 
 ```json
 {
   "request": "依頼内容の要約",
+  "app": "対象アプリ (docs/design/apps/<アプリ名>.md のアプリ名。特定できなければ「不明」)",
   "context": { "who": "誰が・いつ開くか", "purpose": "何のためか", "first_seen": "最初に目に入るべき情報", "irreversible": "取り消せない操作 (なければ「なし」)" },
   "components_used": ["SiteHeader", "Button"],
   "new_components": [{ "name": "新しく作った部品・トークン", "reason": "作った理由" }],
@@ -178,6 +179,17 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
 `guesses` が空になることはほぼない。迷わなかったと思っても、書かれていないことを自分で決めた箇所がないか見直す。
 
+### 共有リポジトリに送る
+
+レポートは、このハーネスを使う全員で見られるよう共有リポジトリ（`Gaji-Labo/implement-ui-reports`）にためる。ためたものは、あとで突き合わせてルールに戻すときの材料にする。
+
+1. `bun run report:share --dry-run` を実行し、送り先・依頼・推測の件数を人に見せて、送ってよいか聞く
+2. よいと言われたら `bun run report:share` を実行する
+
+送るのは `report.json`、行動ログと触ったファイルを除いた `report.html`、`meta.json`（いつ・誰が・どのコミットで作ったか）だけ。手元の `.implement-ui/report.html` には行動ログが残る。実行ごとに新しいフォルダに置くので、7 で直してやり直したときも前のレポートは消えない。
+
+`gh` の認証がない、書き込み権限がないなどで送れなかったときは、作業を止めずに最終報告でそのことを伝える。
+
 ### 最終報告
 
 チャットには次を短く書き、詳細は HTML を見るよう案内する。
@@ -187,7 +199,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 - 作った・変えたファイル
 - 検証の結果（通ったもの・確かめられなかったもの）
 - 推測したことの件数（`app` / `system` 別）と、特に人に確かめてほしいもの。`app` はプロダクトの持ち主、`system` はデザインシステムの担当に確かめる
-- `.implement-ui/report.html` の場所
+- `.implement-ui/report.html` の場所と、共有リポジトリに送ったフォルダの URL（送れなかったときはその理由）
 - 作った画面は `drafts/` にあり、確認して確定したら `pages/` に移す必要があること
 - 確認して決めたこと（推測への答え、直してほしいこと、採用するかどうか）は、そのまま話してもらえばよいこと
 
