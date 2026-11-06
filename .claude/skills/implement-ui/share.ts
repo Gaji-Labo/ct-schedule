@@ -8,7 +8,7 @@
  * - report.json: AI が書いた自己申告 (推測と戻し先)。ためたものを戻すときはこれを読む
  * - report.html: report.json から作る見る用の HTML。行動ログと触ったファイルは載せない
  *   (行動ログにはツールの入力と結果がそのまま入り、.env を読めば秘密も載るため)
- * - meta.json: いつ・誰が・どのリポジトリのどのコミット (= どの版のルール) で作ったか
+ * - meta.json: いつ・誰が・どのリポジトリのどのコミット (= どの版のルール) で作ったか、変えたファイル
  *
  * 共有リポジトリは手元に clone して使い回す (既定: ~/.cache/implement-ui-reports)。
  */
@@ -46,7 +46,13 @@ const login = run("gh", ["api", "user", "-q", ".login"], root, true) || run("git
 const sourceRepo = run("git", ["remote", "get-url", "origin"], root, true).replace(/^https:\/\/github\.com\/|^git@github\.com:|\.git$/g, "");
 const branch = run("git", ["branch", "--show-current"], root, true);
 const commit = run("git", ["rev-parse", "HEAD"], root, true);
-const dirty = run("git", ["status", "--porcelain"], root, true) !== "";
+// 変えたファイル (未コミット・新規)。Skill の手順では draft の Story はコミットしないので、ここで何を作ったかを残す
+// run() は前後の空白を削り、1行目の先頭 (" M" の空白) が欠けるので、ここでは使わない
+const changedFiles = (spawnSync("git", ["status", "--porcelain", "--untracked-files=all"], { cwd: root, encoding: "utf8" }).stdout ?? "")
+  .split("\n")
+  .filter(Boolean)
+  .map((l) => ({ status: l.slice(0, 2).trim(), path: l.slice(3).replace(/^"|"$/g, "") }));
+const dirty = changedFiles.length > 0;
 
 // 最新のセッション記録から、生成に使ったモデルを拾う
 function latestModel(): string | undefined {
@@ -70,13 +76,15 @@ const now = new Date();
 const pad = (n: number) => String(n).padStart(2, "0");
 const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
 const safe = (s: string) => s.replace(/[\s/\\:*?"<>|]+/g, "-").replace(/^-+|-+$/g, "") || "unknown";
-const dirName = `${stamp}_${safe(self.app ?? "app未記入")}_${safe(login)}`;
+const suffix = `${safe(self.app ?? "app未記入")}_${safe(login)}`;
+const dirName = `${stamp}_${suffix}`;
 const meta = {
   created_at: now.toISOString(),
   author: login,
   app: self.app ?? null,
   request: self.request ?? null,
   source: { repo: sourceRepo, branch, commit, uncommitted_changes: dirty },
+  changed_files: changedFiles,
   model: latestModel() ?? null,
   guesses: {
     total: guesses.length,
@@ -85,10 +93,12 @@ const meta = {
   },
 };
 
-console.log(`送り先: https://github.com/${REPO}/tree/main/reports/${dirName}`);
+// フォルダ名の日時は送った時点で決まるので、dry-run では伏せる
+console.log(dryRun ? `送り先: ${REPO} の reports/<送った日時>_${suffix}/` : `送り先: https://github.com/${REPO}/tree/main/reports/${dirName}`);
 console.log(`依頼: ${meta.request ?? "(なし)"}`);
 console.log(`アプリ: ${meta.app ?? "(未記入)"} / 作成: ${login} / ${sourceRepo} ${branch} ${commit.slice(0, 7)}${dirty ? " (未コミットの変更あり)" : ""}`);
 console.log(`推測 ${meta.guesses.total} 件 (app ${meta.guesses.app} / system ${meta.guesses.system})`);
+console.log(`変えたファイル: ${changedFiles.length ? changedFiles.map((f) => f.path).join(", ") : "なし"}`);
 console.log("送るファイル: report.json / report.html (行動ログなし) / meta.json");
 if (dryRun) {
   console.log("\n--dry-run なので送っていません。");
