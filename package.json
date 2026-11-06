@@ -12,6 +12,7 @@
     "build-storybook": "storybook build",
     "verify:ui": "bun run lint && bun test && bun run test:stories && storybook build --quiet",
     "report:ui": "bun .claude/skills/implement-ui/report.ts",
+    "report:share": "bun .claude/skills/implement-ui/share.ts",
     "test:stories": "vitest run --project storybook"
   },
   "dependencies": {
