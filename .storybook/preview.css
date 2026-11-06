@@ -1,0 +1,10 @@
+/*
+ * Tailwind の preflight が ol/ul の list-style を消すため、Docs ページの番号付きリストを復元する
+ * (ul は Storybook 側で disc が再指定されている)
+ *
+ * 部品の中の ol（Breadcrumb など、data-slot を持つもの）は対象外にする。
+ * 対象にすると、Docs やガイドラインの見本で部品に番号（「1.」）が出てしまう
+ */
+.sbdocs ol:not([data-slot]) {
+  list-style: decimal;
+}

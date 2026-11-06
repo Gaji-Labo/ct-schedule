@@ -7,7 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "vitest"
+    "test": "vitest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "verify:ui": "bun run lint && bun test && bun run test:stories && storybook build --quiet",
+    "report:ui": "bun .claude/skills/implement-ui/report.ts",
+    "test:stories": "vitest run --project storybook"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -22,6 +27,7 @@
     "@radix-ui/react-tooltip": "^1.2.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.542.0",
     "next": "16.3.8",
     "next-auth": "^5.0.0-beta.29",
@@ -34,17 +40,28 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@storybook/addon-a11y": "^10.6.3",
+    "@storybook/addon-docs": "^10.6.3",
+    "@storybook/addon-themes": "^10.6.3",
+    "@storybook/addon-vitest": "^10.6.3",
+    "@storybook/nextjs-vite": "^10.6.3",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
+    "@vitest/browser-playwright": "4.1.11",
     "date-fns": "^4.4.0",
     "eslint": "^10.10.0",
     "eslint-config-next": "16.3.8",
+    "eslint-plugin-storybook": "^10.6.3",
+    "playwright": "^1.64.1",
     "postcss": "^8",
+    "remark-gfm": "^4.0.1",
+    "storybook": "^10.6.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^6",
-    "vitest": "^3.2.7"
+    "vite": "^8.3.1",
+    "vitest": "4.1.11"
   }
 }

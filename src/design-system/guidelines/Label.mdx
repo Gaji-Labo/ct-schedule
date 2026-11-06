@@ -1,0 +1,51 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import { Badge } from "../../app/components/ui/badge";
+import { Input } from "../../app/components/ui/input";
+import { Label } from "../../app/components/ui/label";
+import * as LabelStories from "../../app/components/ui/label.stories";
+import { DoDont, UsageRules } from "./GuidelineBlocks";
+
+<Meta of={LabelStories} name="ガイドライン" />
+
+# Label ガイドライン
+
+<UsageRules
+  ok={[
+    <>入力欄のすぐ上に置き、<code>htmlFor</code> と入力欄の <code>id</code> で結ぶ（<code>grid gap-2</code>）。</>,
+    <>必須・任意は<strong>文字</strong>で示す（「必須」の <code>Badge</code> など）。</>,
+    <>補足説明は入力欄の下に <code>text-sm text-muted-foreground</code> で置く。</>,
+  ]}
+  ng={[
+    <>必須を色や「＊」だけで示さない → 文字で「必須」と書く。</>,
+    <>入力欄から離れた場所に置かない → すぐ上に置く。</>,
+    <>ラベルを省いて placeholder で代用しない → 入力すると消え、読み上げでも安定して伝わらない。</>,
+  ]}
+/>
+
+<DoDont
+  title="必須・任意は文字で示す"
+  note="入力の手がかり"
+  good={{
+    example: (
+      <div className="grid w-64 gap-2">
+        <div className="flex items-center gap-2">
+          <Label htmlFor="gl-name">名前</Label>
+          <Badge variant="secondary">必須</Badge>
+        </div>
+        <Input id="gl-name" required />
+      </div>
+    ),
+    caption: "「必須」を文字で示す。色が分からなくても、どの欄が必須か一目で分かる。",
+  }}
+  dont={{
+    example: (
+      <div className="grid w-64 gap-2">
+        <Label htmlFor="gl-name-ng">
+          名前 <span className="text-destructive">*</span>
+        </Label>
+        <Input id="gl-name-ng" required />
+      </div>
+    ),
+    caption: "色付きの「＊」だけでは、必須であることが伝わりにくい。",
+  }}
+/>

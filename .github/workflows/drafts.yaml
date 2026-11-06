@@ -1,0 +1,23 @@
+name: Drafts
+
+# drafts/ は確認待ちの画面の置き場所。確定させて pages/ に移すか消してから main にマージする
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  no-drafts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Check src/design-system/drafts is empty
+        run: |
+          left=$(git ls-files src/design-system/drafts | grep -v '^src/design-system/drafts/README.md$' || true)
+          if [ -n "$left" ]; then
+            echo "::error::確認待ちの画面が drafts/ に残っています。確定させて src/design-system/pages/ に移すか、消してからマージしてください。"
+            echo "$left"
+            exit 1
+          fi

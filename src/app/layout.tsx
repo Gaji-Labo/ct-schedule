@@ -1,18 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { fontVariables } from "@/src/lib/fonts";
 
 export const metadata: Metadata = {
   title: "CT組み合わせ表",
@@ -25,13 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    // フォントの CSS 変数は <html> に付ける（tailwind の font-sans が html 要素で解決されるため）
+    <html lang="ja" className={fontVariables}>
+      <body className="antialiased">
         <TooltipProvider>
           {children}
-          {/* メンバー追加の操作後に表示されるToast */}
+          {/* 保存・削除などの操作後に表示されるToast */}
           <Toaster position="top-center" />
         </TooltipProvider>
       </body>
