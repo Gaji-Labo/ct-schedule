@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { createMember, createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 import { repoUrl } from "@/src/design-system/repo";
+import { ctScheduleCardKnown } from "@/src/design-system/a11y-known";
 import type { CT } from "@/src/utils/member";
 import { CTScheduleCard } from "./CTScheduleCard";
 
@@ -12,6 +13,8 @@ const meta = {
   component: CTScheduleCard,
   tags: ["autodocs"],
   parameters: {
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: ctScheduleCardKnown } },
     docs: {
       description: {
         component: [

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { LogOut, Pencil } from "lucide-react";
 import { expect, userEvent, within } from "storybook/test";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { radixPopupKnown } from "@/src/design-system/a11y-known";
 import { Button } from "./button";
 import {
   DropdownMenu,
@@ -23,6 +24,8 @@ const meta = {
   component: DropdownMenu,
   tags: ["autodocs"],
   parameters: {
+    // 許容している a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: radixPopupKnown } },
     docs: {
       description: {
         component: [

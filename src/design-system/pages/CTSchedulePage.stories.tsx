@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CTScheduleCarousel } from "@/components/CTScheduleCarousel";
 import { PageHeader, PageLayout, PageSection } from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
+import { ctScheduleCarouselKnown } from "@/src/design-system/a11y-known";
 import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 
 type PageProps = {
@@ -51,6 +52,8 @@ const meta = {
   title: "Apps/CTスケジュール/Pages/CT組み合わせ表",
   component: CTSchedulePage,
   parameters: {
+    // 直すまで残す a11y の違反。CTScheduleCarousel のもの（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: ctScheduleCarouselKnown } },
     layout: "fullscreen",
     docs: {
       description: {

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, waitFor } from "storybook/test";
+import { ctScheduleCarouselKnown } from "@/src/design-system/a11y-known";
 import { createMembers, createSchedules } from "@/src/design-system/mocks/ct";
 import { CTScheduleCarousel } from "./CTScheduleCarousel";
 
@@ -8,6 +9,8 @@ const meta = {
   component: CTScheduleCarousel,
   tags: ["autodocs"],
   parameters: {
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: ctScheduleCarouselKnown } },
     layout: "padded",
     docs: {
       description: {

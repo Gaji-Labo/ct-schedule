@@ -38,14 +38,17 @@ Gaji-Labo の社内アプリ向けデザインシステム。トークン・コ�
 # Storybook（デザインシステムのカタログ）
 bun run storybook
 
-# lint → test → Storybook ビルド（UI を変えたら通す）
+# lint → test → Story のテスト → Storybook ビルド（UI を変えたら通す）
 bun run verify:ui
+
+# 全 Story を描画し、play 関数と a11y チェック（axe、WCAG 2.2 AA）を当てる（@storybook/addon-vitest、vitest.config.mts）
+bun run test:stories
 
 # Lint実行
 bun run lint
 
 # テスト実行（bun組み込みテストランナーを使用）
-# ※ bun run test (vitest) はpath aliasエラーが出るため bun test を使う
+# ※ ユニットテストは bun test。vitest は Story のテスト（bun run test:stories）専用
 bun test
 
 # CT スケジュールの開発サーバー起動・ビルド
@@ -106,6 +109,6 @@ experiments/                    # AI の生成検証。今は CT スケジュー
 ## Testing
 
 - **Test Runner**: `bun test`（bun組み込みテストランナー）
-  - `bun run test`（vitest）はpath alias（`@/src/...`）でエラーになるため使わない
+  - `bun run test`（vitest）はユニットテストには使わない。vitest は Story のテスト（`bun run test:stories`）だけを回す設定になっている
 - **Test Files**: `*.test.ts`形式
 - デザインシステム側は lint ルールのテスト（`eslint/design-system-plugin.test.ts`）。CT スケジュール側は `src/utils/` のビジネスロジック

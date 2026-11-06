@@ -31,6 +31,8 @@ const config: StorybookConfig = {
     },
     "@storybook/addon-a11y",
     "@storybook/addon-themes",
+    // Story をテストとして回す（bun run test:stories、vitest.config.mts）
+    "@storybook/addon-vitest",
   ],
   framework: {
     name: "@storybook/nextjs-vite",

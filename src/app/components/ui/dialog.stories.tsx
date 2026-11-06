@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import { destructiveButtonKnown } from "@/src/design-system/a11y-known";
 import { Input } from "./input";
 import { Label } from "./label";
 
@@ -24,6 +25,8 @@ const meta = {
   component: Dialog,
   tags: ["autodocs"],
   parameters: {
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: destructiveButtonKnown } },
     docs: {
       description: {
         component: [

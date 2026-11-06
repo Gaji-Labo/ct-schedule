@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Pencil, Trash2 } from "lucide-react";
 import { fn } from "storybook/test";
+import { destructiveButtonKnown } from "@/src/design-system/a11y-known";
 import { Button } from "./button";
 
 const meta = {
@@ -8,6 +9,8 @@ const meta = {
   component: Button,
   tags: ["autodocs"],
   parameters: {
+    // 直すまで残す a11y の違反（理由は src/design-system/a11y-known.ts）
+    a11y: { config: { rules: destructiveButtonKnown } },
     docs: {
       description: {
         component: [
