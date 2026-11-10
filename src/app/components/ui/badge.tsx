@@ -22,6 +22,8 @@ const badgeVariants = cva(
           "border-feedback-success-border bg-feedback-success-subtle text-feedback-success-foreground",
         warning:
           "border-feedback-warning-border bg-feedback-warning-subtle text-feedback-warning-foreground",
+        // CT スケジュールの「お休み」「祝日名」ラベル (docs/design/apps/ct-schedule.md「このアプリ固有の色」)
+        rest: "rounded-full border-transparent bg-status-rest text-status-rest-foreground",
       },
     },
     defaultVariants: {
