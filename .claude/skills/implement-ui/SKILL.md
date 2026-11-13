@@ -181,7 +181,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
 ### 共有リポジトリに送る
 
-レポートは、このハーネスを使う全員で見られるよう共有リポジトリ（`Gaji-Labo/implement-ui-reports`）にためる。ためたものは、あとで突き合わせてルールに戻すときの材料にする。
+レポートは、このハーネスを使う全員で見られるよう共有リポジトリ（`Gaji-Labo/implement-ui-reports`）にためる。ためたものは、あとで突き合わせてルールに戻すときの材料にする。共有リポジトリはサブモジュール `implement-ui-reports/` として持っていて、`report:share` がその中に書いて push する（初期化していなければ初期化もする）。親リポジトリが持つサブモジュールの参照は更新しないので、親のコミットには含めない。
 
 1. `bun run report:share --dry-run` を実行し、送り先・依頼・推測の件数を人に見せて、送ってよいか聞く
 2. よいと言われたら `bun run report:share` を実行する

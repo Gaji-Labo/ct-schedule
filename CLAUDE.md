@@ -87,7 +87,8 @@ eslint/design-system-plugin.mjs # design-system/* lint ルール (+ テスト)
 wrangler.jsonc                  # Storybook の静的ビルドを Cloudflare Workers に配信する
 .claude/skills/
 ├── implement-ui/               # Skill implement-ui (/implement-ui): UI 実装の手順・検証・報告
-│   └── report.ts               # bun run report:ui。作業レポートを .implement-ui/report.html に出す (git 管理外)
+│   ├── report.ts               # bun run report:ui。作業レポートを .implement-ui/report.html に出す (git 管理外)
+│   └── share.ts                # bun run report:share。レポートを implement-ui-reports/ に書いて push する
 ├── screen-brief/               # Skill screen-brief (/screen-brief): 画面を作る前に要件を聞き取り、docs/design/apps/<アプリ名>/screens/ に書く (試作)
 ├── reflect-decisions/          # Skill reflect-decisions (/reflect-decisions): 確認で決めたことを、承認を取ってから要件ファイル・アプリの md・ルール資料に書き足す (試作)
 └── worktree/                   # git worktree の操作
@@ -95,6 +96,7 @@ experiments/                    # AI の生成検証。今は CT スケジュー
 ├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
 ├── prompts/                    # AI に渡す依頼文 (reproduce: 既存画面の再現 / add-page: 新しい画面)
 └── results/                    # 回ごとの生成物・正解との差分・評価シート (notes.md)
+implement-ui-reports/           # サブモジュール (Gaji-Labo/implement-ui-reports)。implement-ui のレポートをためる。参照は更新しない (ignore = all)
 ```
 
 ### CT スケジュール（アプリ）

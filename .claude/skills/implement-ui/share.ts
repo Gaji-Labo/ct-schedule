@@ -10,20 +10,23 @@
  *   (行動ログにはツールの入力と結果がそのまま入り、.env を読めば秘密も載るため)
  * - meta.json: いつ・誰が・どのリポジトリのどのコミット (= どの版のルール) で作ったか、変えたファイル
  *
- * 共有リポジトリは手元に clone して使い回す (既定: ~/.cache/implement-ui-reports)。
+ * 共有リポジトリはサブモジュール implement-ui-reports/ として持つ。初期化していなければここで初期化し、
+ * main を最新にしてから書き込んで push する。親リポジトリが持つサブモジュールの参照 (コミット) は更新しない
+ * (.gitmodules の ignore = all。レポートは足していくだけなので、読むときは submodule update --remote で最新にする)。
  */
 import { spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, relative } from "node:path";
 
-// 名前を変えたらここと Skill implement-ui の「共有リポジトリに送る」を直す
-const REPO = process.env.IMPLEMENT_UI_REPORTS_REPO ?? "Gaji-Labo/implement-ui-reports";
-const CACHE = process.env.IMPLEMENT_UI_REPORTS_DIR ?? join(homedir(), ".cache/implement-ui-reports");
+// 名前を変えたらここと .gitmodules、Skill implement-ui の「共有リポジトリに送る」を直す
+const REPO = "Gaji-Labo/implement-ui-reports";
+const SUBMODULE = "implement-ui-reports";
 
 const dryRun = process.argv.includes("--dry-run");
 const root = realpathSync(process.cwd());
 const reportJson = join(root, ".implement-ui/report.json");
+const reportsRepo = join(root, SUBMODULE);
 
 function run(cmd: string, args: string[], cwd = root, allowFail = false): string {
   const r = spawnSync(cmd, args, { cwd, encoding: "utf8" });
@@ -51,7 +54,8 @@ const commit = run("git", ["rev-parse", "HEAD"], root, true);
 const changedFiles = (spawnSync("git", ["status", "--porcelain", "--untracked-files=all"], { cwd: root, encoding: "utf8" }).stdout ?? "")
   .split("\n")
   .filter(Boolean)
-  .map((l) => ({ status: l.slice(0, 2).trim(), path: l.slice(3).replace(/^"|"$/g, "") }));
+  .map((l) => ({ status: l.slice(0, 2).trim(), path: l.slice(3).replace(/^"|"$/g, "") }))
+  .filter((f) => f.path !== SUBMODULE);
 const dirty = changedFiles.length > 0;
 
 // 最新のセッション記録から、生成に使ったモデルを拾う
@@ -105,30 +109,31 @@ if (dryRun) {
   process.exit(0);
 }
 
-// ---------- 共有リポジトリを用意 ----------
-if (!existsSync(join(CACHE, ".git"))) {
-  mkdirSync(CACHE, { recursive: true });
-  run("gh", ["repo", "clone", REPO, CACHE]);
+// ---------- 共有リポジトリ (サブモジュール) を用意 ----------
+if (!existsSync(join(reportsRepo, ".git"))) {
+  run("git", ["submodule", "update", "--init", SUBMODULE]);
 }
-run("git", ["pull", "--rebase", "--quiet"], CACHE, true);
+// サブモジュールは親が持つコミットに detached で置かれるので、main に乗せて最新にする
+run("git", ["checkout", "--quiet", "main"], reportsRepo);
+run("git", ["pull", "--rebase", "--quiet", "origin", "main"], reportsRepo, true);
 
-const dest = join(CACHE, "reports", dirName);
+const dest = join(reportsRepo, "reports", dirName);
 mkdirSync(dest, { recursive: true });
 copyFileSync(reportJson, join(dest, "report.json"));
 writeFileSync(join(dest, "meta.json"), JSON.stringify(meta, null, 2) + "\n");
 run("bun", [join(root, ".claude/skills/implement-ui/report.ts"), "--no-log", "--out", join(dest, "report.html")]);
 
 // ---------- commit と push ----------
-run("git", ["add", relative(CACHE, dest)], CACHE);
+run("git", ["add", relative(reportsRepo, dest)], reportsRepo);
 const title = `${meta.app ?? "app未記入"}: ${(meta.request ?? "").split("\n")[0].slice(0, 60)}`;
-run("git", ["commit", "--quiet", "-m", title], CACHE);
+run("git", ["commit", "--quiet", "-m", title], reportsRepo);
 // ほかの人と同時に push したときは取り込んでからやり直す
 for (let i = 0; i < 3; i++) {
-  if (spawnSync("git", ["push", "--quiet"], { cwd: CACHE }).status === 0) {
+  if (spawnSync("git", ["push", "--quiet", "origin", "main"], { cwd: reportsRepo }).status === 0) {
     console.log(`\n送りました: https://github.com/${REPO}/tree/main/reports/${dirName}`);
     process.exit(0);
   }
-  run("git", ["pull", "--rebase", "--quiet"], CACHE);
+  run("git", ["pull", "--rebase", "--quiet", "origin", "main"], reportsRepo);
 }
-console.error(`push できませんでした。${CACHE} で git push を確かめてください。`);
+console.error(`push できませんでした。${SUBMODULE}/ で git push origin main を確かめてください (コミットは手元に残っています)。`);
 process.exit(1);
