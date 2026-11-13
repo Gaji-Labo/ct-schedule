@@ -1,8 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
+  findMyPairs,
   generateCTSchedules,
   generateRoundRobinPairs,
   Round,
+  Schedule,
 } from "@/src/utils/member";
 import { mondays } from "@/src/utils/date";
 import { User } from "@/app/actions";
@@ -239,5 +241,81 @@ describe("generateCTSchedules", () => {
     expect(result[1].isHoliday).toBe(true);
     expect(result[0].round).toBe(rounds[0]);
     expect(result[2].round).toBe(rounds[1]);
+  });
+});
+
+describe("findMyPairs", () => {
+  const alice = createUser(1, "Alice");
+  const bob = createUser(2, "Bob");
+  const charlie = createUser(3, "Charlie");
+
+  const schedules: Schedule = [
+    {
+      date: "2026/10/26(月)",
+      round: [
+        [alice, bob],
+        [charlie, null],
+      ],
+      isHoliday: false,
+    },
+    {
+      date: "2026/11/2(月)",
+      round: [
+        [charlie, alice],
+        [bob, null],
+      ],
+      isHoliday: false,
+    },
+    {
+      date: "2026/11/9(月)",
+      round: [
+        [alice, null],
+        [bob, charlie],
+      ],
+      isHoliday: false,
+    },
+    {
+      date: "2026/11/16(月)",
+      round: null,
+      isHoliday: true,
+      holidayName: "祝日",
+    },
+  ];
+
+  test("自分がペアの1人目のとき、2人目を相手として返す", () => {
+    expect(findMyPairs(schedules, alice.id)[0]).toEqual({
+      date: "2026/10/26(月)",
+      partner: bob,
+      isHoliday: false,
+    });
+  });
+
+  test("自分がペアの2人目のとき、1人目を相手として返す", () => {
+    expect(findMyPairs(schedules, alice.id)[1].partner).toEqual(charlie);
+  });
+
+  test("お休みの週は相手がnullになる", () => {
+    expect(findMyPairs(schedules, alice.id)[2]).toEqual({
+      date: "2026/11/9(月)",
+      partner: null,
+      isHoliday: false,
+    });
+  });
+
+  test("祝日の週は祝日として返す", () => {
+    expect(findMyPairs(schedules, alice.id)[3]).toEqual({
+      date: "2026/11/16(月)",
+      partner: null,
+      isHoliday: true,
+      holidayName: "祝日",
+    });
+  });
+
+  test("limitで件数を絞れる", () => {
+    expect(findMyPairs(schedules, alice.id, 2)).toHaveLength(2);
+  });
+
+  test("CTに参加していないユーザーは空配列を返す", () => {
+    expect(findMyPairs(schedules, 999)).toEqual([]);
   });
 });
