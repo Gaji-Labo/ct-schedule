@@ -16,6 +16,8 @@ import {
 すべての画面は `PageLayout`・`PageHeader`・`PageSection`（`src/app/components/PageLayout.tsx`）で組み立てます。
 `<main>` の余白・最大幅・セクションの間隔を画面ごとに書かないでください。実物は「Patterns/PageLayout」で確認できます。
 
+ページは「`PageHeader`（パンくず → h1 と右端の操作）→ `PageSection` を並べる」の形にします。ログイン状態つきの見出しは `Header`（中で `PageHeader` を使う）を使います。
+
 <PageSkeletonDiagram />
 
 <PageLayoutTable />
@@ -29,12 +31,14 @@ Tailwind の既定値をそのまま使います。社内アプリなので **PC
 
 ## Spacing
 
-Tailwind の 4px グリッドを使います (`p-4` = 16px)。任意値 (`p-[13px]`) は使いません。
+Tailwind の 4px グリッドを使います (`p-4` = 16px)。
+
+**任意値（`p-[13px]`・`max-w-[425px]`・`leading-[1.8]` など）は使いません**（`bun run lint` の `design-system/no-arbitrary-value` で検出）。既定のスケールに無い値を何度も使うなら、部品の variant かトークンを追加します。
 
 <SpacingList />
 
 ## Radius
 
-`--radius` (0.5rem) を基準に派生させています。
+`--radius` (0.5rem) を基準に派生させています。下の用途に合わせて選びます（ボタン・入力欄・リスト行は `rounded-md`、カード・ダイアログは `rounded-lg`、アバター・ラベルは `rounded-full`）。
 
 <RadiusList />

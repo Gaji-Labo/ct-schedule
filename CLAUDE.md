@@ -17,20 +17,19 @@ Gaji-Labo の社内アプリ向けデザインシステム。トークン・コ�
 
 ## UI Implementation
 
-**UI（画面・コンポーネント・スタイル）を実装・変更する前に、`docs/design/` の該当ファイルを読むこと。**
+**UI（画面・コンポーネント・スタイル）を実装・変更する前に、`docs/design/` の該当ファイルと、そこからリンクされている Storybook のドキュメント（`src/design-system/` の MDX・各部品の Story）を読むこと。** 色・余白・文字・部品のルールの本文は Storybook 側にあり、`docs/design/rules.md` はその索引。
 
 画面を作る・直す依頼は、Skill の名前がなくても Skill `implement-ui` の手順から始める。要件の聞き取り（`screen-brief`）と、決めたことの書き戻し（`reflect-decisions`）は `implement-ui` の中から呼ぶ。
 
 | 知りたいこと | ファイル |
 | --- | --- |
-| 色・余白・文字・使う部品・禁止事項 | [docs/design/rules.md](./docs/design/rules.md) |
+| 色・余白・文字・使う部品・禁止事項 | [docs/design/rules.md](./docs/design/rules.md)（索引。本文は Storybook の MDX・Story） |
 | 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | [docs/design/principles.md](./docs/design/principles.md) |
 | アプリ固有の目的・画面・利用シーン・部品・Story で用意する状態 | [docs/design/apps/](./docs/design/apps/)（CT スケジュールは [ct-schedule.md](./docs/design/apps/ct-schedule.md)） |
 | 画面ごとの要件（表示と操作・状態・文言・未決のこと） | `docs/design/apps/<アプリ名>/screens/`（アプリの md の「主な画面」からリンク）。ないときは Skill `screen-brief`（`/screen-brief`）で作る |
 | 実装の手順・検証 | Skill `implement-ui`（[.claude/skills/implement-ui/SKILL.md](./.claude/skills/implement-ui/SKILL.md)、`/implement-ui`） |
 | 確認で決めたことの戻し方 | Skill `reflect-decisions`（`/reflect-decisions`） |
-| 仕組みの全体像・フィードバックの戻し先 | [docs/design/workflow.md](./docs/design/workflow.md) |
-| 依頼から生成・戻すまでの流れ（案） | [docs/design/generation-flow.md](./docs/design/generation-flow.md) |
+| 仕組みの全体像・どこに何を書くか・フィードバックの戻し先 | [docs/design/workflow.md](./docs/design/workflow.md) |
 
 ## Development Commands
 

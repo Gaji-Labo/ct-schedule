@@ -240,7 +240,7 @@ const guesses = self?.guesses ?? [];
 const fixOf = (g: Guess) => ({ where: g.fix?.where, what: g.fix?.what ?? g.missing_rule });
 const SCOPES = [
   { key: "app", title: "プロダクト固有の検討材料", note: "このアプリの仕様・文言・データの扱いで答えが変わるもの。プロダクトの持ち主に確かめ、docs/design/apps/ やその部品・Story に戻す。" },
-  { key: "system", title: "デザインシステムに貯めるもの", note: "どのアプリでも同じ判断になるもの。docs/design/rules.md・ガイドライン・共通部品・Skill に戻す。" },
+  { key: "system", title: "デザインシステムに貯めるもの", note: "どのアプリでも同じ判断になるもの。Foundations の MDX・ガイドライン・Story の docs・共通部品・Skill に戻す。" },
   { key: "none", title: "未分類", note: "戻し先はあるが scope が書かれていない（旧形式の report.json か、分け忘れ）。" },
   { key: "nofix", title: "戻し先なし", note: "既存の実装や慣習に合わせただけで、ルールを足さなくてよい推測。" },
 ] as const;
