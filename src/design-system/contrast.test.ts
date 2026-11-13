@@ -5,7 +5,7 @@ import { contrastRatio, parseTokens, resolveColor, type Theme } from "./contrast
 const tokens = parseTokens(readFileSync(new URL("../app/globals.css", import.meta.url), "utf8"));
 const THEMES: Theme[] = ["light", "dark"];
 
-/** [前景, 地, 基準]。文字は 4.5:1、部品の境界・意味を持つ枠やアイコンは 3:1（docs/design/rules.md「コントラスト」） */
+/** [前景, 地, 基準]。文字は 4.5:1、部品の境界・意味を持つ枠やアイコンは 3:1（Foundations/Colors「コントラスト」） */
 const PAIRS: [string, string, number][] = [
   ["foreground", "background", 4.5],
   ["card-foreground", "card", 4.5],
@@ -49,7 +49,7 @@ const KNOWN: Record<string, string> = {
   "success-foreground / success / light":
     "緑 (green-500) の地に白で 2.28:1。今は文字を載せていない（MemberListItem の参加の点だけ）。文字を載せる前に地を濃くする",
   "input / muted / dark":
-    "ダークの控えめな面 (neutral-800) の上の入力欄の枠 (neutral-550) が 2.48:1。rules.md は黒地 3.27:1 しか確かめていない",
+    "ダークの控えめな面 (neutral-800) の上の入力欄の枠 (neutral-550) が 2.48:1。Colors.mdx は黒地 3.27:1 しか確かめていない",
 };
 
 describe("トークンのコントラスト", () => {
@@ -80,7 +80,7 @@ describe("contrastRatio", () => {
     expect(contrastRatio("#777777", "#777777")).toBeCloseTo(1, 5);
   });
 
-  test("rules.md に書いた input の値と一致する（白地 3.41:1）", () => {
+  test("Colors.mdx に書いた input の値と一致する（白地 3.41:1）", () => {
     expect(contrastRatio(resolveColor(tokens.light, "input"), "#ffffff")).toBeCloseTo(3.41, 1);
   });
 });

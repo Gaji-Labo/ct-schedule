@@ -5,7 +5,7 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 
 # UI を実装する
 
-画面・部品・Story を作るときの進め方。**何を守るか**（文脈・原則・色・余白・部品・禁止事項）は `docs/design/` にあり、このスキルは**どう進めて、どう確かめるか**だけを扱う。
+画面・部品・Story を作るときの進め方。**何を守るか**は、文脈・原則が `docs/design/`、色・余白・文字・部品のルールが Storybook のドキュメント（索引は `docs/design/rules.md`）にあり、このスキルは**どう進めて、どう確かめるか**だけを扱う。
 
 依頼内容: $ARGUMENTS
 
@@ -13,9 +13,10 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 
 このリポジトリのデザインシステムは社内アプリ共通のもの。まず依頼文から、どのアプリの画面・部品を作るのか（対象アプリ）を特定する。アプリごとの文脈は `docs/design/apps/<アプリ名>.md` にある。依頼文から特定できなければ、推測として記録する（`scope: "app"`）。
 
-1. `docs/design/` を読む。`principles.md`（文脈と原則）、`apps/<アプリ名>.md`（アプリ固有の文脈）、`rules.md`（色・余白・文字・部品・禁止事項）は全部
-2. 使えそうな部品の Story と docs（`parameters.docs.description`）、ガイドライン（`src/design-system/guidelines/*.mdx`）を読む
-3. 似た画面がすでにあれば、その画面の Story（`src/design-system/pages/`）と実装を読み、組み立て方をそろえる
+1. `docs/design/` を読む。`principles.md`（文脈と原則）、`apps/<アプリ名>.md`（アプリ固有の文脈）、`rules.md`（ルールの索引）は全部
+2. ルールの本文を読む。`src/design-system/foundations/` の MDX（Colors・Typography・Layout・Elevation・Introduction）と `src/design-system/tokens.ts` は全部。MDX の一覧表は `tokens.ts` から表示しているので、値と用途は `tokens.ts` で確かめる
+3. 使えそうな部品の Story と docs（`parameters.docs.description`）、ガイドライン（`src/design-system/guidelines/*.mdx`）を、`rules.md`「コンポーネント」の表から探して読む
+4. 似た画面がすでにあれば、その画面の Story（`src/design-system/pages/`）と実装を読み、組み立て方をそろえる
 
 ### 画面の要件ファイルを確かめる（画面を作る・直すとき）
 
@@ -43,14 +44,14 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
 
 ## 2. 部品を選ぶ
 
-- `docs/design/rules.md`「コンポーネント」の表から選ぶ。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
+- `docs/design/rules.md`「コンポーネント」の表から選び、リンク先の Story の docs とガイドラインに従う。表にない組み合わせをするときは、その部品のガイドラインの OK / NG に従う
 - 足りない部品があれば、**画面より先に**部品と Story を作る（`src/app/components/`）。画面の中だけで使う独自カード・独自ラベルは作らない
   - 部品の Story の `title` は、どのアプリでも使える部品なら `UI/<部品名>`、そのアプリ専用なら `Apps/<アプリ名>/Components/<部品名>`（`<アプリ名>` は `docs/design/apps/<アプリ名>.md`「Storybook での名前」）。迷ったら「別の社内アプリでもそのまま使えるか」で決める
 
 ## 3. 組み立てる
 
-- 骨組みは `PageLayout` / `PageHeader` / `PageSection` で作る（`docs/design/rules.md`「レイアウト」）。`<main>` の余白・最大幅・間隔を画面ごとに書かない
-- 色・余白・角丸・文字・階層は `docs/design/rules.md` の表から選ぶ。任意値・パレット色は使わない
+- 骨組みは `PageLayout` / `PageHeader` / `PageSection` で作る（Foundations/Layout、`src/design-system/foundations/Layout.mdx`）。`<main>` の余白・最大幅・間隔を画面ごとに書かない
+- 色・余白・角丸・文字・階層は Foundations の MDX と `tokens.ts` から選ぶ。任意値・パレット色は使わない
 
 ## 4. Story を書く
 
@@ -140,7 +141,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 | `scope` | 何か | 例 | 戻し先 |
 | --- | --- | --- | --- |
 | `app`（プロダクト固有の検討材料） | このアプリの仕様・文言・データの扱いで答えが変わるもの。多くはプロダクトの持ち主が決める | 人数の数え方、空状態の文言、メンバーの並び順、このアプリ専用の部品の見た目 | `docs/design/apps/<アプリ名>.md`、その部品と Story |
-| `system`（デザインシステムに貯めるもの） | どのアプリでも同じ判断になるもの | ページの骨組みの余白、空・エラー状態の型、ダイアログの幅、禁止事項の例外、画面 Story の書き方 | `docs/design/rules.md`、`principles.md`、ガイドライン、共通部品、この Skill |
+| `system`（デザインシステムに貯めるもの） | どのアプリでも同じ判断になるもの | ページの骨組みの余白、空・エラー状態の型、ダイアログの幅、禁止事項の例外、画面 Story の書き方 | Foundations の MDX、ガイドライン、Story の docs、`principles.md`、共通部品、この Skill |
 
 1つの推測に両方が混ざるときは、2件に分けて書く。例: 空状態なら「Alert を置き再読み込みボタンを付ける」という**型**は `system`、「組み合わせを作れません」という**文言**は `app`。
 
@@ -164,7 +165,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
       "basis": "既存コードから類推 | 一般的な慣習 | 依頼文から解釈 | 根拠なし",
       "scope": "app | system",
       "fix": {
-        "where": "どこに書いてあれば迷わなかったか (例: docs/design/rules.md「余白・サイズ」、src/design-system/guidelines/Carousel.mdx、Skill implement-ui「画面の Story」)",
+        "where": "どこに書いてあれば迷わなかったか (例: src/design-system/foundations/Layout.mdx「Spacing」、src/design-system/guidelines/Carousel.mdx、Skill implement-ui「画面の Story」)",
         "what": "何が書いてあれば迷わなかったか (足すルール・値・OK/NG 例をそのまま書ける形で)"
       }
     }
@@ -172,7 +173,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 }
 ```
 
-`scope` は上の表で決め、`fix.where` は `scope` の戻し先から選ぶ（`app` なのに `rules.md` を指す、のようにずれていたら分け方を見直す）。`fix` は `docs/design/workflow.md`「フィードバックの戻し先」の表に沿って書く。`where` はファイル名と見出しまで具体的に、`what` はそのまま追記できる文にする。推測ではなく作業中につまずいたこと（エラー、やり直し）も、ルールを直せば防げたなら `guesses` に入れる。
+`scope` は上の表で決め、`fix.where` は `scope` の戻し先から選ぶ（`app` なのに Foundations の MDX を指す、のようにずれていたら分け方を見直す）。`fix` は `docs/design/workflow.md`「フィードバックの戻し先」の表に沿って書く。`where` はファイル名と見出しまで具体的に、`what` はそのまま追記できる文にする。推測ではなく作業中につまずいたこと（エラー、やり直し）も、ルールを直せば防げたなら `guesses` に入れる。
 
 要件ファイルやアプリの md の「未決のこと」にある項目は、推測で決めて `guesses` に入れる（`scope: "app"`、`fix.where` はその「未決のこと」がある要件ファイルかアプリの md）。
 

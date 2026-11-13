@@ -38,7 +38,7 @@ export default [
   },
   ...storybook.configs["flat/recommended"],
 
-  // デザインシステム準拠チェック (ルールの意図は docs/design/rules.md を参照)
+  // デザインシステム準拠チェック (ルールの意図は Storybook の Foundations の MDX。索引は docs/design/rules.md)
   {
     files: ["src/**/*.{ts,tsx}"],
     plugins: { "design-system": designSystem },
