@@ -186,7 +186,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 1. `bun run report:share --dry-run` を実行し、送り先・依頼・推測の件数を人に見せて、送ってよいか聞く
 2. よいと言われたら `bun run report:share` を実行する
 
-送るのは `report.json`、行動ログと触ったファイルを除いた `report.html`、`meta.json`（いつ・誰が・どのコミットで作ったか）だけ。手元の `.implement-ui/report.html` には行動ログが残る。実行ごとに新しいフォルダに置くので、7 で直してやり直したときも前のレポートは消えない。
+送るのは `report.json`、行動ログと触ったファイルを除いた `report.html`、`meta.json`（いつ・誰が・どのコミットで作ったか）だけ。手元の `.implement-ui/report.html` には行動ログが残る。実行ごとに新しいフォルダに置くので、7 で直してやり直したときも前のレポートは消えない。送ったフォルダは `.implement-ui/shared.json` に控えられ、人が確認した結果（`review.json`）は、あとで Skill `reflect-decisions` がそのフォルダに足す。
 
 `gh` の認証がない、書き込み権限がないなどで送れなかったときは、作業を止めずに最終報告でそのことを伝える。
 

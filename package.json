@@ -10,9 +10,11 @@
     "test": "vitest",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "verify:ui": "bun run lint && bun test && bun run test:stories && storybook build --quiet",
+    "verify:ui": "bun run lint && bun run test:unit && bun run test:stories && storybook build --quiet",
+    "test:unit": "bun test ./ ./.claude/skills",
     "report:ui": "bun .claude/skills/implement-ui/report.ts",
     "report:share": "bun .claude/skills/implement-ui/share.ts",
+    "report:pull": "git submodule update --init --remote implement-ui-reports",
     "test:stories": "vitest run --project storybook"
   },
   "dependencies": {

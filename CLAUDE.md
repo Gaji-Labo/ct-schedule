@@ -49,7 +49,12 @@ bun run lint
 
 # テスト実行（bun組み込みテストランナーを使用）
 # ※ ユニットテストは bun test。vitest は Story のテスト（bun run test:stories）専用
-bun test
+# ※ bun test は隠しフォルダ (.claude/) を探さないので、Skill のテストも含めて回すときは test:unit
+bun run test:unit
+
+# 共有リポジトリ (implement-ui-reports/) を最新にする。ためたレポートを読む前に実行する
+# (親の参照は古いままなので、--remote なしの git submodule update は古いコミットに戻る)
+bun run report:pull
 
 # CT スケジュールの開発サーバー起動・ビルド
 bun dev
@@ -88,7 +93,7 @@ wrangler.jsonc                  # Storybook の静的ビルドを Cloudflare Wor
 .claude/skills/
 ├── implement-ui/               # Skill implement-ui (/implement-ui): UI 実装の手順・検証・報告
 │   ├── report.ts               # bun run report:ui。作業レポートを .implement-ui/report.html に出す (git 管理外)
-│   └── share.ts                # bun run report:share。レポートを implement-ui-reports/ に書いて push する
+│   └── share.ts / share-lib.ts # bun run report:share。レポートと確認の結果 (review.json) を implement-ui-reports/ に書いて main に push する
 ├── screen-brief/               # Skill screen-brief (/screen-brief): 画面を作る前に要件を聞き取り、docs/design/apps/<アプリ名>/screens/ に書く (試作)
 ├── reflect-decisions/          # Skill reflect-decisions (/reflect-decisions): 確認で決めたことを、承認を取ってから要件ファイル・アプリの md・ルール資料に書き足す (試作)
 └── worktree/                   # git worktree の操作
@@ -96,7 +101,7 @@ experiments/                    # AI の生成検証。今は CT スケジュー
 ├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
 ├── prompts/                    # AI に渡す依頼文 (reproduce: 既存画面の再現 / add-page: 新しい画面)
 └── results/                    # 回ごとの生成物・正解との差分・評価シート (notes.md)
-implement-ui-reports/           # サブモジュール (Gaji-Labo/implement-ui-reports)。implement-ui のレポートをためる。参照は更新しない (ignore = all)
+implement-ui-reports/           # サブモジュール (Gaji-Labo/implement-ui-reports)。implement-ui のレポートをためる。参照は更新しない (ignore = all)。読む前に bun run report:pull
 ```
 
 ### CT スケジュール（アプリ）
@@ -113,4 +118,4 @@ implement-ui-reports/           # サブモジュール (Gaji-Labo/implement-ui-
 - **Test Runner**: `bun test`（bun組み込みテストランナー）
   - `bun run test`（vitest）はユニットテストには使わない。vitest は Story のテスト（`bun run test:stories`）だけを回す設定になっている
 - **Test Files**: `*.test.ts`形式
-- デザインシステム側は lint ルールのテスト（`eslint/design-system-plugin.test.ts`）。CT スケジュール側は `src/utils/` のビジネスロジック
+- デザインシステム側は lint ルールのテスト（`eslint/design-system-plugin.test.ts`）と、レポートの送り方のテスト（`.claude/skills/implement-ui/share-lib.test.ts`。`bun test` だけでは拾われないので `bun run test:unit` で回す）。CT スケジュール側は `src/utils/` のビジネスロジック
