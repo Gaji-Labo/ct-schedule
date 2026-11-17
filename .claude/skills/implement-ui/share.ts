@@ -5,6 +5,7 @@
  *   bun run report:share                      # レポートを送る (Skill implement-ui の 6)
  *   bun run report:share --review --dry-run   # 人の確認の結果 (review.json) を、何を送るかだけ表示する
  *   bun run report:share --review             # review.json を、最後に送ったレポートのフォルダに足す (Skill reflect-decisions)
+ *   bun run report:pull                       # 共有リポジトリを手元に取ってきて最新にする (= share.ts --pull。ためたレポートを読む前に)
  *
  * 送るもの (reports/<日時>_<アプリ名>_<実行した人>/ に置く)
  * - report.json: AI が書いた自己申告 (推測と戻し先)。ためたものを戻すときはこれを読む
@@ -16,9 +17,8 @@
  *
  * 最後に送ったフォルダは .implement-ui/shared.json に控え、review.json はそこに足す。
  *
- * 共有リポジトリはサブモジュール implement-ui-reports/ として持つ。初期化していなければここで初期化し、
- * main を最新にしてから書き込んで、main に直接 push する。親リポジトリが持つサブモジュールの参照 (コミット) は更新しない
- * (.gitmodules の ignore = all)。読むときは bun run report:pull で最新にする。
+ * 共有リポジトリは、このリポジトリ直下の implement-ui-reports/ (git 管理外) に clone して使う。
+ * まだなければ clone し、あれば main を最新にしてから書き込んで、main に直接 push する。
  */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -27,18 +27,19 @@ import { homedir } from "node:os";
 import { join, relative } from "node:path";
 import { countGuesses, countVerdicts, validateReview, type Review } from "./share-lib";
 
-// 名前を変えたらここと .gitmodules、package.json の report:pull、Skill implement-ui の「共有リポジトリに送る」を直す
+// 名前を変えたらここと .gitignore、Skill implement-ui の「共有リポジトリに送る」を直す
 const REPO = "Gaji-Labo/implement-ui-reports";
-const SUBMODULE = "implement-ui-reports";
+const CLONE_DIR = "implement-ui-reports";
 
 const dryRun = process.argv.includes("--dry-run");
 const reviewMode = process.argv.includes("--review");
+const pullMode = process.argv.includes("--pull");
 const root = realpathSync(process.cwd());
 const localDir = join(root, ".implement-ui");
 const reportJson = join(localDir, "report.json");
 const reviewJson = join(localDir, "review.json");
 const sharedJson = join(localDir, "shared.json");
-const reportsRepo = join(root, SUBMODULE);
+const reportsRepo = join(root, CLONE_DIR);
 const treeUrl = (dir: string) => `https://github.com/${REPO}/tree/main/reports/${dir}`;
 
 function run(cmd: string, args: string[], cwd = root, allowFail = false): string {
@@ -57,14 +58,13 @@ function fail(message: string): never {
 
 const sha256 = (file: string) => createHash("sha256").update(readFileSync(file)).digest("hex");
 
-if (!existsSync(reportJson)) fail(".implement-ui/report.json がありません。先に Skill の手順どおり report.json を書いてください。");
-const self = JSON.parse(readFileSync(reportJson, "utf8"));
-const guesses: { scope?: string }[] = self.guesses ?? [];
-
-/** サブモジュールを初期化し、main に乗せて最新にする */
+/** 共有リポジトリを clone する。あれば main に乗せて最新にする */
 function prepareRepo() {
-  if (!existsSync(join(reportsRepo, ".git"))) run("git", ["submodule", "update", "--init", SUBMODULE]);
-  // サブモジュールは親が持つコミットに detached で置かれるので、main に乗せる
+  const gitPath = join(reportsRepo, ".git");
+  if (!existsSync(gitPath)) {
+    run("git", ["clone", "--quiet", `https://github.com/${REPO}.git`, CLONE_DIR]);
+    return;
+  }
   run("git", ["checkout", "--quiet", "main"], reportsRepo);
   run("git", ["pull", "--rebase", "--quiet", "origin", "main"], reportsRepo);
 }
@@ -77,8 +77,18 @@ function commitAndPush(dest: string, title: string) {
     if (spawnSync("git", ["push", "--quiet", "origin", "main"], { cwd: reportsRepo }).status === 0) return;
     run("git", ["pull", "--rebase", "--quiet", "origin", "main"], reportsRepo);
   }
-  fail(`push できませんでした。${SUBMODULE}/ で git push origin main を確かめてください (コミットは手元に残っています)。`);
+  fail(`push できませんでした。${CLONE_DIR}/ で git push origin main を確かめてください (コミットは手元に残っています)。`);
 }
+
+if (pullMode) {
+  prepareRepo();
+  console.log(`${CLONE_DIR}/ を最新にしました (${run("git", ["log", "-1", "--format=%h %s"], reportsRepo)})`);
+  process.exit(0);
+}
+
+if (!existsSync(reportJson)) fail(".implement-ui/report.json がありません。先に Skill の手順どおり report.json を書いてください。");
+const self = JSON.parse(readFileSync(reportJson, "utf8"));
+const guesses: { scope?: string }[] = self.guesses ?? [];
 
 if (reviewMode) shareReview();
 else shareReport();
@@ -94,8 +104,7 @@ function shareReport() {
   const changedFiles = (spawnSync("git", ["status", "--porcelain", "--untracked-files=all"], { cwd: root, encoding: "utf8" }).stdout ?? "")
     .split("\n")
     .filter(Boolean)
-    .map((l) => ({ status: l.slice(0, 2).trim(), path: l.slice(3).replace(/^"|"$/g, "") }))
-    .filter((f) => f.path !== SUBMODULE);
+    .map((l) => ({ status: l.slice(0, 2).trim(), path: l.slice(3).replace(/^"|"$/g, "") }));
   const dirty = changedFiles.length > 0;
 
   const now = new Date();

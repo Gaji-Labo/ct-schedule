@@ -52,8 +52,7 @@ bun run lint
 # ※ bun test は隠しフォルダ (.claude/) を探さないので、Skill のテストも含めて回すときは test:unit
 bun run test:unit
 
-# 共有リポジトリ (implement-ui-reports/) を最新にする。ためたレポートを読む前に実行する
-# (親の参照は古いままなので、--remote なしの git submodule update は古いコミットに戻る)
+# 共有リポジトリを implement-ui-reports/ に取ってきて最新にする。ためたレポートを読む前に実行する
 bun run report:pull
 
 # CT スケジュールの開発サーバー起動・ビルド
@@ -101,7 +100,7 @@ experiments/                    # AI の生成検証。今は CT スケジュー
 ├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
 ├── prompts/                    # AI に渡す依頼文 (reproduce: 既存画面の再現 / add-page: 新しい画面)
 └── results/                    # 回ごとの生成物・正解との差分・評価シート (notes.md)
-implement-ui-reports/           # サブモジュール (Gaji-Labo/implement-ui-reports)。implement-ui のレポートをためる。参照は更新しない (ignore = all)。読む前に bun run report:pull
+implement-ui-reports/           # 共有リポジトリ Gaji-Labo/implement-ui-reports の clone (git 管理外)。report:share / report:pull が作る
 ```
 
 ### CT スケジュール（アプリ）

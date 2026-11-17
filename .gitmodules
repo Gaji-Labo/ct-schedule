@@ -1,5 +1,0 @@
-[submodule "implement-ui-reports"]
-	path = implement-ui-reports
-	url = https://github.com/Gaji-Labo/implement-ui-reports.git
-	branch = main
-	ignore = all

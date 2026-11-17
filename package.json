@@ -14,7 +14,7 @@
     "test:unit": "bun test ./ ./.claude/skills",
     "report:ui": "bun .claude/skills/implement-ui/report.ts",
     "report:share": "bun .claude/skills/implement-ui/share.ts",
-    "report:pull": "git submodule update --init --remote implement-ui-reports",
+    "report:pull": "bun .claude/skills/implement-ui/share.ts --pull",
     "test:stories": "vitest run --project storybook"
   },
   "dependencies": {
