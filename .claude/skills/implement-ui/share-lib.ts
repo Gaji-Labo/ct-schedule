@@ -18,6 +18,15 @@ export type Review = {
   missed: { topic: string; feedback: string; scope?: Scope; fix?: { where: string; what: string } }[];
 };
 
+/**
+ * git の remote の URL から owner/repo だけを取り出す。GitHub 以外や形が読めないときは null。
+ * remote に https://user:token@github.com/... のようにトークンが入っていても、共有リポジトリに載せないため
+ */
+export function repoName(remote: string): string | null {
+  const m = remote.trim().match(/github\.com[/:]([\w.-]+\/[\w.-]+?)(?:\.git)?\/?$/);
+  return m ? m[1] : null;
+}
+
 export function countGuesses(guesses: { scope?: string }[]) {
   return {
     total: guesses.length,

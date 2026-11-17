@@ -1,5 +1,26 @@
 import { describe, expect, test } from "bun:test";
-import { countGuesses, countVerdicts, validateReview, type Review } from "./share-lib";
+import { countGuesses, countVerdicts, repoName, validateReview, type Review } from "./share-lib";
+
+describe("repoName", () => {
+  test.each([
+    "https://github.com/Gaji-Labo/ct-schedule.git",
+    "https://github.com/Gaji-Labo/ct-schedule",
+    "git@github.com:Gaji-Labo/ct-schedule.git",
+    "ssh://git@github.com/Gaji-Labo/ct-schedule.git",
+    "https://github.com/Gaji-Labo/ct-schedule/\n",
+  ])("%p から owner/repo を取る", (remote) => {
+    expect(repoName(remote)).toBe("Gaji-Labo/ct-schedule");
+  });
+
+  test("URL にトークンが入っていても owner/repo だけを返す", () => {
+    const name = repoName("https://mk-0A0:ghp_EXAMPLE0000000000000000000000000000@github.com/Gaji-Labo/ct-schedule.git");
+    expect(name).toBe("Gaji-Labo/ct-schedule");
+  });
+
+  test.each(["", "https://gitlab.com/Gaji-Labo/ct-schedule.git", "/Users/someone/ct-schedule"])("%p は null", (remote) => {
+    expect(repoName(remote)).toBeNull();
+  });
+});
 
 describe("countGuesses", () => {
   test("scope ごとに数え、scope のないものは total にだけ入る", () => {

@@ -25,7 +25,7 @@ import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, relative } from "node:path";
-import { countGuesses, countVerdicts, validateReview, type Review } from "./share-lib";
+import { countGuesses, countVerdicts, repoName, validateReview, type Review } from "./share-lib";
 
 // 名前を変えたらここと .gitignore、Skill implement-ui の「共有リポジトリに送る」を直す
 const REPO = "Gaji-Labo/implement-ui-reports";
@@ -96,7 +96,8 @@ else shareReport();
 // ---------- レポートを送る ----------
 function shareReport() {
   const login = run("gh", ["api", "user", "-q", ".login"], root, true) || run("git", ["config", "user.name"], root, true) || "unknown";
-  const sourceRepo = run("git", ["remote", "get-url", "origin"], root, true).replace(/^https:\/\/github\.com\/|^git@github\.com:|\.git$/g, "");
+  // remote の URL にはトークンが入っていることがあるので、owner/repo だけを取る
+  const sourceRepo = repoName(run("git", ["remote", "get-url", "origin"], root, true));
   const branch = run("git", ["branch", "--show-current"], root, true);
   const commit = run("git", ["rev-parse", "HEAD"], root, true);
   // 変えたファイル (未コミット・新規)。Skill の手順では draft の Story はコミットしないので、ここで何を作ったかを残す
@@ -127,7 +128,7 @@ function shareReport() {
   // フォルダ名の日時は送った時点で決まるので、dry-run では伏せる
   console.log(dryRun ? `送り先: ${REPO} の reports/<送った日時>_${suffix}/` : `送り先: ${treeUrl(dirName)}`);
   console.log(`依頼: ${meta.request ?? "(なし)"}`);
-  console.log(`アプリ: ${meta.app ?? "(未記入)"} / 作成: ${login} / ${sourceRepo} ${branch} ${commit.slice(0, 7)}${dirty ? " (未コミットの変更あり)" : ""}`);
+  console.log(`アプリ: ${meta.app ?? "(未記入)"} / 作成: ${login} / ${sourceRepo ?? "(リポジトリ不明)"} ${branch} ${commit.slice(0, 7)}${dirty ? " (未コミットの変更あり)" : ""}`);
   console.log(`推測 ${counts.total} 件 (app ${counts.app} / system ${counts.system})`);
   console.log(`変えたファイル: ${changedFiles.length ? changedFiles.map((f) => f.path).join(", ") : "なし"}`);
   console.log("送るファイル: report.json / report.html (行動ログなし) / meta.json");
