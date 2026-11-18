@@ -4,6 +4,7 @@
  *   bun run report:ui                  # 今のディレクトリの最新セッションだけ
  *   bun run report:ui --all-sessions   # このディレクトリで行われた全セッション (実験の回収用)
  *   bun run report:ui --out <path>     # 出力先 (既定: .implement-ui/report.html)
+ *   bun run report:ui --no-log         # 行動ログと触ったファイルを載せない (共有リポジトリに送る用。report:share が使う)
  *
  * 材料は2つ。
  * - 推測リストなどの自己申告: AI が Skill の最後に書く .implement-ui/report.json
@@ -26,6 +27,8 @@ const outPath = resolve(option("--out") ?? join(root, ".implement-ui/report.html
 const reportJsonPath = join(root, ".implement-ui/report.json");
 // 評価シート (人や別の AI が、正解との比較・目視の結果を書いた Markdown)。実験の回収時に渡す
 const notesPath = option("--notes");
+// 行動ログにはツールの入力と結果がそのまま入る (.env を読めば秘密も載る) ので、共有用には載せない
+const noLog = flag("--no-log");
 const HOME = homedir();
 
 // ---------- 自己申告 (report.json) ----------
@@ -43,6 +46,7 @@ type Guess = {
 };
 type SelfReport = {
   request?: string;
+  app?: string;
   context?: { who?: string; purpose?: string; first_seen?: string; irreversible?: string };
   components_used?: string[];
   new_components?: { name: string; reason?: string }[];
@@ -382,32 +386,32 @@ pre{background:var(--code);padding:8px;border-radius:6px;overflow:auto;max-heigh
 @media (max-width:640px){.ev{grid-template-columns:1fr}dl{grid-template-columns:1fr}}
 </style></head><body><main>
 <h1>implement-ui レポート</h1>
-<div class="meta">${esc(root)} ・ 作成 ${esc(new Date().toLocaleString("ja-JP"))} ・ セッション ${targetSessions.length} 件</div>
+<div class="meta">${esc(noLog ? basename(root) : root)}${self?.app ? ` ・ ${esc(self.app)}` : ""} ・ 作成 ${esc(new Date().toLocaleString("ja-JP"))} ・ セッション ${targetSessions.length} 件</div>
 ${self?.request ? `<p><b>依頼:</b> ${esc(self.request)}</p>` : ""}
-${verdict}
+${noLog ? '<p class="meta">共有用のレポート。行動ログと触ったファイルは載せていない（手元の <code>.implement-ui/report.html</code> にある）。</p>' : verdict}
 <div class="stats">
   <div class="stat"><b>${guesses.length}</b>推測したこと（固有 ${scopeCount("app")} / DS ${scopeCount("system")}${scopeCount("none") ? ` / 未分類 ${scopeCount("none")}` : ""}）</div>
-  <div class="stat"><b>${tools.length}</b>ツール呼び出し</div>
+${noLog ? "" : `  <div class="stat"><b>${tools.length}</b>ツール呼び出し</div>
   <div class="stat"><b>${dangerCount}</b>外へのアクセス</div>
   <div class="stat"><b>${flagged.length - dangerCount}</b>履歴・ネットワーク</div>
-  <div class="stat"><b>${files.length}</b>触ったパス</div>
+  <div class="stat"><b>${files.length}</b>触ったパス</div>`}
 </div>
 <nav class="tabs" role="tablist">
   ${notesHtml ? '<button role="tab" aria-selected="true" data-tab="eval">評価</button>' : ""}
   <button role="tab" aria-selected="${notesHtml ? "false" : "true"}" data-tab="guess">推測と戻し先 (${guesses.length})</button>
-  <button role="tab" aria-selected="false" data-tab="log">行動ログ</button>
-  <button role="tab" aria-selected="false" data-tab="files">触ったファイル</button>
+${noLog ? "" : `  <button role="tab" aria-selected="false" data-tab="log">行動ログ</button>
+  <button role="tab" aria-selected="false" data-tab="files">触ったファイル</button>`}
   <button role="tab" aria-selected="false" data-tab="summary">作業のまとめ</button>
 </nav>
 ${notesHtml ? `<section class="tab on" id="eval"><p class="meta">評価シート（<code>${esc(basename(notesPath!))}</code>）。正解との比較や目視など、生成した AI 以外が確かめた結果。</p><div class="notes">${notesHtml}</div></section>` : ""}
 <section class="tab${notesHtml ? "" : " on"}" id="guess"><h2>推測で決めたことと戻し先</h2><p class="meta">docs/design/・Story・ガイドラインに書かれておらず、AI が推測で決めたこと。それぞれに「どこに・何が書いてあれば迷わなかったか」（docs/design/workflow.md「フィードバックの戻し先」に沿った直す候補）を付けている。</p>${guessRows}</section>
-<section class="tab" id="log"><h2>行動ログ</h2><p class="meta">Claude Code のセッション記録から作成（AI の自己申告ではない）。行を開くと入力と結果が見られる。</p>
+${noLog ? "" : `<section class="tab" id="log"><h2>行動ログ</h2><p class="meta">Claude Code のセッション記録から作成（AI の自己申告ではない）。行を開くと入力と結果が見られる。</p>
 <div class="filters" role="group">
   <button aria-pressed="true" data-f="all">すべて</button><button aria-pressed="false" data-f="flagged">要確認だけ (${flagged.length})</button>
   <button aria-pressed="false" data-f="tool">ツールだけ</button><button aria-pressed="false" data-f="read">読む</button><button aria-pressed="false" data-f="write">書く</button><button aria-pressed="false" data-f="bash">Bash</button><button aria-pressed="false" data-f="user">会話</button>
 </div><ol class="log">${eventRows}</ol></section>
 <section class="tab" id="files"><h2>触ったファイル</h2><p class="meta">Read / Edit / Write / Glob / Grep の対象。外のパスを上にまとめている。Bash 経由のアクセスは「行動ログ」の要確認で見る。</p>
-<table><thead><tr><th>パス</th><th>場所</th><th>読む</th><th>書く</th></tr></thead><tbody>${fileRows}</tbody></table></section>
+<table><thead><tr><th>パス</th><th>場所</th><th>読む</th><th>書く</th></tr></thead><tbody>${fileRows}</tbody></table></section>`}
 <section class="tab" id="summary"><h2>作業のまとめ（AI の自己申告）</h2>${summaryBlock || '<p class="empty">report.json がありません。</p>'}</section>
 </main>
 <script>
@@ -418,4 +422,5 @@ document.querySelectorAll(".filters button").forEach(b=>b.onclick=()=>{document.
 mkdirSync(dirname(outPath), { recursive: true });
 writeFileSync(outPath, html);
 console.log(`レポート: ${outPath}`);
-console.log(`推測 ${guesses.length} 件 / ツール ${tools.length} 回 / 外へのアクセス ${dangerCount} 件 / 履歴・ネットワーク ${flagged.length - dangerCount} 件`);
+if (noLog) console.log(`推測 ${guesses.length} 件 (行動ログなし)`);
+else console.log(`推測 ${guesses.length} 件 / ツール ${tools.length} 回 / 外へのアクセス ${dangerCount} 件 / 履歴・ネットワーク ${flagged.length - dangerCount} 件`);
