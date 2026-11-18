@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Harness² の改善ループを ct-schedule の画面づくりで回す入口。
+#
+#   experiments/harness2/h2 run   --task mypage --k 1 --mode parallel [--dry-run]
+#   experiments/harness2/h2 judge --task mypage --k 1 --mode parallel
+#   experiments/harness2/h2 smoke --task mypage           # 基底ハーネスで1回だけ rollout する
+#
+# harness2 本体（google-research/harness2 の clone。venv と proposer.py のパッチ入り）は H2_HOME で指定する。
+set -euo pipefail
+
+cmd="${1:?run | judge | smoke}"
+shift
+here="$(cd "$(dirname "$0")" && pwd)"
+h2_home="${H2_HOME:-$HOME/Work/30_tsukulink/harness2}"
+[ -x "$h2_home/.venv/bin/python" ] || { echo "harness2 の venv がありません: $h2_home/.venv" >&2; exit 1; }
+
+# cmux などの shim を通さず、本物の claude を使う
+export PATH="$HOME/.local/bin:$PATH"
+export PYTHONPATH="$here${PYTHONPATH:+:$PYTHONPATH}"
+cd "$h2_home"
+exec "$h2_home/.venv/bin/python" -u -m "ctds.$cmd" "$@"
