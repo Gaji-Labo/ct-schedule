@@ -122,7 +122,7 @@
     --status-holiday: var(--neutral-100);
     --status-holiday-foreground: var(--neutral-500);
     /* 「お休み」「祝日名」などの補足ラベル */
-    --status-rest: var(--neutral-400);
+    --status-rest: var(--neutral-500);
     --status-rest-foreground: var(--neutral-0);
     /* 今週 (直近) のスケジュールの強調枠 */
     --highlight-current: var(--neutral-500); /* 枠だけで「今週」を伝えるので 3:1 以上 (4.74:1) */
