@@ -1,0 +1,4 @@
+{
+  "runner": "bun",
+  "testGlobs": ["**/*.test.ts"]
+}
