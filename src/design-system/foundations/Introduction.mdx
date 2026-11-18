@@ -22,21 +22,23 @@ Gaji-Labo の社内アプリの UI を組み立てるための部品とルール
 
 ## 基本ルール
 
-ルールの正本はリポジトリの <a href={repoUrl("docs/design")}><code>docs/design/</code></a> です。ここでは要点だけを載せます。
+**色・余白・文字・部品のルールの正本は、この Storybook のドキュメント**（Foundations の各ページ、各部品の「Docs」と「ガイドライン」）です。ルールを足す・直すときはここを書き換えます。
+リポジトリの <a href={repoUrl("docs/design/rules.md")}>docs/design/rules.md</a> は、どのルールがどこにあるかの索引です。
+
+ルール以外の情報はリポジトリの <a href={repoUrl("docs/design")}><code>docs/design/</code></a> にあります。どこに何を書くかの一覧は <a href={repoUrl("docs/design/workflow.md")}>workflow.md</a>「どこに何を書くか」を見てください。
 
 | 知りたいこと | ファイル |
 | --- | --- |
-| 色・余白・文字・使う部品・禁止事項 | <a href={repoUrl("docs/design/rules.md")}>rules.md</a> |
 | 画面の目的・見せ方の判断材料（社内アプリ共通の文脈と原則） | <a href={repoUrl("docs/design/principles.md")}>principles.md</a> |
 | アプリ固有の目的・画面・利用シーン（CT スケジュール） | <a href={repoUrl("docs/design/apps/ct-schedule.md")}>apps/ct-schedule.md</a> |
 | 実装の手順・検証 | Skill <a href={repoUrl(".claude/skills/implement-ui/SKILL.md")}>implement-ui</a>（Claude Code では `/implement-ui`） |
-| 仕組みの全体像・フィードバックの戻し先 | <a href={repoUrl("docs/design/workflow.md")}>workflow.md</a> |
 
 違反の一部は `bun run lint` の `design-system/*` ルールで検出されます。
 
 1. **色は Semantic トークンだけを使う。** `bg-gray-100` や `#e5e5e5` を直接書かない。
    該当するトークンが無ければ、トークンを追加してから使う。
 2. **既存コンポーネントを優先する。** `<button className="...">` を自作せず、`Button` の `variant` / `size` から選ぶ。
+   画面ごとの独自カードや独自ラベルも作らない。既存部品の組み合わせで足りなければ、部品を追加してから使う。
 3. **見た目の調整は variant で行う。** `className` での上書きは余白やレイアウトの調整にとどめる。
 4. **ライト・ダーク両方で確認する。** ツールバーのテーマ切替で表示を確かめる。
 

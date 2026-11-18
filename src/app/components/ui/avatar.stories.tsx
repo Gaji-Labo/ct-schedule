@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { AVATAR_COLORS, Avatar, AvatarFallback, AvatarImage } from "./avatar";
 
 /**
- * 元: shadcn-storybook-registry (radix/avatar-story) を docs/design/rules.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/avatar-story) をこのデザインシステムのルールに合わせて調整
  */
 const meta = {
   title: "UI/Avatar",
@@ -14,7 +14,7 @@ const meta = {
         component: [
           "ユーザーの画像を丸く表示する部品。画像が読み込めないときは `AvatarFallback`（頭文字）を出す。",
           "",
-          "**使い分け**: 画面でユーザーを表示するときは、この部品を直接使わず、画像・代替テキスト・頭文字のフォールバックをまとめて扱うラッパー部品（アプリごとの Domain 部品）を用意して使う。",
+          "**使い分け**: 画面でユーザーを表示するときは、この部品を直接使わず、画像・代替テキスト・頭文字のフォールバックをまとめて扱うラッパー部品（アプリごとの Domain 部品）を用意して使う。Slack のユーザーを表示するときは `UserAvatar`（`src/app/components/UserAvatar.tsx`。`colorSeed` も対応済み）を使う。",
           "",
           "**size の選び方**: 通常は `default`（40px）。リスト行など狭い場所は `sm`（32px）、プロフィールなど目立たせる場所は `lg`（48px）。",
           "",

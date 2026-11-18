@@ -1,5 +1,5 @@
 /**
- * globals.css のトークンを読み、組み合わせのコントラスト比を計算する（docs/design/rules.md「コントラスト」）。
+ * globals.css のトークンを読み、組み合わせのコントラスト比を計算する（Foundations/Colors「コントラスト」、src/design-system/foundations/Colors.mdx）。
  * contrast.test.ts が、文字と地・部品の境界と地の組を、ライト・ダークの両方で確かめる。
  */
 

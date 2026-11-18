@@ -34,7 +34,7 @@ Skill `implement-ui` から呼ばれたときは、そこで控えておいた�
 | --- | --- |
 | その画面だけのこと（`scope: "app"`） | 画面の要件ファイルの該当する見出し |
 | アプリ全体にかかわること（`scope: "app"`） | アプリの md の該当する節 |
-| どのアプリでも同じ答えになること（`scope: "system"`） | `workflow.md`「フィードバックの戻し先」の表に沿う（`rules.md`、`principles.md`、ガイドライン、Story の docs、Skill） |
+| どのアプリでも同じ答えになること（`scope: "system"`） | `workflow.md`「フィードバックの戻し先」の表に沿う（Foundations の MDX、ガイドライン、Story の docs、`principles.md`、Skill。部品やページを足したら `rules.md` の索引にも行を足す） |
 | 未決への答え | 該当する見出しに書き、「未決のこと」の行を消す |
 | 保留 | 未決として、要件ファイルかアプリの md の「未決のこと」に足す（すでにあれば何もしない） |
 

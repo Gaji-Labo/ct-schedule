@@ -10,7 +10,7 @@ Tailwind の既定スケールのうち、社内アプリで使う組み合わ�
 ## フォントファミリー
 
 欧文・数字は **Geist**、和文は **Noto Sans JP** を使います。どちらも `next/font` で読み込み（`src/lib/fonts.ts`）、`tailwind.config.ts` の `font-sans` にまとめています。
-`font-sans` は既定なので、コンポーネントで `font-*` を指定する必要はありません。
+`font-sans` は既定なので、コンポーネントで `font-*` を指定しません（等幅が要るときだけ `font-mono`）。
 
 - 和文を Web フォントにしているのは、Mac・Windows で見た目（字幅・太さ・行の高さ）を揃えるため
 - 読み込めないときは、ヒラギノ角ゴ → Yu Gothic UI → メイリオの順に OS のゴシック体を使う

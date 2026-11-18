@@ -10,6 +10,7 @@ import { ElevationList } from "./TokenDocs";
 - 基調は「静かな UI」（docs/design/principles.md「デザイン原則」）。面の区切りを影で立体的に見せない
 - ダークモードでは影がほとんど見えないため、どの階層でも **枠線を必ず付ける**。影は補助
 - 影の強さは2段階だけ（`shadow-md` / `shadow-lg`）。`shadow-sm`・`shadow`・`shadow-xl` 以上は使わない
+- どちらの影も部品に組み込み済みなので、画面側で `shadow-*` を書かない
 
 <ElevationList />
 

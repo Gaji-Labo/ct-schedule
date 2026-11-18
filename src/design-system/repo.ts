@@ -7,5 +7,5 @@
 const REPO = "https://github.com/Gaji-Labo/ct-schedule";
 const branch = process.env.STORYBOOK_GIT_BRANCH || "main";
 
-/** リポジトリ直下からのパス（例: "docs/design/rules.md#色"）を GitHub の URL にする */
+/** リポジトリ直下からのパス（例: "docs/design/rules.md#色" や "src/design-system/foundations/Colors.mdx"）を GitHub の URL にする */
 export const repoUrl = (path: string) => `${REPO}/blob/${branch}/${path}`;

@@ -6,12 +6,34 @@ import { BrandPalette, PrimitivePalette, SemanticColorTable } from "./TokenDocs"
 
 # Colors
 
+## 使い方のルール
+
+- **Semantic トークンだけを使う。** パレット色の直書き（`bg-gray-100`・`text-black`・`bg-white` など）、色の任意値（`bg-[#e5e5e5]`）、`style` での色指定はしない（`bun run lint` の `design-system/no-palette-color` で検出。`style` は対象外）
+- 該当するトークンが無ければ、トークンを追加してから使う。追加するときは `src/app/globals.css`（ライト・ダーク両方）、`tailwind.config.ts`、`src/design-system/tokens.ts` の3箇所を揃え、下の「コントラスト」を確かめる
+- Feedback message（`feedback-*`）と Avatar（`avatar-*`）は、部品の variant や `colorSeed` 経由で使い、クラスを直接書かない
+- アプリ固有の色（例: CT スケジュールの祝日・お休み）は、トークンの定義は同じ3箇所に置き、用途は <a href={repoUrl("docs/design/apps")}>docs/design/apps/&lt;アプリ名&gt;.md</a> に書く
+
 ## Semantic
 
 コンポーネントから使う色です。Tailwind のクラス (`bg-primary`、`text-muted-foreground` など) で指定します。
 ツールバーでダークテーマに切り替えると、ダーク時の値を確認できます。
 
 <SemanticColorTable />
+
+## コントラスト
+
+WCAG 2.2 AA を守ります。トークンを追加・変更するときは、ライト・ダーク両方の背景（`background` と、その上に置く `muted` など）に対して比率を確かめます。
+組み合わせは `src/design-system/contrast.test.ts` に書き、`bun test` で計算します。部品・画面に組んだあとの違反は、`bun run test:stories`（全 Story に axe を当てる）で見つけます。
+
+| 対象 | 基準 | 該当するトークン |
+| --- | --- | --- |
+| 本文・ラベルなどの文字 | 4.5:1 以上（18px 以上の太字・24px 以上は 3:1 以上） | `foreground`、`muted-foreground`、各 `*-foreground` |
+| **部品の境界**（枠が無いと入力できる場所・部品の範囲がわからないもの） | **3:1 以上**（WCAG 1.4.11） | `input`（白地 3.41:1・muted 地 3.13:1 / 黒地 3.27:1。濃くなりすぎないよう、3:1 を少し上回る中間色 `neutral-450` / `neutral-550` を使う） |
+| 色や枠だけで意味を伝えるもの | 3:1 以上（WCAG 1.4.11） | `highlight-current`（白地 4.74:1 / 黒地 4.18:1）、フォーカスリング `ring` |
+| 飾りの区切り（無くても情報が失われないもの） | 基準なし。ただし面の区切りが見える濃さにする | `border`（白地 1.48:1 / 黒地 1.91:1） |
+
+- 枠線の色を選ぶときは「枠が無いと何かがわからなくなるか」で判断する。わからなくなるなら `border-input` か 3:1 以上の色、ならないなら `border`
+- 状態の色（Alert・toast・Badge の `feedback-*-border`）は、背景色・アイコン・文言でも意味を伝えているので枠線は飾り扱い。色だけで状態を伝えない
 
 ## Primitive
 
@@ -24,6 +46,6 @@ Semantic トークンの参照先になる生の色値です。**コンポーネ
 Gaji-Labo のブランドカラーです。出典は Figma「Gaji-Labo Styles」の Gaji-Labo Colors（Main は Web Site、Accent は Blog の定義）。
 用途は Web サイト・ブログでの使われ方をそのまま載せています。
 
-**Primitive なので、コンポーネントからは直接使いません。** アプリで使うときは、用途に合う Semantic トークンを追加し、その参照先にします（<a href={repoUrl("docs/design/rules.md#色")}>docs/design/rules.md「色」</a>）。
+**Primitive なので、コンポーネントからは直接使いません。** アプリで使うときは、用途に合う Semantic トークンを追加し、その参照先にします（例: `avatar-*`）。
 
 <BrandPalette />

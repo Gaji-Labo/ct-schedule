@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Badge } from "./badge";
 
 /**
- * 元: shadcn-storybook-registry (radix/badge-story) を docs/design/rules.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/badge-story) をこのデザインシステムのルールに合わせて調整
  */
 const meta = {
   title: "UI/Badge",

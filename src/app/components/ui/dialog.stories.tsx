@@ -18,7 +18,7 @@ import { Input } from "./input";
 import { Label } from "./label";
 
 /**
- * 元: shadcn-storybook-registry (radix/dialog-story) を docs/design/rules.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/dialog-story) をこのデザインシステムのルールに合わせて調整
  */
 const meta = {
   title: "UI/Dialog",

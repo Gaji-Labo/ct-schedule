@@ -17,7 +17,7 @@ import {
 } from "./dropdown-menu";
 
 /**
- * 元: shadcn-storybook-registry (radix/dropdown-menu-story) を docs/design/rules.md に合わせて調整
+ * 元: shadcn-storybook-registry (radix/dropdown-menu-story) をこのデザインシステムのルールに合わせて調整
  */
 const meta = {
   title: "UI/DropdownMenu",

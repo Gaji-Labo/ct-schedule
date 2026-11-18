@@ -47,7 +47,7 @@ CT スケジュール固有の目的・画面・利用シーン・原則。社�
 
 ## このアプリ固有の色
 
-共通の色は [../rules.md](../rules.md)「色」にある。次のトークンは CT スケジュールの用語で名前を付けているが、定義は共通トークンと同じ場所（`globals.css`・`tailwind.config.ts`・`tokens.ts`）にある。
+共通の色は Storybook の Foundations/Colors（`src/design-system/foundations/Colors.mdx`。索引は [../rules.md](../rules.md)「色」）にある。次のトークンは CT スケジュールの用語で名前を付けているが、定義は共通トークンと同じ場所（`globals.css`・`tailwind.config.ts`・`tokens.ts`）にある。
 
 | 用途 | 使うトークン |
 | --- | --- |
@@ -59,7 +59,7 @@ CT スケジュール固有の目的・画面・利用シーン・原則。社�
 
 ## このアプリ固有の部品
 
-共通の部品は [../rules.md](../rules.md)「コンポーネント」にある。Storybook では「Apps/CTスケジュール/Components/」に出る。
+共通の部品は [../rules.md](../rules.md)「コンポーネント」から引ける。Storybook では「Apps/CTスケジュール/Components/」に出る。
 
 | やりたいこと | 使うもの |
 | --- | --- |
