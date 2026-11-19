@@ -37,14 +37,44 @@ const AvatarImage = React.forwardRef<
 ))
 AvatarImage.displayName = AvatarPrimitive.Image.displayName
 
+/**
+ * 画像が無いときの背景色 (Semantic トークン avatar-1〜7)。
+ * Tailwind がクラスを検出できるよう、文字列はそのまま書く。
+ */
+const AVATAR_COLORS = [
+  "bg-avatar-1 text-avatar-1-foreground",
+  "bg-avatar-2 text-avatar-2-foreground",
+  "bg-avatar-3 text-avatar-3-foreground",
+  "bg-avatar-4 text-avatar-4-foreground",
+  "bg-avatar-5 text-avatar-5-foreground",
+  "bg-avatar-6 text-avatar-6-foreground",
+  "bg-avatar-7 text-avatar-7-foreground",
+] as const
+
+/**
+ * seed (ユーザー ID など) から背景色を1つ選ぶ。
+ * 見た目はランダムだが、同じ seed なら毎回同じ色になる (再描画やページ移動で色が変わらない)。
+ */
+function getAvatarColor(seed: string) {
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
+  }
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length]
+}
+
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
-  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
+    /** 背景色を決めるキー (ユーザー ID など)。省略時は bg-muted */
+    colorSeed?: string
+  }
+>(({ className, colorSeed, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
+      "flex h-full w-full items-center justify-center rounded-full",
+      colorSeed ? getAvatarColor(colorSeed) : "bg-muted",
       className
     )}
     {...props}
@@ -52,4 +82,4 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-export { Avatar, AvatarImage, AvatarFallback }
+export { Avatar, AvatarImage, AvatarFallback, AVATAR_COLORS, getAvatarColor }

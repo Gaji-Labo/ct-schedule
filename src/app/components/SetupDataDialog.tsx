@@ -63,7 +63,7 @@ export const SetupDataDialog = ({
         setOpen(open);
       }}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <form action={handleSubmit} className="grid gap-5">
           <DialogHeader>
             <DialogTitle>設定</DialogTitle>

@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Storybook の静的ビルド（bun run build-storybook）を配信する
+  "name": "ct-schedule-storybook",
+  "compatibility_date": "2026-10-13",
+  // ダッシュボードの設定はデプロイ時に上書きされるため、ここで明示する
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./storybook-static"
+  },
+  // wrangler preview（非本番ブランチのビルド）の実行に必要。assets などはトップレベルの設定を引き継ぐ
+  "previews": {}
+}

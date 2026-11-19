@@ -42,3 +42,11 @@ next-env.d.ts
 
 # mcp
 .mcp.json
+
+# storybook
+/storybook-static
+*storybook.log
+# implement-ui の作業レポート
+/.implement-ui
+# レポートをためる共有リポジトリ (Gaji-Labo/implement-ui-reports) の clone。report:share / report:pull が作る
+/implement-ui-reports

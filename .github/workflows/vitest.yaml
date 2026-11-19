@@ -23,10 +23,21 @@ jobs:
         run: bun install
 
       - name: Run tests
-        run: bun test
+        run: bun run test:unit
 
       - name: Run linter
         run: bun run lint
 
       - name: Run type check
         run: bun run typecheck
+
+      # 全 Story を描画し、play 関数と a11y チェック（axe、WCAG 2.2 AA）を当てる（@storybook/addon-vitest）
+      - name: Install Chromium for Story tests
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run Story tests
+        run: bun run test:stories
+
+      # MDX のドキュメントも含めてビルドする (--test は MDX を対象にしないので付けない)
+      - name: Build Storybook
+        run: bun run build-storybook --quiet
