@@ -32,7 +32,6 @@
 | アプリ固有の原則・色・部品 | 「今週がすぐわかる」、`status-holiday`、`CTScheduleCard` | アプリの md。最初は空で、生成を重ねて育つ |
 | 進め方・検証・報告 | 読む順番、用意する状態、推測の記録 | Skill `implement-ui`。壁打ちは Skill `screen-brief`、戻すのは Skill `reflect-decisions` |
 | その回の依頼 | 作る画面 | 一言で伝える。ファイルには残さない |
-| 検証用の依頼文 | reproduce、add-page | `experiments/prompts/`（条件をそろえるために固定する） |
 
 依頼に書きたくなったことがあれば、まず上のどこに置くかを考える。
 

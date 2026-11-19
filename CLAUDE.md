@@ -80,7 +80,6 @@ src/
 │   ├── guidelines/             # 各部品の「ガイドライン」ページ (組み合わせ方の OK / NG)。UI/<部品> の下に出る
 │   ├── pages/                  # Storybook の「Apps/<アプリ名>/Pages/」: 画面全体をモックデータで再現した Story (人が確定させた正式な画面)
 │   ├── drafts/                 # Storybook の「Drafts/<アプリ名>/」: 確認待ちの画面。確定したら pages/ へ移す。main には残さない
-│   │   └── experiments/        # 生成検証の結果を正解と並べて見るためのコピー (git 管理外)
 │   └── mocks/                  # Story 用のモックデータ・代用品
 ├── lib/
 │   └── utils.ts                # shadcn/ui utilities (cn関数など)
@@ -96,10 +95,6 @@ wrangler.jsonc                  # Storybook の静的ビルドを Cloudflare Wor
 ├── screen-brief/               # Skill screen-brief (/screen-brief): 画面を作る前に要件を聞き取り、docs/design/apps/<アプリ名>/screens/ に書く (試作)
 ├── reflect-decisions/          # Skill reflect-decisions (/reflect-decisions): 確認で決めたことを、承認を取ってから要件ファイル・アプリの md・ルール資料に書き足す (試作)
 └── worktree/                   # git worktree の操作
-experiments/                    # AI の生成検証。今は CT スケジュールの画面を題材にしている
-├── setup.sh / collect.sh       # 作業場所 (~/ct-schedule-experiments/<種類>-<連番>) の作成と結果の回収
-├── prompts/                    # AI に渡す依頼文 (reproduce: 既存画面の再現 / add-page: 新しい画面)
-└── results/                    # 回ごとの生成物・正解との差分・評価シート (notes.md)
 implement-ui-reports/           # 共有リポジトリ Gaji-Labo/implement-ui-reports の clone (git 管理外)。report:share / report:pull が作る
 ```
 

@@ -5,7 +5,6 @@ Gaji-Labo の社内アプリで使うデザインシステムです。トーク�
 - カタログ: Storybook（`bun run storybook` → [http://localhost:6006](http://localhost:6006)。Cloudflare Workers にも配信）
 - ルール・文脈: [docs/design/](./docs/design/)
 - 実装の手順・検証: Skill [implement-ui](./.claude/skills/implement-ui/SKILL.md)
-- AI の生成検証: [experiments/](./experiments/)
 
 ### 技術スタック
 
