@@ -205,7 +205,7 @@
     /* アプリ固有 (CT スケジュール) */
     --status-holiday: var(--neutral-800);
     --status-holiday-foreground: var(--neutral-400);
-    --status-rest: var(--neutral-600);
+    --status-rest: var(--neutral-500);
     --status-rest-foreground: var(--neutral-50);
     --highlight-current: var(--neutral-500);
 

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/src/lib/utils";
 import { CT } from "@/src/utils/member";
-import { Headphones } from "lucide-react";
+import { Headphones, Moon } from "lucide-react";
 
 const CTScheduleItem = ({ user }: { user: User }) => (
   <div className="flex items-center gap-2 min-w-0">
@@ -87,11 +87,16 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
                 )}
               </>
             ) : (
-              <div className="col-span-2">
-                <Badge className="bg-gray-400 rounded-full hover:bg-gray-400">
-                  お休み
-                </Badge>
-              </div>
+              <>
+                {/* × の列は空けて、2人目のアバターと同じ位置・同じ大きさの円に「お休み」を置く */}
+                <span />
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-status-rest text-status-rest-foreground">
+                    <Moon className="h-4 w-4 fill-current" aria-hidden="true" />
+                  </span>
+                  <span className="text-sm font-bold">お休み</span>
+                </div>
+              </>
             )}
           </div>
         ))}
