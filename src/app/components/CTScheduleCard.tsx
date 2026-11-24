@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/src/lib/utils";
 import { CT } from "@/src/utils/member";
-import { Headphones } from "lucide-react";
+import { Headphones, Moon } from "lucide-react";
 
 const CTScheduleItem = ({ user }: { user: User }) => (
-  <div className="flex items-center gap-2">
+  <div className="flex items-center gap-2 min-w-0">
     <UserAvatar user={user} size="sm" />
-    <span className="font-medium text-sm">{user.slack_display_name}</span>
+    <span className="font-medium text-sm truncate">
+      {user.slack_display_name}
+    </span>
   </div>
 );
 
@@ -39,26 +41,43 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
           {schedule.holidayName}
         </Badge>
       )}
-      <div className="flex flex-col gap-2">
+      {/*
+        行をまたいで列の幅をそろえるため、一覧を5列の grid にし、各行は subgrid でその列を共有する。
+        列の幅は全行でいちばん長い内容に合うので、2人目のアイコンの位置が行ごとにずれず、
+        カードの幅もこれまでどおり中身で決まる（番号 / 1人目 / × / 2人目 / ハドル）
+      */}
+      <div
+        className="grid gap-y-2"
+        style={{ gridTemplateColumns: "repeat(5, auto)" }}
+      >
         {schedule.round?.map((pair, pairIndex) => (
           <div
             key={pairIndex}
-            className="flex items-center gap-2 p-3 bg-gray-50 rounded-md"
+            className={cn(
+              "col-span-5 grid grid-cols-subgrid items-center gap-x-2 p-3 rounded-md",
+              // 奇数行だけ面を付けて、組み合わせの区切りをわかりやすくする。
+              // お休みの週のカードは背景が muted と同じ明るさなので、奇数行は background にして差を残す
+              schedule.isHoliday ? "odd:bg-background" : "odd:bg-muted",
+            )}
           >
-            <span className="text-gray-400 text-xs">{pairIndex + 1}</span>
+            <span className="text-right tabular-nums text-muted-foreground text-xs">
+              {pairIndex + 1}
+            </span>
             <CTScheduleItem user={pair[0]} />
             {pair[1] ? (
               <>
-                <span className="text-gray-400 text-xs">×</span>
+                <span className="text-center text-muted-foreground text-xs">
+                  ×
+                </span>
                 <CTScheduleItem user={pair[1]} />
                 {pair[1].slack_u_channel_id && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <a
                         href={`https://app.slack.com/huddle/${process.env.SLACK_WORKSPACE_ID}/${pair[1].slack_u_channel_id}`}
-                        className="p-2 rounded-md border pointer ml-auto"
+                        className="p-2 rounded-md border pointer justify-self-end"
                       >
-                        <Headphones className="w-4 h-4 text-gray-500" />
+                        <Headphones className="w-4 h-4 text-muted-foreground" />
                       </a>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -68,9 +87,21 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
                 )}
               </>
             ) : (
-              <Badge className="bg-gray-400 rounded-full hover:bg-gray-400">
-                お休み
-              </Badge>
+              <>
+                {/* × の列は空けて、2人目のアバターと同じ位置・同じ大きさの円に「お休み」を置く */}
+                <span />
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-status-rest text-status-rest-foreground">
+                    {/* 輪郭の線を足すと三日月の先がなまるので、塗りだけで描いてシャープにする */}
+                    <Moon
+                      className="h-5 w-5 fill-current"
+                      strokeWidth={0}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className="text-sm font-bold">お休み</span>
+                </div>
+              </>
             )}
           </div>
         ))}
