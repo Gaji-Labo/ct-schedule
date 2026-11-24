@@ -92,7 +92,12 @@ export const CTScheduleCard = ({ schedule, index }: Props) => {
                 <span />
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-status-rest text-status-rest-foreground">
-                    <Moon className="h-4 w-4 fill-current" aria-hidden="true" />
+                    {/* 輪郭の線を足すと三日月の先がなまるので、塗りだけで描いてシャープにする */}
+                    <Moon
+                      className="h-5 w-5 fill-current"
+                      strokeWidth={0}
+                      aria-hidden="true"
+                    />
                   </span>
                   <span className="text-sm font-bold">お休み</span>
                 </div>
