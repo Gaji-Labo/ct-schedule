@@ -62,3 +62,9 @@ export function createSchedules(members: User[], weeks = 12): Schedule {
   const dates = filterFromToday(mondays).slice(0, weeks);
   return generateCTSchedules(rounds, dates, mockHolidays);
 }
+
+/** uチャンネルの選択肢 (本物は Slack の getChannels)。name_normalized は Slack のチャンネル名 */
+export const mockUChannels = HANDLES.map((handle, i) => ({
+  id: `C${String(i + 1).padStart(4, "0")}`,
+  name_normalized: `u-${handle}`,
+}));
