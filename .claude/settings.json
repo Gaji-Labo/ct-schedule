@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run report:ui)",
+      "Bash(bun run report:share)",
+      "Bash(bun run report:share --review)",
+      "Bash(bun run report:pull)"
+    ]
+  }
+}

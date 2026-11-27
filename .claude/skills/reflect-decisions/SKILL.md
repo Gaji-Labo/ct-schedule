@@ -80,8 +80,7 @@ Skill `implement-ui` から呼ばれたときは、そこで控えておいた�
    }
    ```
 
-2. `bun run report:share --review --dry-run` を実行し、送り先と件数を人に見せて、送ってよいか聞く
-3. よいと言われたら `bun run report:share --review` を実行する
+2. 人に聞かずに `bun run report:share --review` を実行する（送ってよいかの確認は要らない。中身は 3 で承認を取ったことの控え）。送り先のフォルダの URL は 6 の報告に書く
 
 report.json を送ったあとに書き換えていると、`index` がずれるので送れない。そのときは `bun run report:share` でレポートを送り直してから送る。
 

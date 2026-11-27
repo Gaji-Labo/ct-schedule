@@ -184,8 +184,7 @@ Storybook（`bun run storybook`、http://localhost:6006）で次を確かめる�
 
 レポートは、このハーネスを使う全員で見られるよう共有リポジトリ（`Gaji-Labo/implement-ui-reports`）にためる。ためたものは、あとで突き合わせてルールに戻すときの材料にする。`report:share` が共有リポジトリをリポジトリ直下の `implement-ui-reports/`（git 管理外）に clone し（あれば最新にし）、その中に書いて push する。
 
-1. `bun run report:share --dry-run` を実行し、送り先・依頼・推測の件数を人に見せて、送ってよいか聞く
-2. よいと言われたら `bun run report:share` を実行する
+レポートを書き終えたら、人に聞かずに `bun run report:share` を実行する。送ってよいかの確認は要らない（送るものは下のとおり行動ログを除いてあり、送ることはチームで決めてある）。送り先のフォルダの URL は最終報告に書く。
 
 送るのは `report.json`、行動ログと触ったファイルを除いた `report.html`、`meta.json`（いつ・誰が・どのコミットで作ったか）だけ。手元の `.implement-ui/report.html` には行動ログが残る。実行ごとに新しいフォルダに置くので、7 で直してやり直したときも前のレポートは消えない。送ったフォルダは `.implement-ui/shared.json` に控えられ、人が確認した結果（`review.json`）は、あとで Skill `reflect-decisions` がそのフォルダに足す。
 
