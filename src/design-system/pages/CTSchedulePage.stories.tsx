@@ -50,6 +50,8 @@ const CTSchedulePage = ({ participants, weeks }: PageProps) => {
 
 const meta = {
   title: "Apps/CTスケジュール/Pages/CT組み合わせ表",
+  // 画面は使い回す部品ではないので、部品のマニフェスト（/manifests/components.json）に載せない
+  tags: ["!manifest"],
   component: CTSchedulePage,
   parameters: {
     // 直すまで残す a11y の違反。CTScheduleCarousel のもの（理由は src/design-system/a11y-known.ts）

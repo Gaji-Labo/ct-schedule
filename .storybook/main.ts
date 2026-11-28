@@ -38,6 +38,11 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs-vite",
     options: {},
   },
+  features: {
+    // 部品の一覧と Props を /manifests/components.json に出す（ビルドでは manifests/ に出力）。
+    // AI が部品の仕様を引くために使う。画面の Story（pages/・drafts/）は tags: ["!manifest"] で外す
+    componentsManifest: true,
+  },
   staticDirs: ["../public"],
   viteFinal: (config) => ({
     ...config,
