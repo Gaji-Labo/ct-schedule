@@ -126,8 +126,6 @@ const MemberPage = ({ participants, nonParticipants, signedIn }: PageProps) => {
 
 const meta = {
   title: "Apps/CTスケジュール/Pages/メンバー一覧",
-  // 画面は使い回す部品ではないので、部品のマニフェスト（/manifests/components.json）に載せない
-  tags: ["!manifest"],
   component: MemberPage,
   parameters: {
     layout: "fullscreen",

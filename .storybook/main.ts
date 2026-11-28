@@ -14,6 +14,9 @@ const gitBranch = (() => {
   }
 })();
 
+const isScreenStoryFile = (fileName: string) =>
+  /\/src\/design-system\/(pages|drafts)\//.test(fileName);
+
 const config: StorybookConfig = {
   stories: [
     "../src/design-system/**/*.mdx",
@@ -38,9 +41,20 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs-vite",
     options: {},
   },
+  // 画面の Story（pages/・drafts/）は使い回す部品ではないので、部品のマニフェストに載せない。
+  // ファイルの場所で一律に !manifest タグを付ける（Story ファイルに書かなくてよい）
+  experimental_indexers: (indexers) =>
+    (indexers ?? []).map((indexer) => ({
+      ...indexer,
+      createIndex: async (fileName, options) => {
+        const inputs = await indexer.createIndex(fileName, options);
+        if (!isScreenStoryFile(fileName)) return inputs;
+        return inputs.map((input) => ({ ...input, tags: [...(input.tags ?? []), "!manifest"] }));
+      },
+    })),
   features: {
     // 部品の一覧と Props を /manifests/components.json に出す（ビルドでは manifests/ に出力）。
-    // AI が部品の仕様を引くために使う。画面の Story（pages/・drafts/）は tags: ["!manifest"] で外す
+    // AI が部品の仕様を引くために使う。画面の Story は上の experimental_indexers で外す
     componentsManifest: true,
   },
   staticDirs: ["../public"],

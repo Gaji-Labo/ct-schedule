@@ -61,7 +61,6 @@ description: 社内アプリの画面・コンポーネント・Story を実装�
   - 既存の画面を作り直すときも、`drafts/` に同じ名前のファイルを新しく作る。`pages/` の元のファイルは変えない
   - 部品の props が変わって `pages/` の Story が型エラーになる、のような追従の修正だけは `pages/` を直接直してよい
 - `title: "Drafts/<アプリ名>/<画面名（日本語）>"`、`parameters.layout: "fullscreen"`
-- `tags: ["!manifest"]` を付ける。画面は使い回す部品ではないので、部品のマニフェスト（`/manifests/components.json`。AI が部品の仕様を引く元）に載せない。`pages/` に移したあとも付けたままにする
 - `parameters.docs.description.component` に、何の画面か・本番のどのパスか・どこから来るかを書く
 - モックデータは `src/design-system/mocks/` のアプリ用ファイル（`docs/design/apps/<アプリ名>.md` に書いてある）を使う。足りなければそこに足す
 - DB・Slack・サーバーアクションにつながる部品は Storybook で動かないので、**見た目が同じ代用品**を作り、コメントで「本物は ○○」と書く
