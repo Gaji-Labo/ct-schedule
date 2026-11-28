@@ -36,6 +36,16 @@ const config: StorybookConfig = {
     "@storybook/addon-themes",
     // Story をテストとして回す（bun run test:stories、vitest.config.mts）
     "@storybook/addon-vitest",
+    // 起動中の Storybook に MCP サーバーを立てる（http://localhost:6006/mcp、.mcp.json で登録）。
+    // AI が部品の一覧と Props を引く。部品の情報は下の features.componentsManifest のマニフェストから読む
+    {
+      name: "@storybook/addon-mcp",
+      options: {
+        // 部品を引く docs だけを使う。dev（Story の書き方・プレビュー）と test（test-run）は、
+        // Skill implement-ui と bun run verify:ui の手順とぶつかる指示をエージェントに出すので切る
+        toolsets: { dev: false, test: false },
+      },
+    },
   ],
   framework: {
     name: "@storybook/nextjs-vite",
