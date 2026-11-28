@@ -14,6 +14,9 @@ const gitBranch = (() => {
   }
 })();
 
+const isScreenStoryFile = (fileName: string) =>
+  /\/src\/design-system\/(pages|drafts)\//.test(fileName);
+
 const config: StorybookConfig = {
   stories: [
     "../src/design-system/**/*.mdx",
@@ -33,10 +36,36 @@ const config: StorybookConfig = {
     "@storybook/addon-themes",
     // Story をテストとして回す（bun run test:stories、vitest.config.mts）
     "@storybook/addon-vitest",
+    // 起動中の Storybook に MCP サーバーを立てる（http://localhost:6006/mcp、.mcp.json で登録）。
+    // AI が部品の一覧と Props を引く。部品の情報は下の features.componentsManifest のマニフェストから読む
+    {
+      name: "@storybook/addon-mcp",
+      options: {
+        // 部品を引く docs だけを使う。dev（Story の書き方・プレビュー）と test（test-run）は、
+        // Skill implement-ui と bun run verify:ui の手順とぶつかる指示をエージェントに出すので切る
+        toolsets: { dev: false, test: false },
+      },
+    },
   ],
   framework: {
     name: "@storybook/nextjs-vite",
     options: {},
+  },
+  // 画面の Story（pages/・drafts/）は使い回す部品ではないので、部品のマニフェストに載せない。
+  // ファイルの場所で一律に !manifest タグを付ける（Story ファイルに書かなくてよい）
+  experimental_indexers: (indexers) =>
+    (indexers ?? []).map((indexer) => ({
+      ...indexer,
+      createIndex: async (fileName, options) => {
+        const inputs = await indexer.createIndex(fileName, options);
+        if (!isScreenStoryFile(fileName)) return inputs;
+        return inputs.map((input) => ({ ...input, tags: [...(input.tags ?? []), "!manifest"] }));
+      },
+    })),
+  features: {
+    // 部品の一覧と Props を /manifests/components.json に出す（ビルドでは manifests/ に出力）。
+    // AI が部品の仕様を引くために使う。画面の Story は上の experimental_indexers で外す
+    componentsManifest: true,
   },
   staticDirs: ["../public"],
   viteFinal: (config) => ({

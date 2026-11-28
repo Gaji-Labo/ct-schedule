@@ -40,9 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# mcp
-.mcp.json
-
 # storybook
 /storybook-static
 *storybook.log
